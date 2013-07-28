@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8" />
+	<title>comments_json</title>
+	<meta name="generator" content="iA Writer for Mac 1.4 (1.4)" />
+	<meta name="description" content="" />
+	<meta name="keywords" content="" />
+</head>
+<body>
+<h1>Comment format</h1>
+
+<pre><code>{
+</code>
+<code>  comment_id: &lt;string&gt;,
+</code>
+<code>  component_id: &lt;string&gt;,
+</code>
+<code>  dataset_id: &lt;string&gt;,
+</code>
+<code>  user_id: &lt;string&gt;
+</code>
+<code>  visualized_properties: [ &lt;string&gt; ],
+</code>
+<code>  component_memento: {
+</code>
+<code>    property: value
+</code>
+<code>  },
+</code>
+<code>  versions: [ &lt;version&gt; ]
+</code>
+<code>}
+</code>
+</pre>
+<p><code>comment_id</code> is not available when the help system just created it. It will be generated in the backend.
+</p>
+<p><code>component_id</code> does <strong>not</strong> refer to the component instance id!
+</p>
+<h1>Version format</h1>
+
+<pre><code>{
+</code>
+<code>  timestamp: &lt;long&gt;,
+</code>
+<code>  text: &lt;string&gt;,
+</code>
+<code>  number: &lt;int&gt;,
+</code>
+<code>  annotations: [ &lt;annotation&gt; ]
+</code>
+<code>}
+</code>
+</pre>
+<h1>Annotation format</h1>
+
+<h2>Data based</h2>
+
+<p>Range only works when all properties are intrinsically orderable, e.g. temperatures or dates. Not intrinsically orderable: humans, cars, countries etc.
+</p>
+<h3>Data</h3>
+
+<pre><code>{
+</code>
+<code>  type: &quot;data&quot;,
+</code>
+<code>}
+</code>
+</pre>
+<h3>Group</h3>
+
+<pre><code>{
+</code>
+<code>  type: &quot;group&quot;,
+</code>
+<code>  points: [ &lt;point&gt; ]
+</code>
+<code>}
+</code>
+</pre>
+<h3>Point</h3>
+
+<pre><code>{
+</code>
+<code>  type: &quot;point&quot;,
+</code>
+<code>  uri: &lt;string&gt;,
+</code>
+<code>  values: {
+</code>
+<code>    &lt;property uri&gt;: &lt;value&gt;
+</code>
+<code>  }
+</code>
+<code>}
+</code>
+</pre>
+<h2>Area based</h2>
+
+<pre><code>{
+</code>
+<code>  type: &quot;area&quot;,
+</code>
+<code>  visualization_width: &lt;int&gt;,
+</code>
+<code>  visualization_height: &lt;int&gt;,
+</code>
+<code>  elements: [ &lt;element&gt; ]
+</code>
+<code>}
+</code>
+</pre>
+<h3>Text element</h3>
+
+<pre><code>{
+</code>
+<code>  type: &quot;text&quot;,
+</code>
+<code>  x: &lt;float&gt;,
+</code>
+<code>  y: &lt;float&gt;,
+</code>
+<code>  text: &lt;string&gt;
+</code>
+<code>}
+</code>
+</pre>
+<h3>Rectangle element</h3>
+
+<pre><code>{
+</code>
+<code>  type: &quot;rectangle&quot;,
+</code>
+<code>  x1: &lt;float&gt;,
+</code>
+<code>  y1: &lt;float&gt;,
+</code>
+<code>  x2: &lt;float&gt;,
+</code>
+<code>  y2: &lt;float&gt;
+</code>
+<code>}
+</code>
+</pre>
+<h3>Arrow element</h3>
+
+<pre><code>{
+</code>
+<code>  type: &quot;arrow&quot;,
+</code>
+<code>  x1: &lt;float&gt;,
+</code>
+<code>  y1: &lt;float&gt;,
+</code>
+<code>  x2: &lt;float&gt;,
+</code>
+<code>  y2: &lt;float&gt;
+</code>
+<code>}</code></pre>
+</body>
+</html>
