@@ -1,3 +1,59 @@
+<!--
+
+TODO
+
+# Metadata
+
+* meta:doesDataProcessing: bool, mandatory
+* meta:hasReproducibleLayout: bool, mandatory
+* meta:loadsExternalData: bool, mandatory
+* meta:hasRelativeStyle: bool, mandatory
+
+# Interaction
+
+* > capability
+
+# Capability
+
+* dataVariable: string?, optional
+* relatedConcept: string, optional
+* wait: string, optional
+* generateAssistance: bool, optional, default true
+* > viso-operations: optional
+
+# viso-operation
+
+* id: xs:id, mandatory
+* element: string, mandatory
+* op: viso referenz, mandatory
+* testParameter: irgendwas, optional
+
+# sequentialVisoOperatoin
+
+* id: xs:id, mandatory
+* > viso-operation
+
+# parallelVisoOperation
+
+* id: xs:id, mandatory
+* > viso-operation
+
+# Interface
+
+* > memento
+
+# Memento
+
+* type
+* > mementoProperty
+
+# Memento Property
+
+* type
+* textContent
+-->
+
+
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema targetNamespace="http://mmt.inf.tu-dresden.de/smcdl/1.12" elementFormDefault="qualified" version="1.12" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:meta="http://mmt.inf.tu-dresden.de/smcdl/1.12/metadata" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:smcdl="http://mmt.inf.tu-dresden.de/smcdl/1.12">
 	<xs:annotation>

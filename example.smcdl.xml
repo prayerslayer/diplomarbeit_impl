@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- @author Martin Dobrev -->
+<component 
+		id="http://cruise/ui/xima/vvo/eventList/ExtEventList" 
+		name="EventList" version="1.0"
+		isUI="true"
+		xmlns:meta="http://mmt.inf.tu-dresden.de/smcdl/1.12/metadata"
+		xmlns:nfp="http://mmt.inf.tu-dresden.de/models/nfp.owl#"		
+		xmlns:mcdl="http://mmt.inf.tu-dresden.de/models/mcdl.owl#"
+		xmlns:travel="http://mmt.inf.tu-dresden.de/cruise/travel.owl#"
+		xmlns:upperactions="http://mmt.inf.tu-dresden.de/models/activity-actions.owl#"
+		xmlns:eventMash="http://inf.tu-dresden.de/cruise/eventMash.owl#"
+		xmlns="http://mmt.inf.tu-dresden.de/smcdl/1.12" 
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+		xsi:schemaLocation="http://mmt.inf.tu-dresden.de/smcdl/1.12 ../schema/MCDL.xsd">
+
+	<meta:metadata>
+		<meta:keywords>events, last fm, list, grid</meta:keywords>
+		<meta:contactInformation>
+			<meta:maintainer>
+				<meta:name>Oliver Mross</meta:name>
+				<meta:email>oliver.mross@tu-dresden.de</meta:email>
+				<meta:webURL>http://mmt.inf.tu-dresden.de/Team/mitarbeiter.xhtml?id=416</meta:webURL>
+				<meta:phone>+49 351 463-38519</meta:phone>
+			</meta:maintainer>
+		</meta:contactInformation>
+		<meta:documentation>Event List</meta:documentation>
+		<meta:pricing>
+			<meta:absolutePrice currency="nfp:EUR" value="0.00"/>
+		</meta:pricing>
+		<meta:energy consumption="nfp:Medium"/>
+		<meta:screenshots>
+			<meta:screenshot url="http://mashup.dyndns.org:7331/res/1.10/components/UI_EventList/EventList_Screenshot.png">
+				<meta:documentation>screenshot</meta:documentation>
+			</meta:screenshot>
+		</meta:screenshots>
+		<meta:icons>
+			<meta:icon url="http://mashup.dyndns.org:7331/res/1.10/components/UI_EventList/EventList_Screenshot.png">
+				<meta:documentation>icon</meta:documentation>
+			</meta:icon>
+		</meta:icons>
+		<meta:dimensions> 
+			<meta:min width="250" height="200" />
+			<meta:max width="250" height="200" />
+		</meta:dimensions>
+		<!-- BEGIN NEW STUFF -->
+		<meta:doesDataProcessing>false</meta:doesDataProcessing>
+		<meta:hasReproducibleLayout>true</meta:hasReproducibleLayout>
+		<meta:loadsExternalData>false</meta:loadsExternalData>
+		<meta:hasRelativeStyle>true</meta:hasRelativeStyle>
+		<!-- END NEW STUFF -->
+	</meta:metadata>
+
+	<requirements>
+		<runtimes>
+			<runtime version=">=1.9" id="TSR"/>
+		</runtimes>
+	</requirements>
+	
+	<!-- BEGIN NEW STUFF -->
+	<interaction>
+		<capability
+			entity="travel:Event"
+			activity="upperactions:Sort"
+			dataVariable="dv:N1"
+			id="cap01"
+			relatedConcept="http://dbpedia.org/resource/Event"
+			wait="5s"
+			generateAssistance="true">
+		
+			<viso-operations id="sortOps">
+				<viso-operation id="clickSortButton" element="button.sort" op="viso:Click"/>
+				<viso-operation id="clickSpaceWhileFocusOnSortButton" element="button.sort" op="viso:Type" modifier="SPACE"/>
+				<sequentialVisoOperation id="clickSortOnMenu">
+					<viso-operation id="clickMenuButton" element=".menu" op="viso:Click"/>
+					<viso-operation id="clickMenuSortButton" element=".menu > li.sort" op="viso:Click"/>
+				</sequentialVisoOperation>
+				<viso-operation id="dragMap" element=".map" op="viso:Drag" testParameter="100,200"/>
+			</viso-operations>
+		</capability>
+		<capability entity="travel:Location" activity="upperactions:Input" id="cap02"/>
+	</interaction>
+
+	<interface>
+		<!-- memento format -->
+		<memento type="mcdl:hasMemento">
+			<mementoProperty type="mcdl:hasMementoProperty">destTime</mementoProperty>
+			<mementoProperty type="mcdl:hasMementoProperty">currentEvents</mementoProperty>
+		</memento>
+
+		<!-- END NEW STUFF -->
+		<property type="mcdl:hasTitle" required="true" name="title">
+			<default>Veranstaltungen</default>
+		</property>
+		<property type="mcdl:hasWidth" required="true" name="width">
+			<default>250</default>
+		</property>
+		<property type="mcdl:hasHeight" required="true" name="height">
+			<default>200</default>
+		</property>
+		<property type="travel:Event" required="false" name="currentEvents" />
+		<property name="destTime" required="false" type="travel:hasDestinationTime" />
+		<event name="locationSelected" dependsOn="cap02">
+			<parameter name="location" type="travel:Location"/>
+			<parameter name="locationtype" type="travel:locationType"/>
+		</event>
+		<!--<event name="timeSelected" dependsOn="actions:InputDateTime" functionality="events:DateTimeSelected">
+			<parameter name="time" type="travel:hasDestinationTime"/>
+		</event>-->
+		<event name="requestEventList">
+			<parameter name="events" isCollection="true" type="travel:Event"/>
+			<callbackOperation name="update"/>
+		</event>
+		<operation name="update">
+			<capability entity="travel:Event" activity="upperactions:Display" id="cap03"/>
+			<parameter name="events" isCollection="true" type="travel:Event"/>
+		</operation>
+	</interface>
+	<binding bindingtype="mapping_simplewrapper">
+		<dependencies>
+					<dependency language="css">
+				<url>http://extjs-public.googlecode.com/svn/tags/extjs-3.4.0/release/resources/css/ext-all.css</url>
+			</dependency>
+			<dependency language="javascript">
+				<url>http://extjs-public.googlecode.com/svn/tags/extjs-3.4.0/release/adapter/ext/ext-base.js</url>
+			</dependency>
+			<dependency language="javascript">
+				<url>http://extjs-public.googlecode.com/svn/tags/extjs-3.4.0/release/ext-all.js</url>
+			</dependency>
+			<dependency language="javascript">
+				<url>http://mashup.dyndns.org:7331/res/1.10/components/UI_EventList/xmlFunctions.js</url>
+			</dependency>
+			<dependency language="javascript">
+				<url>http://mashup.dyndns.org:7331/res/1.10/components/UI_EventList/ExtEventList.js</url>
+			</dependency>
+		</dependencies>
+		<constructor>
+			<code>new Ext.cruise.list.EventList();</code>
+		</constructor>
+	</binding>
+</component>
