@@ -58,28 +58,25 @@
 	</requirements>
 	
 	<!-- BEGIN NEW STUFF -->
-	<interaction>
-		<capability
-			entity="travel:Event"
-			activity="upperactions:Sort"
-			dataVariable="dv:N1"
-			id="cap01"
-			relatedConcept="http://dbpedia.org/resource/Event"
-			wait="5s"
-			generateAssistance="true">
+	<capability
+		entity="travel:Event"
+		activity="upperactions:Sort"
+		dataVariable="dv:N1"
+		id="cap01"
+		relatedConcept="http://dbpedia.org/resource/Event"
+		wait="5s"
+		generateAssistance="true">
+
+		<viso-operation id="clickSortButton" element="button.sort" op="viso:Click"/>
+		<viso-operation id="clickSpaceWhileFocusOnSortButton" element="button.sort" op="viso:Type" modifier="SPACE"/>
+		<sequentialVisoOperation id="clickSortOnMenu">
+			<viso-operation id="clickMenuButton" element=".menu" op="viso:Click"/>
+			<viso-operation id="clickMenuSortButton" element=".menu > li.sort" op="viso:Click"/>
+		</sequentialVisoOperation>
+		<viso-operation id="dragMap" element=".map" op="viso:Drag" testParameter="100,200"/>
 		
-			<viso-operations id="sortOps">
-				<viso-operation id="clickSortButton" element="button.sort" op="viso:Click"/>
-				<viso-operation id="clickSpaceWhileFocusOnSortButton" element="button.sort" op="viso:Type" modifier="SPACE"/>
-				<sequentialVisoOperation id="clickSortOnMenu">
-					<viso-operation id="clickMenuButton" element=".menu" op="viso:Click"/>
-					<viso-operation id="clickMenuSortButton" element=".menu > li.sort" op="viso:Click"/>
-				</sequentialVisoOperation>
-				<viso-operation id="dragMap" element=".map" op="viso:Drag" testParameter="100,200"/>
-			</viso-operations>
-		</capability>
-		<capability entity="travel:Location" activity="upperactions:Input" id="cap02"/>
-	</interaction>
+	</capability>
+	<capability entity="travel:Location" activity="upperactions:Input" id="cap02"/>
 
 	<interface>
 		<!-- memento format -->

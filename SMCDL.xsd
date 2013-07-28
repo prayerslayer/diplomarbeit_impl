@@ -9,17 +9,13 @@ TODO
 * meta:loadsExternalData: bool, mandatory
 * meta:hasRelativeStyle: bool, mandatory
 
-# Interaction
-
-* > capability
-
 # Capability
 
 * dataVariable: string?, optional
 * relatedConcept: string, optional
 * wait: string, optional
 * generateAssistance: bool, optional, default true
-* > viso-operations: optional
+* > viso-operation: optional
 
 # viso-operation
 
