@@ -2,27 +2,6 @@
 
 TODO
 
-# Capability
-
-* > viso-operation: optional
-
-# viso-operation
-
-* id: xs:id, mandatory
-* element: string, mandatory
-* op: viso referenz, mandatory
-* testParameter: irgendwas, optional
-
-# sequentialVisoOperatoin
-
-* id: xs:id, mandatory
-* > viso-operation
-
-# parallelVisoOperation
-
-* id: xs:id, mandatory
-* > viso-operation
-
 # Interface
 
 * > memento
@@ -357,7 +336,7 @@ Furthermore, SMCDL provides means for semantic annotation and description of mas
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
-	</xs:complexType>
+	</xs:complexTycdpe>
 	<xs:complexType name="ToStdGroundingTransformation">
 		<xs:annotation>
 			<xs:documentation>Transformation from component internal dataformat and/or schema to the predefinied schema. May be
@@ -393,6 +372,70 @@ Furthermore, SMCDL provides means for semantic annotation and description of mas
 			</xs:extension>
 		</xs:complexContent>
 	</xs:complexType>
+	<!-- single viso operation -->
+	<xs:complexType name="SingleVisoOperation">
+		<xs:annotation>
+				<xs:documentation>
+					Represents a single operation from VISO, e.g. a click, a drag, a key press, a swipe etc.
+				</xs:documentation>
+			</xs:annotation>
+		<xs:attribute name="id" type="xs:ID" use="required"></xs:attribute>
+		<xs:attribute name="element" type="xs:string" use="required">
+			<xs:annotation>
+				<xs:documentation>
+					A CSS selector matching the elements where this VISO operation is applicable.
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="operation" type="xs:anyURI" use="required">
+			<xs:annotation>
+				<xs:documentation>
+					The URI of the VISO operation, e.g. viso:click.
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="modifier" type="xs:anyURI">
+			<xs:annotation>
+				<xs:documentation>
+					An optional modifier for the VISO operation, e.g. the key that has to be pressed.
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="exampleParameter" type="xs:anyType">
+			<xs:annotation>
+				<xs:documentation>
+					Optional example parameter for this operation, e.g. the deltas of a drag operation.
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+	<!-- sequential viso operation -->
+	<xs:complexType name="SequentialVisoOperation">
+		<xs:annotation>
+				<xs:documentation>
+					Represents a sequence of viso operations. E.g. open the menu, then choose "sort".
+				</xs:documentation>
+			</xs:annotation>
+		<xs:attribute name="id" type="xs:ID" use="required"></xs:attribute>
+		<xs:sequence>
+			<xs:element name="visoOperation" type="smcdl:SingleVisoOperation" minOccurs="2" maxOccurs="unbounded"></xs:element>
+			</xs:annotation>
+			</xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	<!-- parallel viso operation -->
+	<xs:complexType name="ParallelVisoOperation">
+		<xs:annotation>
+				<xs:documentation>
+					Represents parallel viso operations that have to happen simultaniously. E.g. keyboard shortcuts like STRG+T.
+				</xs:documentation>
+			</xs:annotation>
+		<xs:attribute name="id" type="xs:ID" use="required"></xs:attribute>
+		<xs:sequence>
+			<xs:element name="visoOperation" type="smcdl:SingleVisoOperation" minOccur="2" maxOccurs="unbounded"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+	
 	<xs:complexType name="Capability">
 		<xs:annotation>
 			<xs:documentation>
@@ -435,6 +478,14 @@ Furthermore, SMCDL provides means for semantic annotation and description of mas
 				</xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
+		<xs:sequence>
+			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:element name="sequentialVisoOperation" type="smcl:SequentialVisoOperation">
+				</xs:element>
+				<xs:element name="parallelVisoOperation" type="smcdl:ParallelVisoOperation"></xs:element>
+				<xs:element name="visoOperation" type="smcdl:SingleVisoOperation"></xs:element>
+			</xs:choice>
+		</xs:sequence>
 	</xs:complexType>
 	<xs:simpleType name="Provider">
 		<xs:annotation>

@@ -4,6 +4,11 @@
 		id="http://cruise/ui/xima/vvo/eventList/ExtEventList" 
 		name="EventList" version="1.0"
 		isUI="true"
+		doesDataProcessing="false"
+		hasReproducibleLayout="true"
+		loadsExternalData="false"
+		hasRelativeStyle="false"
+
 		xmlns:meta="http://mmt.inf.tu-dresden.de/smcdl/1.12/metadata"
 		xmlns:nfp="http://mmt.inf.tu-dresden.de/models/nfp.owl#"		
 		xmlns:mcdl="http://mmt.inf.tu-dresden.de/models/mcdl.owl#"
@@ -43,12 +48,6 @@
 			<meta:min width="250" height="200" />
 			<meta:max width="250" height="200" />
 		</meta:dimensions>
-		<!-- BEGIN NEW STUFF -->
-		<meta:doesDataProcessing>false</meta:doesDataProcessing>
-		<meta:hasReproducibleLayout>true</meta:hasReproducibleLayout>
-		<meta:loadsExternalData>false</meta:loadsExternalData>
-		<meta:hasRelativeStyle>true</meta:hasRelativeStyle>
-		<!-- END NEW STUFF -->
 	</meta:metadata>
 
 	<requirements>
@@ -67,14 +66,14 @@
 		wait="5s"
 		generateAssistance="true">
 
-		<viso-operation id="clickSortButton" element="button.sort" op="viso:Click"/>
-		<viso-operation id="clickSpaceWhileFocusOnSortButton" element="button.sort" op="viso:Type" modifier="SPACE"/>
+		<visoOperation id="clickSortButton" element="button.sort" operation="viso:Click"/>
+		<visoOperation id="clickSpaceWhileFocusOnSortButton" element="button.sort" operation="viso:Type" modifier="SPACE"/>
 		<sequentialVisoOperation id="clickSortOnMenu">
-			<viso-operation id="clickMenuButton" element=".menu" op="viso:Click"/>
-			<viso-operation id="clickMenuSortButton" element=".menu > li.sort" op="viso:Click"/>
+			<visoOperation id="clickMenuButton" element=".menu" operation="viso:Click"/>
+			<visoOperation id="clickMenuSortButton" element=".menu > li.sort" operation="viso:Click"/>
 		</sequentialVisoOperation>
-		<viso-operation id="dragMap" element=".map" op="viso:Drag" testParameter="100,200"/>
-		
+		<visoOperation id="dragMap" element=".map" operation="viso:Drag" exampleParameter="100,200"/>
+
 	</capability>
 	<capability entity="travel:Location" activity="upperactions:Input" id="cap02"/>
 
