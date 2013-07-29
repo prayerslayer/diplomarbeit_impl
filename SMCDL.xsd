@@ -2,15 +2,6 @@
 
 TODO
 
-# Interface
-
-* > memento
-
-# Memento
-
-* type
-* > mementoProperty
-
 # Memento Property
 
 * type
@@ -109,6 +100,7 @@ Furthermore, SMCDL provides means for semantic annotation and description of mas
 	<!-- ################# INTERFACE TYPES ############################ -->
 	<xs:complexType name="Interface">
 		<xs:sequence>
+			<xs:element ref="smcdl:memento" minOccurs="1" maxOccurs="1" />
 			<xs:element ref="smcdl:property" minOccurs="0" maxOccurs="unbounded" />
 			<xs:element ref="smcdl:event" minOccurs="0" maxOccurs="unbounded" />
 			<xs:element ref="smcdl:operation" minOccurs="0" maxOccurs="unbounded" />
@@ -148,6 +140,18 @@ Furthermore, SMCDL provides means for semantic annotation and description of mas
 			</xs:annotation>
 		</xs:attribute>
 	</xs:complexType>
+
+	<xs:complexType name="Memento">
+		<xs:annotation>
+			<xs:documentation>
+
+			</xs:documentation>
+		</xs:annotation>
+		<xs:sequence>
+			<xs:element name="mementoProperty" type="xs:string" minOccurs="1" maxOccurs="unbounded"></xs:element>
+		</xs:sequence>
+	</xs:complexType>
+
 	<xs:complexType name="Property">
 		<xs:complexContent>
 			<xs:extension base="smcdl:ITypable">
@@ -418,7 +422,7 @@ Furthermore, SMCDL provides means for semantic annotation and description of mas
 			</xs:annotation>
 		<xs:attribute name="id" type="xs:ID" use="required"></xs:attribute>
 		<xs:sequence>
-			<xs:element name="visoOperation" type="smcdl:SingleVisoOperation" minOccurs="2" maxOccurs="unbounded"></xs:element>
+			<xs:element name="visoOperation" ref="smcdl:singlevisooperation" minOccurs="2" maxOccurs="unbounded"></xs:element>
 			</xs:annotation>
 			</xs:element>
 		</xs:sequence>
@@ -432,7 +436,7 @@ Furthermore, SMCDL provides means for semantic annotation and description of mas
 			</xs:annotation>
 		<xs:attribute name="id" type="xs:ID" use="required"></xs:attribute>
 		<xs:sequence>
-			<xs:element name="visoOperation" type="smcdl:SingleVisoOperation" minOccur="2" maxOccurs="unbounded"></xs:element>
+			<xs:element name="visoOperation" ref="smcdl:singlevisooperation" minOccur="2" maxOccurs="unbounded"></xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	
@@ -480,10 +484,10 @@ Furthermore, SMCDL provides means for semantic annotation and description of mas
 		</xs:attribute>
 		<xs:sequence>
 			<xs:choice minOccurs="0" maxOccurs="unbounded">
-				<xs:element name="sequentialVisoOperation" type="smcl:SequentialVisoOperation">
+				<xs:element name="sequentialVisoOperation" ref="smcdl:sequentialvisooperation">
 				</xs:element>
-				<xs:element name="parallelVisoOperation" type="smcdl:ParallelVisoOperation"></xs:element>
-				<xs:element name="visoOperation" type="smcdl:SingleVisoOperation"></xs:element>
+				<xs:element name="parallelVisoOperation" ref="smcdl:parallelvisooperation"></xs:element>
+				<xs:element name="visoOperation" ref="smcdl:singlevisooperation"></xs:element>
 			</xs:choice>
 		</xs:sequence>
 	</xs:complexType>
