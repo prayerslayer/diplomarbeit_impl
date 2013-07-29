@@ -2,19 +2,8 @@
 
 TODO
 
-# Metadata
-
-* meta:doesDataProcessing: bool, mandatory
-* meta:hasReproducibleLayout: bool, mandatory
-* meta:loadsExternalData: bool, mandatory
-* meta:hasRelativeStyle: bool, mandatory
-
 # Capability
 
-* dataVariable: string?, optional
-* relatedConcept: string, optional
-* wait: string, optional
-* generateAssistance: bool, optional, default true
 * > viso-operation: optional
 
 # viso-operation
@@ -93,6 +82,34 @@ Furthermore, SMCDL provides means for semantic annotation and description of mas
 		<xs:attribute name="signature" type="xs:string">
 			<xs:annotation>
 				<xs:documentation>Contains a digital signature to verify the document's integrity and origin.</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="doesDataProcessing" type="xs:boolean" use="required">
+			<xs:annotation>
+				<xs:documentation>
+					Tells the user assistance system that this component does data processing (e.g. aggregation) on its own. It switches data-bound comments and undo/redo off.
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="hasReproducibleLayout" type="xs:boolean" use="required">
+			<xs:annotation>
+				<xs:documentation>
+					Tells the user assistance system that this component has a reproducible layout and is therefore able to display comments.
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="loadsExternalData" type="xs:boolean" use="required">
+			<xs:annotation>
+				<xs:documentation>
+					Tells the user assistance system that this component loads external data (not from the Data Repository). Comments and undo/redo are then disabled.
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="hasRelativeStyle" type="xs:boolean" use="required">
+			<xs:annotation>
+				<xs:documentation>
+					Tells the user assistance system that this component's style is completely relative. This is the case when the content of the component is arbitrarily resizable, even without any min-width constraints. If this attribute is set to false the user assistance system has to recalculate the CSS at runtime.
+				</xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
 	</xs:complexType>
