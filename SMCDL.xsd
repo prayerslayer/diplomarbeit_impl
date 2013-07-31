@@ -377,41 +377,45 @@ Furthermore, SMCDL provides means for semantic annotation and description of mas
 		</xs:complexContent>
 	</xs:complexType>
 	<!-- single viso operation -->
-	<xs:complexType name="SingleVisoOperation">
-		<xs:annotation>
-				<xs:documentation>
-					Represents a single operation from VISO, e.g. a click, a drag, a key press, a swipe etc.
-				</xs:documentation>
-			</xs:annotation>
-		<xs:attribute name="id" type="xs:ID" use="required"></xs:attribute>
-		<xs:attribute name="element" type="xs:string" use="required">
-			<xs:annotation>
-				<xs:documentation>
-					A CSS selector matching the elements where this VISO operation is applicable.
-				</xs:documentation>
-			</xs:annotation>
-		</xs:attribute>
-		<xs:attribute name="operation" type="xs:anyURI" use="required">
-			<xs:annotation>
-				<xs:documentation>
-					The URI of the VISO operation, e.g. viso:click.
-				</xs:documentation>
-			</xs:annotation>
-		</xs:attribute>
-		<xs:attribute name="modifier" type="xs:anyURI">
-			<xs:annotation>
-				<xs:documentation>
-					An optional modifier for the VISO operation, e.g. the key that has to be pressed.
-				</xs:documentation>
-			</xs:annotation>
-		</xs:attribute>
-		<xs:attribute name="exampleParameter" type="xs:anyType">
-			<xs:annotation>
-				<xs:documentation>
-					Optional example parameter for this operation, e.g. the deltas of a drag operation.
-				</xs:documentation>
-			</xs:annotation>
-		</xs:attribute>
+	<xs:complexType name="AtomicVisoOperation">
+		<xs:complexContent>
+			<xs:extension base="ITypable">
+				<xs:annotation>
+						<xs:documentation>
+							Represents a single operation from VISO, e.g. a click, a drag, a key press, a swipe etc.
+						</xs:documentation>
+					</xs:annotation>
+				<xs:attribute name="id" type="xs:ID" use="required"></xs:attribute>
+				<xs:attribute name="element" type="xs:string" use="required">
+					<xs:annotation>
+						<xs:documentation>
+							A CSS selector matching the elements where this VISO operation is applicable.
+						</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="operation" type="xs:anyURI" use="required">
+					<xs:annotation>
+						<xs:documentation>
+							The URI of the VISO operation, e.g. viso:click.
+						</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="modifier" type="xs:anyURI">
+					<xs:annotation>
+						<xs:documentation>
+							An optional modifier for the VISO operation, e.g. the key that has to be pressed.
+						</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+				<xs:attribute name="exampleParameter" type="xs:anyType">
+					<xs:annotation>
+						<xs:documentation>
+							Optional example parameter for this operation, e.g. the deltas of a drag operation.
+						</xs:documentation>
+					</xs:annotation>
+				</xs:attribute>
+			</xs:extension>
+		</xs:complexContent>
 	</xs:complexType>
 	<!-- sequential viso operation -->
 	<xs:complexType name="SequentialVisoOperation">
@@ -422,7 +426,7 @@ Furthermore, SMCDL provides means for semantic annotation and description of mas
 			</xs:annotation>
 		<xs:attribute name="id" type="xs:ID" use="required"></xs:attribute>
 		<xs:sequence>
-			<xs:element name="visoOperation" ref="smcdl:singlevisooperation" minOccurs="2" maxOccurs="unbounded"></xs:element>
+			<xs:element name="visoOperation" ref="smcdl:atomicvisooperatoin" minOccurs="2" maxOccurs="unbounded"></xs:element>
 			</xs:annotation>
 			</xs:element>
 		</xs:sequence>
@@ -436,7 +440,7 @@ Furthermore, SMCDL provides means for semantic annotation and description of mas
 			</xs:annotation>
 		<xs:attribute name="id" type="xs:ID" use="required"></xs:attribute>
 		<xs:sequence>
-			<xs:element name="visoOperation" ref="smcdl:singlevisooperation" minOccur="2" maxOccurs="unbounded"></xs:element>
+			<xs:element name="visoOperation" ref="smcdl:atomicvisooperatoin" minOccur="2" maxOccurs="unbounded"></xs:element>
 		</xs:sequence>
 	</xs:complexType>
 	
@@ -487,7 +491,7 @@ Furthermore, SMCDL provides means for semantic annotation and description of mas
 				<xs:element name="sequentialVisoOperation" ref="smcdl:sequentialvisooperation">
 				</xs:element>
 				<xs:element name="parallelVisoOperation" ref="smcdl:parallelvisooperation"></xs:element>
-				<xs:element name="visoOperation" ref="smcdl:singlevisooperation"></xs:element>
+				<xs:element name="visoOperation" ref="smcdl:atomicvisooperatoin"></xs:element>
 			</xs:choice>
 		</xs:sequence>
 	</xs:complexType>
