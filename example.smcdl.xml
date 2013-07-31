@@ -66,13 +66,13 @@
 		wait="5s"
 		generateAssistance="true">
 
-		<visoOperation id="clickSortButton" element="button.sort" type="viso:Click"/>
-		<visoOperation id="clickSpaceWhileFocusOnSortButton" element="button.sort" type="viso:Type" modifier="SPACE"/>
+		<visoOperation id="clickSortButton" element="button.sort" type="viso-operations:Click"/>
+		<visoOperation id="clickSpaceWhileFocusOnSortButton" element="button.sort" type="viso-operations:Type" modifier="viso-operations:SpaceKey"/>
 		<sequentialVisoOperation id="clickSortOnMenu">
-			<visoOperation id="clickMenuButton" element=".menu" type="viso:Click"/>
-			<visoOperation id="clickMenuSortButton" element=".menu > li.sort" type="viso:Click"/>
+			<visoOperation id="clickMenuButton" element=".menu" type="viso-operations:Click"/>
+			<visoOperation id="clickMenuSortButton" element=".menu > li.sort" type="viso-operations:Click"/>
 		</sequentialVisoOperation>
-		<visoOperation id="dragMap" element=".map" type="viso:Drag" exampleParameter="100,200"/>
+		<visoOperation id="dragMap" element=".map" type="viso-operations:Drag" exampleParameter="100,200"/>
 
 	</capability>
 	<capability entity="travel:Location" activity="upperactions:Input" id="cap02"/>
