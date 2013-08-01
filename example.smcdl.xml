@@ -10,7 +10,8 @@
 		hasRelativeStyle="false"
 
 		xmlns:meta="http://mmt.inf.tu-dresden.de/smcdl/1.12/metadata"
-		xmlns:nfp="http://mmt.inf.tu-dresden.de/models/nfp.owl#"		
+		xmlns:nfp="http://mmt.inf.tu-dresden.de/models/nfp.owl#"	
+		xmlns:op="http://mmt.inf.tu-dresden.de/models/activity-operations.owl#"
 		xmlns:mcdl="http://mmt.inf.tu-dresden.de/models/mcdl.owl#"
 		xmlns:travel="http://mmt.inf.tu-dresden.de/cruise/travel.owl#"
 		xmlns:upperactions="http://mmt.inf.tu-dresden.de/models/activity-actions.owl#"
@@ -66,13 +67,13 @@
 		wait="5s"
 		generateAssistance="true">
 
-		<visoOperation id="clickSortButton" element="button.sort" type="viso-operations:Click"/>
-		<visoOperation id="clickSpaceWhileFocusOnSortButton" element="button.sort" type="viso-operations:Type" modifier="viso-operations:SpaceKey"/>
-		<sequentialVisoOperation id="clickSortOnMenu">
-			<visoOperation id="clickMenuButton" element=".menu" type="viso-operations:Click"/>
-			<visoOperation id="clickMenuSortButton" element=".menu > li.sort" type="viso-operations:Click"/>
-		</sequentialVisoOperation>
-		<visoOperation id="dragMap" element=".map" type="viso-operations:Drag" exampleParameter="100,200"/>
+		<atomicoperation id="clickSortButton" element="button.sort" type="op:Click" modifier="op:LeftButton"/>
+		<atomicoperation id="clickSpaceWhileFocusOnSortButton" element="button.sort" type="op:Type" modifier="op:SpaceKey"/>
+		<sequentialoperation id="clickSortOnMenu">
+			<atomicoperation id="clickMenuButton" element=".menu" type="op:Click" modifier="op:LeftButton" />
+			<atomicoperation id="clickMenuSortButton" element=".menu > li.sort" type="op:Click" modifier="LeftButton"/>
+		</sequentialoperation<name />
+		<atomicoperation id="dragMap" element=".map" type="op:Drag" modifier="LeftButton" exampleParameter="100,200"/>
 
 	</capability>
 	<capability entity="travel:Location" activity="upperactions:Input" id="cap02"/>

@@ -1,14 +1,3 @@
-<!--
-
-TODO
-
-# Memento Property
-
-* type
-* textContent
--->
-
-
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema targetNamespace="http://mmt.inf.tu-dresden.de/smcdl/1.12" elementFormDefault="qualified" version="1.12" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:meta="http://mmt.inf.tu-dresden.de/smcdl/1.12/metadata" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:smcdl="http://mmt.inf.tu-dresden.de/smcdl/1.12">
 	<xs:annotation>
@@ -54,28 +43,28 @@ Furthermore, SMCDL provides means for semantic annotation and description of mas
 				<xs:documentation>Contains a digital signature to verify the document's integrity and origin.</xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
-		<xs:attribute name="doesDataProcessing" type="xs:boolean" use="required">
+		<xs:attribute name="doesDataProcessing" type="xs:boolean" use="optional" default="false">
 			<xs:annotation>
 				<xs:documentation>
 					Tells the user assistance system that this component does data processing (e.g. aggregation) on its own. It switches data-bound comments and undo/redo off.
 				</xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
-		<xs:attribute name="hasReproducibleLayout" type="xs:boolean" use="required">
+		<xs:attribute name="hasReproducibleLayout" type="xs:boolean" use="optional" default="true">
 			<xs:annotation>
 				<xs:documentation>
 					Tells the user assistance system that this component has a reproducible layout and is therefore able to display comments.
 				</xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
-		<xs:attribute name="loadsExternalData" type="xs:boolean" use="required">
+		<xs:attribute name="loadsExternalData" type="xs:boolean" use="optional" default="false">
 			<xs:annotation>
 				<xs:documentation>
 					Tells the user assistance system that this component loads external data (not from the Data Repository). Comments and undo/redo are then disabled.
 				</xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
-		<xs:attribute name="hasRelativeStyle" type="xs:boolean" use="required">
+		<xs:attribute name="hasRelativeStyle" type="xs:boolean" use="optional" default="false">
 			<xs:annotation>
 				<xs:documentation>
 					Tells the user assistance system that this component's style is completely relative. This is the case when the content of the component is arbitrarily resizable, even without any min-width constraints. If this attribute is set to false the user assistance system has to recalculate the CSS at runtime.
@@ -340,7 +329,7 @@ Furthermore, SMCDL provides means for semantic annotation and description of mas
 				</xs:sequence>
 			</xs:extension>
 		</xs:complexContent>
-	</xs:complexTycdpe>
+	</xs:complexType>
 	<xs:complexType name="ToStdGroundingTransformation">
 		<xs:annotation>
 			<xs:documentation>Transformation from component internal dataformat and/or schema to the predefinied schema. May be
@@ -379,7 +368,7 @@ Furthermore, SMCDL provides means for semantic annotation and description of mas
 	<!-- atomic viso operation -->
 	<xs:complexType name="AtomicVisoOperation">
 		<xs:complexContent>
-			<xs:extension base="ITypable">
+			<xs:extension base="smcdl:ITypable">
 				<xs:annotation>
 						<xs:documentation>
 							Represents a single operation from VISO, e.g. a click, a drag, a key press, a swipe etc.
@@ -393,7 +382,7 @@ Furthermore, SMCDL provides means for semantic annotation and description of mas
 						</xs:documentation>
 					</xs:annotation>
 				</xs:attribute>
-				<xs:attribute name="modifier" type="xs:anyURI">
+				<xs:attribute name="modifier" type="xs:QName">
 					<xs:annotation>
 						<xs:documentation>
 							An optional modifier for the VISO operation, e.g. the key that has to be pressed.
@@ -409,13 +398,11 @@ Furthermore, SMCDL provides means for semantic annotation and description of mas
 				<xs:documentation>
 					Represents a sequence of viso operations. E.g. open the menu, then choose "sort".
 				</xs:documentation>
-			</xs:annotation>
-		<xs:attribute name="id" type="xs:ID" use="required"></xs:attribute>
+		</xs:annotation>
 		<xs:sequence>
-			<xs:element name="visoOperation" ref="smcdl:atomicvisooperation" minOccurs="2" maxOccurs="unbounded"></xs:element>
-			</xs:annotation>
-			</xs:element>
+			<xs:element ref="smcdl:atomicoperation" minOccurs="2" maxOccurs="unbounded"></xs:element>
 		</xs:sequence>
+		<xs:attribute name="id" type="xs:ID" use="required"></xs:attribute>
 	</xs:complexType>
 	<!-- parallel viso operation -->
 	<xs:complexType name="ParallelVisoOperation">
@@ -424,10 +411,10 @@ Furthermore, SMCDL provides means for semantic annotation and description of mas
 					Represents parallel viso operations that have to happen simultaniously. E.g. keyboard shortcuts like STRG+T.
 				</xs:documentation>
 			</xs:annotation>
-		<xs:attribute name="id" type="xs:ID" use="required"></xs:attribute>
 		<xs:sequence>
-			<xs:element name="visoOperation" ref="smcdl:atomicvisooperation" minOccur="2" maxOccurs="unbounded"></xs:element>
+			<xs:element ref="smcdl:atomicoperation" minOccurs="2" maxOccurs="unbounded"></xs:element>
 		</xs:sequence>
+		<xs:attribute name="id" type="xs:ID" use="required"></xs:attribute>
 	</xs:complexType>
 	
 	<xs:complexType name="Capability">
@@ -439,6 +426,14 @@ Furthermore, SMCDL provides means for semantic annotation and description of mas
 				provider which is either the system or the user.
 			</xs:documentation>
 		</xs:annotation>
+		<xs:sequence>
+			<xs:choice minOccurs="0" maxOccurs="unbounded">
+				<xs:element  ref="smcdl:sequentialoperation">
+				</xs:element>
+				<xs:element ref="smcdl:paralleloperation"></xs:element>
+				<xs:element ref="smcdl:atomicoperation"></xs:element>
+			</xs:choice>
+		</xs:sequence>
 		<xs:attributeGroup ref="smcdl:modelRef.attributeGroup"></xs:attributeGroup>
 		<xs:attribute name="provider" type="smcdl:Provider" use="optional" default="ui">
 		</xs:attribute>
@@ -458,28 +453,26 @@ Furthermore, SMCDL provides means for semantic annotation and description of mas
 				</xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
-		<xs:attribute name="wait" type="xs:string">
+		<xs:attribute name="wait" default="5s">
 			<xs:annotation>
 				<xs:documentation>
 					Used to tell the assistance generation service how long it should wait before taking a screenshot. Intended to prevent premature screenshots when there might be long-running animations. Format should be something like 1h14m40s.
 				</xs:documentation>
 			</xs:annotation>
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<!-- 1H3m33S -->
+					<xs:pattern value="(\d+[Hh])?(\d?\d[Mm])?\d?\d[Ss]"/>
+				</xs:restriction>
+			</xs:simpleType>	
 		</xs:attribute>
-		<xs:attribute name="generateAssistance" type="xs:boolean">
+		<xs:attribute name="generateAssistance" type="xs:boolean" use="optional" default="true">
 			<xs:annotation>
 				<xs:documentation>
 					Used to tell the assistance generation service that it shall skip this capability. This might be the case when a capability does not alter the user interface or when the component developer thinks the capability does not need it.
 				</xs:documentation>
 			</xs:annotation>
 		</xs:attribute>
-		<xs:sequence>
-			<xs:choice minOccurs="0" maxOccurs="unbounded">
-				<xs:element name="sequentialVisoOperation" ref="smcdl:sequentialvisooperation">
-				</xs:element>
-				<xs:element name="parallelVisoOperation" ref="smcdl:parallelvisooperation"></xs:element>
-				<xs:element name="visoOperation" ref="smcdl:atomicvisooperation"></xs:element>
-			</xs:choice>
-		</xs:sequence>
 	</xs:complexType>
 	<xs:simpleType name="Provider">
 		<xs:annotation>
@@ -777,6 +770,13 @@ Furthermore, SMCDL provides means for semantic annotation and description of mas
 			</xs:documentation>
 		</xs:annotation>
 	</xs:element>
+	<xs:element name="memento" type="smcdl:Memento">
+		<xs:annotation>
+			<xs:documentation>
+				Definition of the component's memento.
+			</xs:documentation>
+		</xs:annotation>
+	</xs:element>
 	<xs:element name="parameter" type="smcdl:Parameter">
 		<xs:annotation>
 			<xs:documentation>
@@ -992,8 +992,9 @@ Furthermore, SMCDL provides means for semantic annotation and description of mas
 	<xs:element name="invocation" type="smcdl:Invocation" />
 	<xs:element name="transformation" type="smcdl:Transformation" />
 	<xs:element name="capability" type="smcdl:Capability" />
-
-
+	<xs:element name="atomicoperation" type="smcdl:AtomicVisoOperation" />
+	<xs:element name="sequentialoperation" type="smcdl:SequentialVisoOperation" />
+	<xs:element name="paralleloperation" type="smcdl:ParallelVisoOperation" />
 	<xs:element name="requirements" type="smcdl:Requirements"></xs:element>
 
 	<xs:complexType name="Requirements">
