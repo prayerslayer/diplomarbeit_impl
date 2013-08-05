@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Test</title>
+		<script src="libs/underscore.js"></script>
+		<script src="libs/backbone.js"></script>
+		<script src="libs/jquery.js"></script>
+		<script src="libs/models/AssistanceHowtoItemModel.js"></script>
+		<script src="libs/views/AssistanceHowtoItemView.js"></script>
+		<script src="libs/views/AssistanceHowtoListView.js"></script>
+		<script type="text/javascript">
+			$( document ).ready( function() {
+				var item = new assistance.HowtoItem({
+					"action": "sort",
+					"variable": "player",
+					"capability": "cap01"
+				});
+				var listview = new assistance.HowtoList();
+				var itemview = new assistance.HowtoItemView({
+					"model": item,
+					"el": listview
+				});
+			});
+		</script>
+	</head>
+	<body>
+		<h1>hooray for backbone</h1>
+		<ol id="halp"></ol>
+	</body>
+</html>
