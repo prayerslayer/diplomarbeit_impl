@@ -5,7 +5,7 @@ var assistance = assistance || {};
 
 		tagName: "div",
 		className: "assistance-howto__list",
-
+		template: _.template( $("#listViewTemplate").html() ),
 		// positions this view next to the selector
 		position: function( selector ) {
 			var $bro = $( selector ),
@@ -21,14 +21,15 @@ var assistance = assistance || {};
 		initialize: function() {
 			this.render();
 		},
+
 		render: function() {
 			var that = this;
+			this.$el.html( this.template() );
 			_.each( this.model.models, function( item ) {
 				var view = new assistance.HowtoItemView({
 					model: item
 				});
-				view.render();
-				that.$el.append( view.el );
+				that.$el.find(".assistance-howto__list-content").append( view.el );
 			});
 			return this;
 		}

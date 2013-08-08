@@ -3,6 +3,14 @@
 	<head>
 		<meta charset="utf-8" />
 		<title>Test</title>
+		<!-- templates -->
+		<script type="text/template" id="listViewTemplate">
+			<h2>How to</h2>
+			<div class='assistance-howto__list-content'>
+			</div>
+		</script>
+
+		<!-- other stuff -->
 		<link rel="stylesheet" href="style.css" />
 		<script src="libs/jquery.js"></script>
 		<script src="libs/underscore.js"></script>
@@ -15,6 +23,7 @@
 		<script src="libs/views/AssistanceHowtoListView.js"></script>
 		<script type="text/javascript">
 			$( document ).ready( function() {
+				console.debug( assistance );
 				var item = new assistance.HowtoItem({
 					"action": "sort",
 					"variable": "player",
