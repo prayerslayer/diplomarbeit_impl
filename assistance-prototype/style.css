@@ -1,0 +1,57 @@
+div#barchart {
+	width: 420px;
+	height: 420px;
+	border: 1px solid black;
+	background: white;
+}
+
+rect {
+	fill: steelblue;
+}
+
+rect:hover {
+	fill: orange;
+}
+
+/* ################################### */
+body {
+	font-size: 16px;
+	line-height: 20px;
+}
+
+.assistance-howto__item {
+	background-color: #16161D;
+	color: white;
+	width: 80%;
+	left: 5%;
+	position:relative;
+}
+
+.assistance-howto__item:hover {
+	background-color: white;
+	color: #16161D;
+	cursor: pointer;
+}
+
+.assistance-howto__list {
+	background-color: #16161D;
+	color:white;
+	width: 20rem;
+	height: 30rem;
+	border-radius: 5%;
+	position: absolute;
+}
+
+.vizboard-copy {
+	border: 1px solid orange;
+}
+
+.vizboard-rootcopy {
+	position: absolute; !important
+}
+
+div.vizboard-ground {
+	background-color: black;
+	opacity: 0.2;
+	position: absolute;
+}

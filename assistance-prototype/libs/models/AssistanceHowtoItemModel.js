@@ -7,7 +7,9 @@ var assistance = assistance || {};
 		defaults: {
 			action: "defaultAction",
 			variable: "someVariable",
-			capability: "someCapability"
+			capability: "someCapability",
+			preview: false,
+			active: false
 		}
 	});
 })(jQuery);
