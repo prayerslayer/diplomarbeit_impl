@@ -60,7 +60,7 @@ var assistance = assistance || {};
 				cpy.attr( "class", "vizboard-copy" );
 			});
 
-			root.style( "opacity", 0 );
+			//root.style( "opacity", 0 );
 		},
 
 		unhighlightElements: function() {
@@ -71,7 +71,7 @@ var assistance = assistance || {};
 			viz.selectAll(".vizboard-copy").remove();
 			viz.selectAll(".vizboard-rootcopy" ).remove();
 
-			root.style( "opacity", 1 );
+			//root.style( "opacity", 1 );
 		}
 
 	});

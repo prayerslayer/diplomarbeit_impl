@@ -52,6 +52,6 @@ body {
 
 div.vizboard-ground {
 	background-color: black;
-	opacity: 0.2;
+	opacity: 0.75;
 	position: absolute;
 }
