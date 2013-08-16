@@ -4,10 +4,23 @@
 		<meta charset="utf-8" />
 		<title>Test</title>
 		<!-- templates -->
-		<script type="text/template" id="listViewTemplate">
-			<h2>How to</h2>
-			<div class='assistance-howto__list-content'>
+		
+		<script type="text/template" id="howtoItemTemplate">
+			<%= action %> <%= variable %>
+		</script>
+
+		<script type="text/template" id="baseViewTemplate">
+			<h2 class="assistance-base__headline">Headline</h2>
+			<span class="assistance-base__close" data-action="close">Close</span>
+			<p class="assistance-base__explanation">Some explanations maybe</p>
+			<div class='assistance-base__content'>
 			</div>
+		</script>
+
+		<script type="text/template" id="listViewTemplate">
+		<p>Some text goes here.</p>
+		<div class="assistance-howto__list-content">
+		</div>
 		</script>
 
 		<!-- other stuff -->
@@ -15,12 +28,15 @@
 		<script src="libs/jquery.js"></script>
 		<script src="libs/underscore.js"></script>
 		<script src="libs/backbone.js"></script>
+		<script src="libs/backbone.marionette.js"></script>
 		<script src="libs/d3.js"></script>
 		<script src="libs/d3-plugin.js"></script>
 		<script src="libs/models/AssistanceHowtoItemModel.js"></script>
 		<script src="libs/models/AssistanceHowtoCollection.js"></script>
+		<script src="libs/views/AssistanceBaseView.js"></script>
 		<script src="libs/views/AssistanceHowtoItemView.js"></script>
 		<script src="libs/views/AssistanceHowtoListView.js"></script>
+		<script src="libs/views/AssistanceComicView.js"></script>
 		<script type="text/javascript">
 			$( document ).ready( function() {
 				console.debug( assistance );
@@ -29,21 +45,31 @@
 					"variable": "player",
 					"capability": "cap01",
 					"elements": "svg > rect:nth-child(2)",
-					"viz": "#barchart",
-					"vizRoot": "#barchart > svg"
+					"visualization": "#barchart",
+					"visualization_root": "#barchart > svg"
 				});
 				var item2 = new assistance.HowtoItem({
 					"action": "display",
-					"capability": "cap02"
-				})
+					"capability": "cap02",
+					"elements": "svg > rect",
+					"visualization": "#barchart",
+					"visualization_root": "#barchart > svg"
+				});
 				var items = new assistance.HowtoCollection();
 				items.add( item );
 				items.add( item2 );
-				var list = new assistance.HowtoListView({
-					model: items
+				var listbase = new assistance.BaseView({
+					"type": "howto",
+					"visualization": "#barchart"
 				});
-				$( "body" ).append( list.el );
-				list.position( "#barchart" );
+				listbase.render();
+				var list = new assistance.HowtoListView({
+					"collection": items,
+					"itemView": assistance.HowtoItemView,
+					"model": assistance.HowtoItem
+				});
+				listbase.content.show( list );
+				$("body").append( listbase.el );
 			});
 		</script>
 	</head>

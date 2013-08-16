@@ -15,6 +15,7 @@ rect:hover {
 
 /* ################################### */
 body {
+	font-family: Helvetica;
 	font-size: 16px;
 	line-height: 20px;
 }
@@ -23,7 +24,6 @@ body {
 	background-color: #16161D;
 	color: white;
 	width: 80%;
-	left: 5%;
 	position:relative;
 }
 
@@ -33,13 +33,35 @@ body {
 	cursor: pointer;
 }
 
-.assistance-howto__list {
+.assistance-base__headline {
+	padding-left: 1rem;
+	padding-bottom: .5rem;
+	border-bottom: 2px solid white;
+}
+
+.assistance-base__close {
+	position: absolute;
+	right: 1rem;
+	top: 1rem;
+}
+
+.assistance-base__close:hover {
+	background-color: white;
+	color: #16161D;
+	cursor: pointer;
+}
+
+.assistance-base {
 	background-color: #16161D;
 	color:white;
 	width: 20rem;
 	height: 30rem;
 	border-radius: 5%;
 	position: absolute;
+}
+
+.assistance-base__content {
+	margin: 1rem;
 }
 
 .vizboard-copy {

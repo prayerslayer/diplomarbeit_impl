@@ -1,20 +1,12 @@
 var assistance = assistance || {};
 
 ( function( $ ) {
-	assistance.HowtoItemView = Backbone.View.extend({
+	assistance.HowtoItemView = Marionette.ItemView.extend({
 
 		tagName: "div",
 		className: "assistance-howto__item",
 
-		initialize: function( ) {
-			console.debug( this.options );
-			this.render();
-		},
-
-		render: function( ) {
-			this.$el.html( this.model.get("action" ) + " " + this.model.get("variable"));
-			return this;
-		},
+		template: "#howtoItemTemplate",
 
 		events: {
 			"click": "showAssistance",
@@ -23,15 +15,19 @@ var assistance = assistance || {};
 		},
 
 		showAssistance: function() {
-			
+			//TODO show comic
+			this.model.collection.lock();
 		},
 
 		highlightElements: function() {
+			if ( this.model.get( "lock" ) )
+				return;
+
 			var eels = d3.selectAll( this.model.get( "elements") ),
-				viz = d3.select( this.model.get( "viz" ) ),
+				viz = d3.select( this.model.get( "visualization" ) ),
 				$viz= $( viz.node() ),
-				root = d3.select( this.model.get( "vizRoot" ) ),
-				$root = $( this.model.get( "vizRoot" ) ),
+				root = d3.select( this.model.get( "visualization_root" ) ),
+				$root = $( this.model.get( "visualization_root" ) ),
 				root_offset = $root.offset();
 
 			// make dark background
@@ -40,38 +36,33 @@ var assistance = assistance || {};
 							.css( "height", $root.height() )
 							.attr( "class", "vizboard-ground" );
 			$viz.prepend( ground );
-			// copy vizroot
-			var copyroot = root.clone();
-			// delete everything
-			copyroot.selectAll("*").remove();
+			// shallow copy of  visualization_root - this is because we don't know (and don't want to) if it's a HTML or SVG visualization
+			var copyroot = root.clone( false );
 			// prepend to visualization
-			console.log( copyroot );
 			viz.appendChild( copyroot );
 			copyroot.attr( "class", "vizboard-rootcopy" );
 			$( copyroot.node() ).css( "left", root_offset.left );
 			$( copyroot.node() ).css( "top", root_offset.top );
 
 			// now copy relevant elements and display them above
-			console.log( eels );
 			eels.each( function() {
 				var cpy = d3.select( this ).clone(),
 					off = $( cpy.node() ).offset();
 				copyroot.appendChild( cpy );
 				cpy.attr( "class", "vizboard-copy" );
 			});
-
-			//root.style( "opacity", 0 );
 		},
 
 		unhighlightElements: function() {
-			var viz = d3.select( this.model.get( "viz" ) ),
-				root = d3.select( this.model.get( "vizRoot" ) );
+			if ( this.model.get( "lock" ) )
+				return;
+
+			var viz = d3.select( this.model.get( "visualization" ) ),
+				root = d3.select( this.model.get( "visualization_root" ) );
 			
 			viz.selectAll("div.vizboard-ground").remove( );
 			viz.selectAll(".vizboard-copy").remove();
 			viz.selectAll(".vizboard-rootcopy" ).remove();
-
-			//root.style( "opacity", 1 );
 		}
 
 	});

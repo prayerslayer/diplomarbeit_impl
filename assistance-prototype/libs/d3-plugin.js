@@ -7,9 +7,9 @@
 	*	Returns a clone of the selection, written by Mike Bostock himself
 	*	@see https://groups.google.com/forum/#!topic/d3-js/-EEgqt29wmQ
 	*/
-	d3.selection.prototype.clone = function clone( ) {
+	d3.selection.prototype.clone = function clone( deep ) {
 		var node = this.node();
-	    return d3.select( node.parentNode.insertBefore( node.cloneNode(true), node.nextSibling));
+	    return d3.select( node.parentNode.insertBefore( node.cloneNode( deep != null ? deep : true ), node.nextSibling));
 	};
 
 	/*
