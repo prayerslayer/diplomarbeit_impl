@@ -17,10 +17,20 @@
 			</div>
 		</script>
 
+		<script type="text/template" id="panelViewTemplate">
+			<img class="assistance-comic__panel-image" src="<%= image_url %>" alt="picture"/>
+			<div class="assistance-comic__panel-caption"><%= caption %></div>
+		</script>
+
+		<script type="text/template" id="comicViewTemplate">
+		 	<div class="assistance-comic__content-images">
+		 	</div>
+		 	<div class="assistance-comoc__content-panels"
+		</script>
+
 		<script type="text/template" id="listViewTemplate">
-		<p>Some text goes here.</p>
-		<div class="assistance-howto__list-content">
-		</div>
+			<div class="assistance-howto__list-content">
+			</div>
 		</script>
 
 		<!-- other stuff -->
@@ -32,8 +42,12 @@
 		<script src="libs/d3.js"></script>
 		<script src="libs/d3-plugin.js"></script>
 		<script src="libs/models/AssistanceHowtoItemModel.js"></script>
+		<script src="libs/models/AssistancePanelModel.js"></script>
+		<script src="libs/models/AssistanceOperationPanelModel.js"></script>
 		<script src="libs/models/AssistanceHowtoCollection.js"></script>
 		<script src="libs/views/AssistanceBaseView.js"></script>
+		<script src="libs/views/AssistancePanelView.js"></script>
+		<script src="libs/views/AssistanceComicBaseView.js"></script>
 		<script src="libs/views/AssistanceHowtoItemView.js"></script>
 		<script src="libs/views/AssistanceHowtoListView.js"></script>
 		<script src="libs/views/AssistanceComicView.js"></script>
@@ -41,26 +55,28 @@
 			$( document ).ready( function() {
 				console.debug( assistance );
 				var item = new assistance.HowtoItem({
+					"component_id": "http://mmt.inf.tu-dresden.de/VizBoard/Something",
 					"action": "sort",
 					"variable": "player",
 					"capability": "cap01",
 					"elements": "svg > rect:nth-child(2)",
-					"visualization": "#barchart",
-					"visualization_root": "#barchart > svg"
+					"component": "#barchart",
+					"visualization": "#barchart > svg"
 				});
 				var item2 = new assistance.HowtoItem({
+					"component_id": "http://mmt.inf.tu-dresden.de/VizBoard/Something",
 					"action": "display",
 					"capability": "cap02",
 					"elements": "svg > rect",
-					"visualization": "#barchart",
-					"visualization_root": "#barchart > svg"
+					"component": "#barchart",
+					"visualization": "#barchart > svg"
 				});
 				var items = new assistance.HowtoCollection();
 				items.add( item );
 				items.add( item2 );
 				var listbase = new assistance.BaseView({
 					"type": "howto",
-					"visualization": "#barchart"
+					"component": "#barchart"
 				});
 				listbase.render();
 				var list = new assistance.HowtoListView({
@@ -69,7 +85,6 @@
 					"model": assistance.HowtoItem
 				});
 				listbase.content.show( list );
-				$("body").append( listbase.el );
 			});
 		</script>
 	</head>

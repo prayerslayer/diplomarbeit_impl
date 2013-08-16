@@ -19,15 +19,20 @@ var assistance = assistance || {};
 			"howto": {
 				"headline": "How to",
 				"explanation": "Learn how to accomplish these tasks:"
+			},
+			"comic": {
+				"headline": "Explanation",
+				"explanation": "These pictures show you how to achieve this task."
 			}
 		},
 
 		onRender: function() {
-			// position view
-			this.position( this.options.visualization );
+			this.position( this.options.component );
 			// fill view with content
 			this.$el.find( "h2:first" ).text( this.options.headline || this.default_content[ this.options.type ].headline );
 			this.$el.find( "p.assistance-base__explanation" ).text( this.options.explanation || this.default_content[ this.options.type ].explanation );
+			// show base view
+			$( "body" ).append( this.el );
 		},
 
 		// positions this view next to the selector

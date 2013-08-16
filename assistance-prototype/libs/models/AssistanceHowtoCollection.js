@@ -5,13 +5,13 @@ var assistance = assistance || {};
 		model: assistance.HowtoItem,
 
 		lock: function() {
-			this.models.each( function( m ) {
+			_.each( this.models, function( m ) {
 				m.set( "lock", true );
 			});
 		},
 
 		unlock: function() {
-			this.models.each( function( m ) {
+			_.each( this.models, function( m ) {
 				m.set( "lock", false );
 			});
 		}

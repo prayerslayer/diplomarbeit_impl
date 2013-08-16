@@ -1,5 +1,5 @@
 div#barchart {
-	width: 420px;
+	width: 500px;
 	height: 420px;
 	border: 1px solid black;
 	background: white;
@@ -39,6 +39,10 @@ body {
 	border-bottom: 2px solid white;
 }
 
+.assistance-base__explanation {
+	margin: 1rem;
+}
+
 .assistance-base__close {
 	position: absolute;
 	right: 1rem;
@@ -60,6 +64,12 @@ body {
 	position: absolute;
 }
 
+.assistance-comic {
+	background: rgba(22, 22, 29, 0.75);
+	color:white;
+	position: absolute;
+}
+
 .assistance-base__content {
 	margin: 1rem;
 }
@@ -76,4 +86,31 @@ div.vizboard-ground {
 	background-color: black;
 	opacity: 0.75;
 	position: absolute;
+}
+
+div.assistance-comic__content {
+	 display: -webkit-flex;
+   	-webkit-justify-content: center;
+   	-webkit-align-items: baseline;
+}
+
+div.assistance-comic__panel {
+	float: left;
+	margin: .5rem;
+	-webkit-flex: 1;
+}
+
+img.assistance-comic__panel-image {
+	width: 100%;
+	height: auto;
+}
+
+div.assistance-comic__panel-caption {
+	background: #FFF;
+	color: #000;
+	width: 100%;
+	height: 30px;
+	outline: 2px solid #000;
+	font-size: 12px;
+	text-align: center;
 }
