@@ -9,9 +9,12 @@
 			<%= action %> <%= variable %>
 		</script>
 
+		<script type="text/template" id="spinnerTemplate">
+		</script>
+
 		<script type="text/template" id="baseViewTemplate">
 			<h2 class="assistance-base__headline">Headline</h2>
-			<span class="assistance-base__close" data-action="close">Close</span>
+			<span class="assistance-base__close" data-action="close">X</span>
 			<p class="assistance-base__explanation">Some explanations maybe</p>
 			<div class='assistance-base__content'>
 			</div>
@@ -21,7 +24,10 @@
 			<div class="assistance-comic__panel-wrapper">
 				<img class="assistance-comic__panel-image" src="<%= image_url %>" alt="picture"/>
 			</div>
-			<div class="assistance-comic__panel-caption"><%= caption %></div>
+			<div class="assistance-comic__panel-caption">
+				<div class="assistance-comic__panel-caption-content"><%= caption %>
+				</div>
+			</div>
 		</script>
 
 		<script type="text/template" id="comicViewTemplate">
@@ -34,8 +40,10 @@
 		</script>
 
 		<!-- other stuff -->
+		<link href='http://fonts.googleapis.com/css?family=Lilita+One' rel='stylesheet' type='text/css'>
 		<link rel="stylesheet" href="style.css" />
 		<script src="libs/jquery.js"></script>
+		<script src="libs/jquery-ui-core.js"></script>
 		<script src="libs/imagesloaded.js"></script>
 		<script src="libs/underscore.js"></script>
 		<script src="libs/backbone.js"></script>
@@ -46,6 +54,7 @@
 		<script src="libs/models/AssistancePanelModel.js"></script>
 		<script src="libs/models/AssistanceOperationPanelModel.js"></script>
 		<script src="libs/models/AssistanceHowtoCollection.js"></script>
+		<script src="libs/views/AssistanceSpinner.js"></script>
 		<script src="libs/views/AssistanceBaseView.js"></script>
 		<script src="libs/views/AssistancePanelView.js"></script>
 		<script src="libs/views/AssistanceOperationPanelView.js"></script>
@@ -55,7 +64,6 @@
 		<script src="libs/views/AssistanceComicView.js"></script>
 		<script type="text/javascript">
 			$( document ).ready( function() {
-				console.debug( assistance );
 				var item = new assistance.HowtoItem({
 					"component_id": "http://mmt.inf.tu-dresden.de/VizBoard/Something",
 					"action": "sort",

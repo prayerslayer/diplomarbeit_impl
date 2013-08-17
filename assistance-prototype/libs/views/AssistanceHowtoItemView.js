@@ -22,14 +22,40 @@ var assistance = assistance || {};
 			"mouseout": "unhighlightElements"
 		},
 
+		comic: null,
+
+		initialize: function() {
+			this.model.collection.bind( "unlocked", this.clear, this );
+		},
+
+		clear: function() {
+			if ( this.model.get( "displayed" ) ) {
+				this.unhighlightElements();
+				this.model.set( "displayed", false );
+				if ( this.comic ) {
+					this.comic.close();
+					this.comic = null;	// prevent zombie view
+				}
+			}
+			this.$el.removeClass( "assistance-howto__item_selected" );
+		},
+
 		// creates a comic view and displays it
 		showAssistance: function() {
 			var that = this;
+			if ( this.model.get( "lock" ) )
+				return;
 			this.model.collection.lock();
-
+			this.model.set( "displayed", true );
+			this.$el.addClass( "assistance-howto__item_selected" );
 			var task = _.template( $( this.template ).html(), this.model.attributes );
 			// fake http request
+			var spinner = new assistance.Spinner({
+				"caller": this.$el
+			});
 			setTimeout( function() {
+				spinner.close();
+				
 				var data = {
 				    "initial": "http://baconmockup.com/400/400/",
 				    "result": "http://baconmockup.com/1000/750/",
@@ -37,43 +63,42 @@ var assistance = assistance || {};
 				        "url": "http://s10.postimg.org/fc6iv6rp5/testimage.png",
 				        "bbox": [42.14, 15.35, 48.97, 44.76],
 				        "operation": "click"
-				    }, {
+				    }
+				    /*, {
 				        "url": "http://s2.postimg.org/zdbyhgfk9/testimage2.png",
 				        "bbox": [ 48.16, 25.91, 44.57, 45.3 ],
 				        "operation": "double click"
-				    }
+				    }*/
 				        ]
 				};
 
 				// create a normal base view if images do not fit inside component
-				var comicbase = null,
-					component = that.model.get( "component" );
-				if ( $( component ).width() < (2+data.operations.length)*150 ) {
-					comicbase = new assistance.BaseView({
+				var component = that.model.get( "component" );
+				if ( $( component ).width() < (2+data.operations.length)*170 ) {
+					that.comic = new assistance.BaseView({
 						"type": "comic",
 						"headline": task,
 						"component": component
 					});
-					//TODO position accordingly
+					that.comic.overlay( component );
+					that.comic.$el.css( "width", "auto" );
 				} else {
-					comicbase = new assistance.ComicBaseView({
+					that.comic = new assistance.that.comicView({
 						"type": "comic",
 						"headline": task,
 						"component": component
 					});
 				}
-				var comic = new assistance.ComicView({
+				var comic_view = new assistance.ComicView({
 					"component_id": that.model.get( "component_id" ),
 					"capability": that.model.get( "capability" ),
 					"task": task,
 					"data": data,
 					"creator": that.model
 				});
-				comicbase.content.show( comic );
-				comicbase.$el.css( "width", "auto" );
-				comicbase.overlay( component );
+				that.comic.content.show( comic_view );
 
-			}, 1000 );
+			}, 2000 );
 		},
 
 		// highlights relevant UI elements

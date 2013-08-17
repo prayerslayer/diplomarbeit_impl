@@ -13,7 +13,8 @@ var assistance = assistance || {};
 		defaults: {
 			action: "defaultAction",		// label for the action, e.g. sort
 			capability: "someCapability",	// id of the capability
-			variable: ""
+			variable: "",
+			displayed: false
 		}
 	});
 })(jQuery);

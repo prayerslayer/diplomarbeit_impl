@@ -22,6 +22,7 @@ var assistance = assistance || {};
 			_.each( this.models, function( m ) {
 				m.set( "lock", false );
 			});
+			this.trigger( "unlocked" );
 		}
 	});
 })( jQuery );

@@ -13,8 +13,10 @@ var assistance = assistance || {};
 
 		tagName: "ul",
 		className: "assistance-howto__list",
-		itemView: assistance.HowtoItemView
+		itemView: assistance.HowtoItemView,
 
-
+		onBeforeClose: function() {
+			this.collection.unlock();
+		}
 	});
 })( jQuery );
