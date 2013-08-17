@@ -1,4 +1,10 @@
-// model of a how to information
+/*
+	Howto Item
+=======================	
+	Represents an item in the instruction list view.
+
+	@author npiccolotto
+*/
 
 var assistance = assistance || {};
 

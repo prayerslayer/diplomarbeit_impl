@@ -1,3 +1,11 @@
+/*
+	Howto List View
+=======================	
+ 	Displays the Howto Items. Does not much else.
+
+	@author npiccolotto
+*/
+
 var assistance = assistance || {};
 
 ( function( $ ) {
@@ -5,17 +13,7 @@ var assistance = assistance || {};
 
 		tagName: "ul",
 		className: "assistance-howto__list",
-		//template: "#listViewTemplate",
-		itemView: assistance.HowtoItemView,
-		locked: false,	// this is true when a comic is displayed
-
-		lock: function() {
-			this.locked = true;
-		},
-
-		unlock: function() {
-			this.locked = false;
-		}
+		itemView: assistance.HowtoItemView
 
 
 	});

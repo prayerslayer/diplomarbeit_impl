@@ -1,3 +1,11 @@
+/*
+	Comic View
+=======================	
+ 	Holds some comic panels together.
+ 	
+	@author npiccolotto
+*/
+
 var assistance = assistance || {};
 
 ( function( $ ) {

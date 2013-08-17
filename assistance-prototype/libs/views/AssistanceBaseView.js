@@ -1,3 +1,11 @@
+/*
+	Base View
+=======================	
+ 	Holds default look and feel of the help system, e.g. a close button and round borders on a dark background.
+ 	
+	@author npiccolotto
+*/
+
 var assistance = assistance || {};
 
 ( function( $ ) {

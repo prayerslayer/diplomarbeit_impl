@@ -1,3 +1,11 @@
+/*
+	Panel View
+=======================	
+ 	View of a panel. Basically it displays the image and caption and centers the image horizontally and vertically.
+ 	
+	@author npiccolotto
+*/
+
 var assistance = assistance || {};
 
 (function( $ ) {

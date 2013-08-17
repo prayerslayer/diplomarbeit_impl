@@ -1,3 +1,11 @@
+/*
+	Operation Panel View
+=======================	
+ 	View of an operation panel. They are different from regular (e.g. the initial and result) panels, as the caption is layed over the panel instead of located at the bottm.
+
+	@author npiccolotto
+*/
+
 var assistance = assistance || {};
 
 (function( $ ) {
@@ -11,11 +19,12 @@ var assistance = assistance || {};
 		},
 
 		onRender: function() {
-			// wait for image to load
 			var that = this,
 				img = that.$el.find( "img" ).first();
-				
+
+			// wait for image to load, we don't know size until that happens
 			img.imagesLoaded( function() {
+
 				var wrap = that.$el.find( ".assistance-comic__panel-wrapper" ),
 					img_w = img.width(),
 					img_h = img.height(),
@@ -25,7 +34,6 @@ var assistance = assistance || {};
 					x = bbox[0]/100,
 					y = bbox[1]/100;
 
-				console.log( img_w, img_h, w, h, x, y );
 				if ( w > h ) {
 					// width is longest side
 					img.css( "width", (img_w*150)/w + "px" );
@@ -38,17 +46,9 @@ var assistance = assistance || {};
 					img.css( "height", (img_h*150)/h + "px" );
 					img.css( "margin-left", -x*img.width()+w/2 + "px" );
 					img.css( "margin-top",  -y*img.height() + "px" );
-				}
-
-				
+				}				
+				// everything is fine if image is square
 			});
-			/*
-				bbox: [ x, y, width, height ]
-				relative doubles to image size
-			*/
-
-			
-			
 		}
 	});
 })( jQuery );
