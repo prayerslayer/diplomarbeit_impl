@@ -18,14 +18,14 @@
 		</script>
 
 		<script type="text/template" id="panelViewTemplate">
-			<img class="assistance-comic__panel-image" src="<%= image_url %>" alt="picture"/>
+			<div class="assistance-comic__panel-wrapper">
+				<img class="assistance-comic__panel-image" src="<%= image_url %>" alt="picture"/>
+			</div>
 			<div class="assistance-comic__panel-caption"><%= caption %></div>
 		</script>
 
 		<script type="text/template" id="comicViewTemplate">
-		 	<div class="assistance-comic__content-images">
-		 	</div>
-		 	<div class="assistance-comoc__content-panels"
+		
 		</script>
 
 		<script type="text/template" id="listViewTemplate">
@@ -36,6 +36,7 @@
 		<!-- other stuff -->
 		<link rel="stylesheet" href="style.css" />
 		<script src="libs/jquery.js"></script>
+		<script src="libs/imagesloaded.js"></script>
 		<script src="libs/underscore.js"></script>
 		<script src="libs/backbone.js"></script>
 		<script src="libs/backbone.marionette.js"></script>
@@ -47,6 +48,7 @@
 		<script src="libs/models/AssistanceHowtoCollection.js"></script>
 		<script src="libs/views/AssistanceBaseView.js"></script>
 		<script src="libs/views/AssistancePanelView.js"></script>
+		<script src="libs/views/AssistanceOperationPanelView.js"></script>
 		<script src="libs/views/AssistanceComicBaseView.js"></script>
 		<script src="libs/views/AssistanceHowtoItemView.js"></script>
 		<script src="libs/views/AssistanceHowtoListView.js"></script>
@@ -78,7 +80,6 @@
 					"type": "howto",
 					"component": "#barchart"
 				});
-				listbase.render();
 				var list = new assistance.HowtoListView({
 					"collection": items,
 					"itemView": assistance.HowtoItemView,

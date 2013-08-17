@@ -15,6 +15,10 @@ var assistance = assistance || {};
 			"content": "div.assistance-base__content"
 		},
 
+		initialize: function() {
+			this.render();
+		},
+
 		default_content: {
 			"howto": {
 				"headline": "How to",
@@ -44,8 +48,22 @@ var assistance = assistance || {};
 
 			this.$el.css( "left", left );
 			this.$el.css( "top", offset.top );
-			this.$el.css( "height", $bro.height() );
 		},
+
+		// centers this view at the center of selector element
+		overlay: function( selector ) {
+			var $bro = $( selector ),
+				offset = $bro.offset(),
+				w = $bro.width(),
+				h = $bro.height();
+
+			this.$el.css( "top", offset.top + h/2 );
+			this.$el.css( "left", offset.left + w/2 );
+			this.$el.css( "margin-left", -this.$el.width()/2 );
+			this.$el.css( "margin-top", -this.$el.height()/2 );
+		},
+
+
 		// animate removal
 		remove: function(){
 		  this.$el.fadeOut(function(){

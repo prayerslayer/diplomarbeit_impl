@@ -20,19 +20,52 @@ var assistance = assistance || {};
 			this.model.collection.lock();
 
 			var task = _.template( $( this.template ).html(), this.model.attributes );
-			var comicbase = new assistance.ComicBaseView({
-				"type": "comic",
-				"headline": task,
-				"component": this.model.get( "component" )
-			});
-			comicbase.render();
-			var comic = new assistance.ComicView({
-				"component_id": this.model.get( "component_id" ),
-				"capability": this.model.get( "capability" ),
-				"task": task,
-				"creator": this.model
-			});
-			comicbase.content.show( comic );
+			// fake http request
+			setTimeout( function() {
+				var data = {
+				    "initial": "http://baconmockup.com/400/400/",
+				    "result": "http://baconmockup.com/1000/750/",
+				    "operations": [{
+				        "url": "http://s10.postimg.org/fc6iv6rp5/testimage.png",
+				        "bbox": [42.14, 15.35, 48.97, 44.76],
+				        "operation": "click"
+				    }, {
+				        "url": "http://s2.postimg.org/zdbyhgfk9/testimage2.png",
+				        "bbox": [ 48.16, 25.91, 44.57, 45.3 ],
+				        "operation": "double click"
+				    }
+				        ]
+				};
+
+				// create a normal base view if images do not fit inside component
+				var comicbase = null,
+					component = that.model.get( "component" );
+				if ( $( component ).width() < (2+data.operations.length)*150 ) {
+					comicbase = new assistance.BaseView({
+						"type": "comic",
+						"headline": task,
+						"component": component
+					});
+					//TODO position accordingly
+				} else {
+					comicbase = new assistance.ComicBaseView({
+						"type": "comic",
+						"headline": task,
+						"component": component
+					});
+				}
+				var comic = new assistance.ComicView({
+					"component_id": that.model.get( "component_id" ),
+					"capability": that.model.get( "capability" ),
+					"task": task,
+					"data": data,
+					"creator": that.model
+				});
+				comicbase.content.show( comic );
+				comicbase.$el.css( "width", "auto" );
+				comicbase.overlay( component );
+
+			}, 1000 );
 		},
 
 		// highlights relevant UI elements

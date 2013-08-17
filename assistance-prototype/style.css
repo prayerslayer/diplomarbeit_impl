@@ -62,6 +62,7 @@ body {
 	height: 30rem;
 	border-radius: 5%;
 	position: absolute;
+	border: 1px solid white;
 }
 
 .assistance-comic {
@@ -89,20 +90,25 @@ div.vizboard-ground {
 }
 
 div.assistance-comic__content {
-	 display: -webkit-flex;
-   	-webkit-justify-content: center;
-   	-webkit-align-items: baseline;
+
 }
 
-div.assistance-comic__panel {
+div.assistance-comic__panel, div.assistance-comic__operation-panel {
 	float: left;
 	margin: .5rem;
-	-webkit-flex: 1;
+	height: auto;
+}
+
+div.assistance-comic__panel-wrapper {
+	width: 150px;
+	height: 150px;
+	overflow: hidden;
 }
 
 img.assistance-comic__panel-image {
 	width: 100%;
 	height: auto;
+	
 }
 
 div.assistance-comic__panel-caption {

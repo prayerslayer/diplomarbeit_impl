@@ -15,24 +15,13 @@ var assistance = assistance || {};
 			// fake http request
 			setTimeout( function() {
 
-				var base = "http://baconmockup.com/",
-					initial = base + "500/500/",
-					result = base + "750/750/",
-					operations = [ {
-						"img": base + "/300/200/",
-						"operation": "click",
-						"bbox": [44,55]
-					}, {
-						"img": base + "/749/129/",
-						"bbox": [34, 20],
-						"operation": "double click"
-					}
-					];
+				var data = that.options.data;
 
 				var m_initial = new assistance.Panel({
-					"image_url": initial,
+					"image_url": data.initial,
 					"type": "initial",
-					"task": that.options.task
+					"task": that.options.task,
+					"caption": "Use this element..."
 				});
 				var v_initial = new assistance.PanelView({
 					"model": m_initial
@@ -41,22 +30,24 @@ var assistance = assistance || {};
 				var views = [];
 				views.push( v_initial );
 
-				for( var i = 0, len = operations.length; i < len; i++ ) {
-					var op = operations[ i ],
+				for( var i = 0, len = data.operations.length; i < len; i++ ) {
+					var op = data.operations[ i ],
 						model = new assistance.OperationPanel({
-							"image_url": op.img,
+							"image_url": op.url,
 							"bbox": op.bbox,
-							"operation": op.operation
+							"operation": op.operation,
+							"caption": op.operation
 						}),
-						view = new assistance.PanelView({
+						view = new assistance.OperationPanelView({
 							"model": model
 						});
 					views.push( view );
 				}
 				var m_result = new assistance.Panel({
-					"image_url": result,
+					"image_url": data.result,
 					"type": "result",
-					"task": that.options.task
+					"task": that.options.task,
+					"caption": "...to " + that.options.task + "."
 				});
 				var v_result = new assistance.PanelView({
 					"model": m_result
