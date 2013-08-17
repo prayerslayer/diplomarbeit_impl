@@ -45,6 +45,11 @@ var assistance = assistance || {};
 			// show base view
 			$( "body" ).append( this.el );
 			this.position( this.options.component );
+			// init view when it's to be shown
+			this.content.on( "show", function( view ) {
+				if ( typeof view.init === 'function' )
+					view.init();
+			});
 		},
 
 		// positions this view next to the selector

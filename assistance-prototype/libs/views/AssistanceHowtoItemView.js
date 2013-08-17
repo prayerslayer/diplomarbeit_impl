@@ -64,11 +64,11 @@ var assistance = assistance || {};
 				        "bbox": [42.14, 15.35, 48.97, 44.76],
 				        "operation": "click"
 				    }
-				    , {
+				    /*, {
 				        "url": "http://s2.postimg.org/zdbyhgfk9/testimage2.png",
 				        "bbox": [ 48.16, 25.91, 44.57, 45.3 ],
 				        "operation": "double click"
-				    }
+				    }*/
 				        ]
 				};
 
@@ -89,6 +89,7 @@ var assistance = assistance || {};
 						"component": component
 					});
 				}
+				// show comic view
 				var comic_view = new assistance.ComicView({
 					"component_id": that.model.get( "component_id" ),
 					"capability": that.model.get( "capability" ),
@@ -98,7 +99,7 @@ var assistance = assistance || {};
 				});
 				that.comic.content.show( comic_view );
 
-			}, 2000 );
+			}, 200 );
 		},
 
 		// highlights relevant UI elements
