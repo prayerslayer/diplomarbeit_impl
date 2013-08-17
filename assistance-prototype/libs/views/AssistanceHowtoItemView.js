@@ -55,7 +55,7 @@ var assistance = assistance || {};
 			});
 			setTimeout( function() {
 				spinner.close();
-				
+
 				var data = {
 				    "initial": "http://baconmockup.com/400/400/",
 				    "result": "http://baconmockup.com/1000/750/",
@@ -64,11 +64,11 @@ var assistance = assistance || {};
 				        "bbox": [42.14, 15.35, 48.97, 44.76],
 				        "operation": "click"
 				    }
-				    /*, {
+				    , {
 				        "url": "http://s2.postimg.org/zdbyhgfk9/testimage2.png",
 				        "bbox": [ 48.16, 25.91, 44.57, 45.3 ],
 				        "operation": "double click"
-				    }*/
+				    }
 				        ]
 				};
 
@@ -83,7 +83,7 @@ var assistance = assistance || {};
 					that.comic.overlay( component );
 					that.comic.$el.css( "width", "auto" );
 				} else {
-					that.comic = new assistance.that.comicView({
+					that.comic = new assistance.ComicBaseView({
 						"type": "comic",
 						"headline": task,
 						"component": component

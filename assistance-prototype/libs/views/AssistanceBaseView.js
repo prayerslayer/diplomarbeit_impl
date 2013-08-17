@@ -39,38 +39,37 @@ var assistance = assistance || {};
 		},
 
 		onRender: function() {
-			this.position( this.options.component );
 			// fill view with content
 			this.$el.find( "h2:first" ).text( this.options.headline || this.default_content[ this.options.type ].headline );
 			this.$el.find( "p.assistance-base__explanation" ).text( this.options.explanation || this.default_content[ this.options.type ].explanation );
 			// show base view
 			$( "body" ).append( this.el );
+			this.position( this.options.component );
 		},
 
 		// positions this view next to the selector
 		position: function( selector ) {
 			var $bro = $( selector ),
 				offset = $bro.offset(),
-				position_left = offset.left > $(window).width() - offset.left - $bro.width(),
-				left = ( position_left ? offset.left - 20 : offset.left + $bro.width() + 20 );
+				position_left = offset.left > $(window).width() - offset.left - $bro.width();
 
-			this.$el.css( "left", left );
-			this.$el.css( "top", offset.top );
+			this.$el.position({
+				"of": $bro,
+				"my": "left center",
+				"at": "right center"
+			});
 		},
 
 		// centers this view at the center of selector element
 		overlay: function( selector ) {
-			var $bro = $( selector ),
-				offset = $bro.offset(),
-				w = $bro.width(),
-				h = $bro.height();
+			var $bro = $( selector );
 
-			this.$el.css( "top", offset.top + h/2 );
-			this.$el.css( "left", offset.left + w/2 );
-			this.$el.css( "margin-left", -this.$el.width()/2 );
-			this.$el.css( "margin-top", -this.$el.height()/2 );
+			this.$el.position({
+				"of": $bro,
+				"my": "center center",
+				"at": "center center"
+			});
 		},
-
 
 		// animate removal
 		remove: function(){
