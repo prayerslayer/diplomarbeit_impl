@@ -11,7 +11,7 @@ var assistance = assistance || {};
 ( function( $ ) {
 	assistance.HowtoListView = Backbone.Marionette.CollectionView.extend({
 
-		tagName: "ul",
+		tagName: "div",
 		className: "assistance-howto__list",
 		itemView: assistance.HowtoItemView,
 

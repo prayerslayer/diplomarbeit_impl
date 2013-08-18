@@ -13,23 +13,25 @@
 		</script>
 
 		<script type="text/template" id="commentViewTemplate">
-			<div class="assistance-comment__comment_metadata">
-				<div class="assistance-comment__comment_metadata-id"><%= comment_id %></div>
-				<img class="assistance-comment__comment_metadata-avatar" src="<%= avatar_url %>"/>
-				<div class="assistance-comment__comment_metadata-name"><%= user_name %></div>
-				<div class="assistance-comment__comment_metadata-date"><%= timestamp %></div>
-				<div class="assistance-comment__comment_metadata-edit-delete"></div>
-				<div class="assistance-comment__comment_metadata-show-annos">
+			<div class="assistance-comment__comment-metadata">
+				<div class="assistance-comment__comment-metadata-id"><%= comment_id %></div>
+				<img class="assistance-comment__comment-metadata-avatar" src="<%= avatar_url %>"/>
+				<div class="assistance-comment__comment-metadata-name"><%= user_name %></div>
+				<div class="assistance-comment__comment-metadata-date"><%= hr_timestamp %></div>
+				<div class="assistance-comment__comment-metadata-edit-delete"></div>
+				<div class="assistance-comment__comment-metadata-show-annos" data-action="showannotations">
 				Show annotations
 				</div>
-				<div class="assistance-comment__comment_metadata-reply">
+				<div class="assistance-comment__comment-metadata-reply" data-action="reply">
 				Reply to comment</div>
-				<div class="assistance-comment__comment_metadata-voting">
-				Vote for comment: 
+				<div class="assistance-comment__comment-metadata-voting">
+				Vote for comment:
+					<div class="assistance-comment__comment-metadata-voting_up" data-action="voteup">Agree</div>
+					<div class="assistance-comment__comment-metadata-voting_down" data-action="votedown">Disagree</div>
 				</div>
 			</div>
-			<div class="assistance-comment__comment_content">
-				<%= 
+			<div class="assistance-comment__comment-content">
+				<%= text %>
 			</div>
 		</script>
 
@@ -72,6 +74,7 @@
 		<script src="libs/backbone.marionette.js"></script>
 		<script src="libs/d3.js"></script>
 		<script src="libs/d3-plugin.js"></script>
+		<script src="libs/moment.js"></script>
 		<script src="libs/sinon.js"></script>
 		<!-- models -->
 		<script src="libs/models/AssistanceHowtoItemModel.js"></script>
@@ -79,6 +82,7 @@
 		<script src="libs/models/AssistanceOperationPanelModel.js"></script>
 		<script src="libs/models/AssistanceHowtoCollection.js"></script>
 		<script src="libs/models/AssistanceCommentModel.js"></script>
+		<script src="libs/models/AssistanceCommentCollection.js"></script>
 		<script src="libs/views/AssistanceSpinner.js"></script>
 		<!-- howto views -->
 		<script src="libs/views/AssistanceBaseView.js"></script>
@@ -93,11 +97,11 @@
 		<script src="libs/views/AssistanceReadCommentsView.js"></script>
 		<!-- mock apis -->
 		<script type="text/javascript">
-			var image_server = sinon.fakeServer.create();
-			image_server.autoRespond = true;
-			image_server.autoRespondAfter = 500;
+			var fake_server = sinon.fakeServer.create();
+			fake_server.autoRespond = true;
+			fake_server.autoRespondAfter = 500;
 
-			image_server.respondWith( /componentCapability/, function(xhr){
+			fake_server.respondWith( /componentCapability/, function(xhr){
 				var data = {
 				    "initial": "http://baconmockup.com/400/400/",
 				    "result": "http://baconmockup.com/1000/750/",
@@ -115,17 +119,70 @@
 				};
 				xhr.respond( 200, { "Content-Type": "application/json" }, JSON.stringify( data ) );
 			});
+
+			fake_server.respondWith( /componentComments/, function(xhr) {
+				var data = [{
+					    "comment_id": "asdfasdf",
+					    "component_id": "http://mmt.inf.tu-dresden.de/VizBoard/Something",
+						"dataset_id": "testdataset",
+					    "user_id": "mark",
+						"user_name": "Mark the line",
+						"avatar_url": "http://www.biography.com/imported/images/Biography/Images/Profiles/Z/Mark-Zuckerberg-507402-1-402.jpg",
+						"visualized_properties": [],
+						"component_memento": {},
+						"timestamp": 123789523,
+						"text": "Bacon ipsum dolor sit amet drumstick spare ribs pork chop ground round, tongue ham pork belly brisket shoulder chuck chicken filet mignon. Shank pork chop tail, pig pastrami pork loin kielbasa ham strip steak sausage leberkas ribeye corned beef drumstick pork belly. Drumstick beef pork chop, pork loin pork belly beef ribs filet mignon turducken ball tip ribeye pig cow. Corned beef strip steak pork bresaola, frankfurter doner brisket chuck t-bone spare ribs.",
+						"number": 1,
+						"annotations": [{
+					        "type": "area",
+					        "visualization_width": 400,
+					        "visualization_height": 400,
+					        "elements": [
+					            {
+					                "type": "text",
+					                "x": 220,
+					                "y": 50.5,
+					                "text": "OLOLZ"
+					            }
+					        ]
+						}]
+					}, {"comment_id": "sdfgsdfg",
+					    "component_id": "http://mmt.inf.tu-dresden.de/VizBoard/Something",
+						"dataset_id": "testdataset",
+					    "user_id": "donald",
+						"user_name": "Donald Knuth",
+						"avatar_url": "http://computersciencepodcast.com/guests/donald-knuth.png",
+						"visualized_properties": [],
+						"component_memento": {},
+						"timestamp": 123789523,
+						"text": "Taro mung bean lotus root celery peanut salad sorrel daikon gumbo bamboo shoot winter purslane pea soybean salsify kale. Catsear salsify mung bean avocado radicchio chickweed okra lettuce quandong chickpea collard greens komatsuna arugula garbanzo soybean bell pepper. Amaranth welsh onion horseradish gumbo parsley tomato.",
+						"number": 1,
+						"annotations": [{
+					        "type": "area",
+					        "visualization_width": 400,
+					        "visualization_height": 400,
+					        "elements": [
+					            {
+					                "type": "text",
+					                "x": 220,
+					                "y": 50.5,
+					                "text": "OLOLZ"
+					            }
+					        ]
+						}]}];
+				xhr.respond( 200, { "Content-Type": "application/json"}, JSON.stringify( data ) );
+			});
 		</script>
 		<!-- do actual things -->
 		<script type="text/javascript">
 			$( document ).ready( function() {
 
 				$( ".button#showcomments" ).click( function() {
-					var comments = new assistance.CommentCollection({
-
+					var comments = new assistance.CommentCollection([], {
+						"url": "componentComments"
 					});
 					var comment_view = new assistance.ReadCommentsView({
-
+						"collection": comments
 					});
 					var commentbase = new assistance.BaseView({
 						"type": "readcomment",

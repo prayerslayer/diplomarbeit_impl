@@ -56,25 +56,8 @@ var assistance = assistance || {};
 			var spinner = new assistance.Spinner({
 				"caller": this.$el
 			});
-			setTimeout( function() {
+			$.get( "componentCapability", function( data ) {
 				spinner.close();
-
-				var data = {
-				    "initial": "http://baconmockup.com/400/400/",
-				    "result": "http://baconmockup.com/1000/750/",
-				    "operations": [{
-				        "url": "http://s10.postimg.org/fc6iv6rp5/testimage.png",
-				        "bbox": [42.14, 15.35, 48.97, 44.76],
-				        "operation": "click"
-				    }
-				    /*, {
-				        "url": "http://s2.postimg.org/zdbyhgfk9/testimage2.png",
-				        "bbox": [ 48.16, 25.91, 44.57, 45.3 ],
-				        "operation": "double click"
-				    }*/
-				        ]
-				};
-
 				// create a normal base view if images do not fit inside component
 				var component = that.model.get( "component" );
 				if ( $( component ).width() < (2+data.operations.length)*170 ) {
@@ -101,8 +84,8 @@ var assistance = assistance || {};
 					"creator": that.model
 				});
 				that.comic.content.show( comic_view );
-
-			}, 200 );
+			});
+				
 		},
 
 		highlightSelf: function() {

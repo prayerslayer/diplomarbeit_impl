@@ -83,6 +83,8 @@ body {
 
 .assistance-base__content {
 	margin: 1rem;
+	max-height: 75%; /* TODO magic number alert */
+	overflow: scroll;
 }
 
 .vizboard-copy {
@@ -168,6 +170,33 @@ div.assistance-comic__operation-panel div.assistance-comic__panel-caption-conten
 	line-height: 32px;
 	-webkit-transform: translateY(60px)rotate(-45deg);
 }
+
+/* COMMENT STUFF */
+
+div.assistance-comment__comment {
+	display: -webkit-flex;
+	min-width: 32rem;
+}
+
+div.assistance-comment__comment + div.assistance-comment__comment {
+	margin-top: 2rem;
+}
+
+div.assistnace-comment__comment-metadata{
+	-webkit-flex: 1;
+	margin: auto 1rem;
+}
+
+img.assistance-comment__comment-metadata-avatar {
+	width: 64px;
+}
+
+div.assistance-comment__comment-content {
+	-webkit-flex: 1;
+	margin: auto 1rem;
+}
+
+/* SPINNER STUFF */
 
 div.assistance-spinner {
    height:60px;

@@ -35,6 +35,14 @@ var assistance = assistance || {};
 			"comic": {
 				"headline": "Explanation",
 				"explanation": "These pictures show you how to achieve this task."
+			},
+			"readcomment": {
+				"headline": "Read comments",
+				"explanation": ""
+			},
+			"writecomment": {
+				"headline": "Write comment",
+				"explanation": ""
 			}
 		},
 
@@ -50,6 +58,9 @@ var assistance = assistance || {};
 				if ( typeof view.init === 'function' )
 					view.init();
 			});
+			
+			if ( this.options.type === "readcomment" )
+				this.$el.css( "width", "auto" );
 		},
 
 		// positions this view next to the selector
