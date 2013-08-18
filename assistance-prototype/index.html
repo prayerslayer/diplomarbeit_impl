@@ -12,6 +12,27 @@
 		<script type="text/template" id="spinnerTemplate">
 		</script>
 
+		<script type="text/template" id="commentViewTemplate">
+			<div class="assistance-comment__comment_metadata">
+				<div class="assistance-comment__comment_metadata-id"><%= comment_id %></div>
+				<img class="assistance-comment__comment_metadata-avatar" src="<%= avatar_url %>"/>
+				<div class="assistance-comment__comment_metadata-name"><%= user_name %></div>
+				<div class="assistance-comment__comment_metadata-date"><%= timestamp %></div>
+				<div class="assistance-comment__comment_metadata-edit-delete"></div>
+				<div class="assistance-comment__comment_metadata-show-annos">
+				Show annotations
+				</div>
+				<div class="assistance-comment__comment_metadata-reply">
+				Reply to comment</div>
+				<div class="assistance-comment__comment_metadata-voting">
+				Vote for comment: 
+				</div>
+			</div>
+			<div class="assistance-comment__comment_content">
+				<%= 
+			</div>
+		</script>
+
 		<script type="text/template" id="baseViewTemplate">
 			<h2 class="assistance-base__headline">Headline</h2>
 			<span class="assistance-base__close" data-action="close">X</span>
@@ -39,9 +60,10 @@
 			</div>
 		</script>
 
-		<!-- other stuff -->
+		<!-- stylesheets -->
 		<link href='http://fonts.googleapis.com/css?family=Lilita+One' rel='stylesheet' type='text/css'>
 		<link rel="stylesheet" href="style.css" />
+		<!-- libraries -->
 		<script src="libs/jquery.js"></script>
 		<script src="libs/jquery-ui-core.js"></script>
 		<script src="libs/imagesloaded.js"></script>
@@ -50,11 +72,15 @@
 		<script src="libs/backbone.marionette.js"></script>
 		<script src="libs/d3.js"></script>
 		<script src="libs/d3-plugin.js"></script>
+		<script src="libs/sinon.js"></script>
+		<!-- models -->
 		<script src="libs/models/AssistanceHowtoItemModel.js"></script>
 		<script src="libs/models/AssistancePanelModel.js"></script>
 		<script src="libs/models/AssistanceOperationPanelModel.js"></script>
 		<script src="libs/models/AssistanceHowtoCollection.js"></script>
+		<script src="libs/models/AssistanceCommentModel.js"></script>
 		<script src="libs/views/AssistanceSpinner.js"></script>
+		<!-- howto views -->
 		<script src="libs/views/AssistanceBaseView.js"></script>
 		<script src="libs/views/AssistancePanelView.js"></script>
 		<script src="libs/views/AssistanceOperationPanelView.js"></script>
@@ -62,10 +88,54 @@
 		<script src="libs/views/AssistanceHowtoItemView.js"></script>
 		<script src="libs/views/AssistanceHowtoListView.js"></script>
 		<script src="libs/views/AssistanceComicView.js"></script>
+		<!-- comment views -->
+		<script src="libs/views/AssistanceCommentView.js"></script>
+		<script src="libs/views/AssistanceReadCommentsView.js"></script>
+		<!-- mock apis -->
+		<script type="text/javascript">
+			var image_server = sinon.fakeServer.create();
+			image_server.autoRespond = true;
+			image_server.autoRespondAfter = 500;
+
+			image_server.respondWith( /componentCapability/, function(xhr){
+				var data = {
+				    "initial": "http://baconmockup.com/400/400/",
+				    "result": "http://baconmockup.com/1000/750/",
+				    "operations": [{
+				        "url": "http://s10.postimg.org/fc6iv6rp5/testimage.png",
+				        "bbox": [42.14, 15.35, 48.97, 44.76],
+				        "operation": "click"
+				    }
+				    /*, {
+				        "url": "http://s2.postimg.org/zdbyhgfk9/testimage2.png",
+				        "bbox": [ 48.16, 25.91, 44.57, 45.3 ],
+				        "operation": "double click"
+				    }*/
+				        ]
+				};
+				xhr.respond( 200, { "Content-Type": "application/json" }, JSON.stringify( data ) );
+			});
+		</script>
+		<!-- do actual things -->
 		<script type="text/javascript">
 			$( document ).ready( function() {
 
-				$( ".button" ).click( function() {
+				$( ".button#showcomments" ).click( function() {
+					var comments = new assistance.CommentCollection({
+
+					});
+					var comment_view = new assistance.ReadCommentsView({
+
+					});
+					var commentbase = new assistance.BaseView({
+						"type": "readcomment",
+						"component": "#barchart"
+					});
+					commentbase.content.show( comment_view );
+				});
+
+
+				$( ".button#instructions" ).click( function() {
 					var item = new assistance.HowtoItem({
 						"component_id": "http://mmt.inf.tu-dresden.de/VizBoard/Something",
 						"action": "sort",
@@ -103,15 +173,16 @@
 	<body>
 		<h1>hooray for backbone</h1>
 
-		<div class="button">Start help</div>
+		<div class="button" id="instructions">show howto</div>
+		<div class="button" id="showcomments">show comments</div>
 
 		<div id="barchart">
 			<svg>
-				<rect class="bar" x="20px" y="120px" width="40px" height="280px" />
-				<rect class="bar" x="70px" y="260px" width="40px" height="140px" />
-				<rect class="bar" x="120px" y="310px" width="40px" height="90px" />
-				<rect class="bar" x="170px" y="240px" width="40px" height="160px" />
-				<rect class="bar" x="220px" y="290px" width="40px" height="110px" />
+				<rect resource="testinstance1" class="bar" x="20px" y="120px" width="40px" height="280px" />
+				<rect resource="testinstance2" class="bar" x="70px" y="260px" width="40px" height="140px" />
+				<rect resource="testinstance3" class="bar" x="120px" y="310px" width="40px" height="90px" />
+				<rect resource="testinstance4" class="bar" x="170px" y="240px" width="40px" height="160px" />
+				<rect resource="testinstance5" class="bar" x="220px" y="290px" width="40px" height="110px" />
 			</svg>
 
 		</div>
