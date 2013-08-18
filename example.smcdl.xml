@@ -5,7 +5,6 @@
 		name="EventList" version="1.0"
 		isUI="true"
 		doesDataProcessing="false"
-		hasReproducibleLayout="true"
 		loadsExternalData="false"
 		hasRelativeStyle="false"
 
@@ -72,20 +71,13 @@
 		<sequentialoperation id="clickSortOnMenu">
 			<atomicoperation id="clickMenuButton" element=".menu" type="op:Click" modifier="op:LeftButton" />
 			<atomicoperation id="clickMenuSortButton" element=".menu > li.sort" type="op:Click" modifier="LeftButton"/>
-		</sequentialoperation<name />
+		</sequentialoperation>
 		<atomicoperation id="dragMap" element=".map" type="op:Drag" modifier="LeftButton" exampleParameter="100,200"/>
 
 	</capability>
 	<capability entity="travel:Location" activity="upperactions:Input" id="cap02"/>
 
 	<interface>
-		<!-- memento format -->
-		<memento>
-			<mementoProperty>destTime</mementoProperty>
-			<mementoProperty>currentEvents</mementoProperty>
-		</memento>
-
-		<!-- END NEW STUFF -->
 		<property type="mcdl:hasTitle" required="true" name="title">
 			<default>Veranstaltungen</default>
 		</property>
@@ -95,8 +87,8 @@
 		<property type="mcdl:hasHeight" required="true" name="height">
 			<default>200</default>
 		</property>
-		<property type="travel:Event" required="false" name="currentEvents" />
-		<property name="destTime" required="false" type="travel:hasDestinationTime" />
+		<property isMemento="true" type="travel:Event" required="false" name="currentEvents" />
+		<property isMemento="true" name="destTime" required="false" type="travel:hasDestinationTime" />
 		<event name="locationSelected" dependsOn="cap02">
 			<parameter name="location" type="travel:Location"/>
 			<parameter name="locationtype" type="travel:locationType"/>
