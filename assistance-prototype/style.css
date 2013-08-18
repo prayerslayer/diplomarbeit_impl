@@ -1,3 +1,12 @@
+div.button {
+	cursor: pointer;
+	background: gray;
+	margin: 0 auto;
+	width: 10%;
+	font-size: 24px;
+	margin: 2rem;
+}
+
 div#barchart {
 	width: 600px;
 	height: 420px;
@@ -5,12 +14,12 @@ div#barchart {
 	background: white;
 }
 
-rect {
+rect.bar {
 	fill: steelblue;
 }
 
-rect:hover {
-	fill: orange;
+rect.bar:hover {
+	fill: darkblue;
 }
 
 /* ################################### */
@@ -27,7 +36,7 @@ body {
 	position:relative;
 }
 
-.assistance-howto__item_selected, .assistance-howto__item:hover {
+.assistance-howto__item_selected {
 	background-color: white;
 	color: #16161D;
 	cursor: pointer;
@@ -84,6 +93,18 @@ body {
 	position: absolute; !important
 }
 
+.vizboard-highlight, .vizboard-relevant-element:hover {
+	fill: orange;
+	background-color: orange;
+	cursor: pointer;
+}
+
+.vizboard-relevant-element {
+	border: 2px solid orange;
+	stroke: orange;
+	stroke-width: 2px;
+}
+
 div.vizboard-ground {
 	background-color: black;
 	opacity: 0.75;
@@ -112,7 +133,7 @@ div.assistance-comic__panel-wrapper {
 }
 
 img.assistance-comic__panel-image {
-	width: 100%;
+	width: 150px;
 	height: auto;
 	-webkit-transition-property: margin-left, margin-top, width, height;
 	-webkit-transition-duration: 1s;
@@ -157,7 +178,7 @@ div.assistance-spinner {
    -moz-animation: rotation .6s infinite linear;
    -o-animation: rotation .6s infinite linear;
    animation: rotation .6s infinite linear;
-   border:6px solid rgba(0,174,239,.15);
+   border:6px solid rgba(255,255,255,.15);
    border-radius:100%;
 }
 
@@ -169,7 +190,7 @@ div.assistance-spinner:before {
    top:-6px;
    height:100%;
    width:100%;
-   border-top:6px solid rgba(0,174,239,.8);
+   border-top:6px solid orange;
    border-left:6px solid transparent;
    border-bottom:6px solid transparent;
    border-right:6px solid transparent;

@@ -26,6 +26,9 @@ var assistance = assistance || {};
 
 		initialize: function() {
 			this.model.collection.bind( "unlocked", this.clear, this );
+			this.listenTo( this.model, "showassistance", this.showAssistance );
+			this.listenTo( this.model, "highlight", this.highlightSelf );
+			this.listenTo( this.model, "unhighlight", this.unhighlightSelf );
 		},
 
 		clear: function() {
@@ -37,7 +40,7 @@ var assistance = assistance || {};
 					this.comic = null;	// prevent zombie view
 				}
 			}
-			this.$el.removeClass( "assistance-howto__item_selected" );
+			this.unhighlightSelf();
 		},
 
 		// creates a comic view and displays it
@@ -47,7 +50,7 @@ var assistance = assistance || {};
 				return;
 			this.model.collection.lock();
 			this.model.set( "displayed", true );
-			this.$el.addClass( "assistance-howto__item_selected" );
+			this.highlightSelf();
 			var task = _.template( $( this.template ).html(), this.model.attributes );
 			// fake http request
 			var spinner = new assistance.Spinner({
@@ -102,52 +105,31 @@ var assistance = assistance || {};
 			}, 200 );
 		},
 
+		highlightSelf: function() {
+			this.$el.addClass( "assistance-howto__item_selected" );
+		},
+
+		unhighlightSelf: function() {
+			this.$el.removeClass( "assistance-howto__item_selected" );
+		},
+
 		// highlights relevant UI elements
 		highlightElements: function() {
 			if ( this.model.get( "lock" ) )
 				return;
-
-			var eels = d3.selectAll( this.model.get( "elements") ),
-				viz = d3.select( this.model.get( "component" ) ),
-				$viz= $( viz.node() ),
-				root = d3.select( this.model.get( "visualization" ) ),
-				$root = $( this.model.get( "visualization" ) ),
-				root_offset = $root.offset();
-
-			// make dark background
-			var ground = $( document.createElement( "div" ) )
-							.css( "width", $root.width() )
-							.css( "height", $root.height() )
-							.attr( "class", "vizboard-ground" );
-			$viz.prepend( ground );
-			// shallow copy of  visualization - this is because we don't know (and don't want to) if it's a HTML or SVG visualization
-			var copyroot = root.clone( false );
-			// prepend to visualization
-			viz.appendChild( copyroot );
-			copyroot.attr( "class", "vizboard-rootcopy" );
-			$( copyroot.node() ).css( "left", root_offset.left );
-			$( copyroot.node() ).css( "top", root_offset.top );
-
-			// now copy relevant elements and display them above
-			eels.each( function() {
-				var cpy = d3.select( this ).clone(),
-					off = $( cpy.node() ).offset();
-				copyroot.appendChild( cpy );
-				cpy.attr( "class", "vizboard-copy" );
-			});
+			this.highlightSelf();
+			var eels = d3.selectAll( this.model.get( "component" ) + " > .vizboard-rootcopy " + this.model.get( "elements") );
+			// not necessary to remember original class since these elements are a copy anyway
+			eels.attr( "class", "vizboard-highlight" );
 		},
 
 		// unhighlights highlighted elements
 		unhighlightElements: function() {
 			if ( this.model.get( "lock" ) )
 				return;
-
-			var viz = d3.select( this.model.get( "component" ) ),
-				root = d3.select( this.model.get( "visualization" ) );
-			
-			viz.selectAll("div.vizboard-ground").remove( );
-			viz.selectAll(".vizboard-copy").remove();
-			viz.selectAll(".vizboard-rootcopy" ).remove();
+			this.unhighlightSelf();
+			var eels = d3.selectAll( this.model.get( "component" ) + " > .vizboard-rootcopy " + this.model.get( "elements") );
+			eels.attr("class", "vizboard-relevant-element" );
 		}
 
 	});

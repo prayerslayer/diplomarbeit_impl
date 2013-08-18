@@ -21,7 +21,7 @@ var assistance = assistance || {};
 		// triggers event when image is completely loaded
 		onRender: function() {
 			var that = this;
-			var img = this.$el.find( "img" ).first();
+			var img = this.$el.find( ".assistance-comic__panel-image" ).first();
 
 			img.imagesLoaded( function() {
 				that.trigger( "imagesloaded" );
@@ -30,7 +30,7 @@ var assistance = assistance || {};
 
 		// centers image if necessary
 		resize: function() {
-			var img = this.$el.find( "img" ).first(),
+			var img = this.$el.find( ".assistance-comic__panel-image" ).first(),
 				w = img.width(),
 				h = img.height();
 

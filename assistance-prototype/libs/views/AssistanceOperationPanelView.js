@@ -28,7 +28,7 @@ var assistance = assistance || {};
 		resize: function() {
 			var that = this,
 				wrap = this.$el.find( ".assistance-comic__panel-wrapper" ),
-				img = wrap.find( "img" ).first(),
+				img = wrap.find( ".assistance-comic__panel-image" ).first(),
 				img_w = img.width(),
 				img_h = img.height(),
 				ratio = img_w/img_h,

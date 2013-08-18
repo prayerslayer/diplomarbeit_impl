@@ -64,50 +64,54 @@
 		<script src="libs/views/AssistanceComicView.js"></script>
 		<script type="text/javascript">
 			$( document ).ready( function() {
-				var item = new assistance.HowtoItem({
-					"component_id": "http://mmt.inf.tu-dresden.de/VizBoard/Something",
-					"action": "sort",
-					"variable": "player",
-					"capability": "cap01",
-					"elements": "svg > rect:nth-child(2)",
-					"component": "#barchart",
-					"visualization": "#barchart > svg"
+
+				$( ".button" ).click( function() {
+					var item = new assistance.HowtoItem({
+						"component_id": "http://mmt.inf.tu-dresden.de/VizBoard/Something",
+						"action": "sort",
+						"variable": "player",
+						"capability": "cap01",
+						"elements": "rect:nth-child(even)",
+						"component": "#barchart",
+						"visualization": "#barchart > svg"
+					});
+					var item2 = new assistance.HowtoItem({
+						"component_id": "http://mmt.inf.tu-dresden.de/VizBoard/Something",
+						"action": "display",
+						"capability": "cap02",
+						"elements": "rect:nth-child(odd)",
+						"component": "#barchart",
+						"visualization": "#barchart > svg"
+					});
+					var items = new assistance.HowtoCollection();
+					items.add( item );
+					items.add( item2 );
+					var listbase = new assistance.BaseView({
+						"type": "howto",
+						"component": "#barchart"
+					});
+					var list = new assistance.HowtoListView({
+						"collection": items,
+						"itemView": assistance.HowtoItemView,
+						"model": assistance.HowtoItem
+					});
+					listbase.content.show( list );
 				});
-				var item2 = new assistance.HowtoItem({
-					"component_id": "http://mmt.inf.tu-dresden.de/VizBoard/Something",
-					"action": "display",
-					"capability": "cap02",
-					"elements": "svg > rect",
-					"component": "#barchart",
-					"visualization": "#barchart > svg"
-				});
-				var items = new assistance.HowtoCollection();
-				items.add( item );
-				items.add( item2 );
-				var listbase = new assistance.BaseView({
-					"type": "howto",
-					"component": "#barchart"
-				});
-				var list = new assistance.HowtoListView({
-					"collection": items,
-					"itemView": assistance.HowtoItemView,
-					"model": assistance.HowtoItem
-				});
-				listbase.content.show( list );
 			});
 		</script>
 	</head>
 	<body>
 		<h1>hooray for backbone</h1>
 
-		<div id="barchart">
+		<div class="button">Start help</div>
 
+		<div id="barchart">
 			<svg>
-				<rect x="20px" y="120px" width="40px" height="280px" />
-				<rect x="70px" y="260px" width="40px" height="140px" />
-				<rect x="120px" y="310px" width="40px" height="90px" />
-				<rect x="170px" y="240px" width="40px" height="160px" />
-				<rect x="220px" y="290px" width="40px" height="110px" />
+				<rect class="bar" x="20px" y="120px" width="40px" height="280px" />
+				<rect class="bar" x="70px" y="260px" width="40px" height="140px" />
+				<rect class="bar" x="120px" y="310px" width="40px" height="90px" />
+				<rect class="bar" x="170px" y="240px" width="40px" height="160px" />
+				<rect class="bar" x="220px" y="290px" width="40px" height="110px" />
 			</svg>
 
 		</div>
