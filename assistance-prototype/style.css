@@ -24,7 +24,8 @@ rect.bar:hover {
 
 /* ################################### */
 body {
-	font-family: Helvetica;
+	font-family: "Source Sans Pro";
+	font-weight: 300;
 	font-size: 16px;
 	line-height: 20px;
 }
@@ -107,6 +108,23 @@ body {
 	stroke-width: 2px;
 }
 
+.vizboard-badge {
+	border-radius: 100%;
+	width: 48px;
+	height: 36px;
+	background-color: #16161d;
+	color: white;
+	border: 1px solid white;
+	font-size: 22px;
+	padding-top: 12px;
+	text-align: center;
+}
+
+.vizboard-badge:hover {
+	cursor:pointer;
+	background-color: orange;
+}
+
 div.vizboard-ground {
 	background-color: black;
 	opacity: 0.75;
@@ -182,18 +200,63 @@ div.assistance-comment__comment + div.assistance-comment__comment {
 	margin-top: 2rem;
 }
 
-div.assistnace-comment__comment-metadata{
+div.assistance-comment__comment-metadata{
+	display: -webkit-flex;
+	-webkit-flex-direction: column;
+	-webkit-justify-content: flex-start;
+	-webkit-align-items: baseline;
+	margin: 0 1rem;
+}
+
+div.assistance-comment__comment-metadata-reply {
+	margin: 1rem 0;
+}
+div.assistance-comment__comment-metadata-show-annos {
+	margin-top: 1rem;
+}
+
+div.assistance-comment__comment-metadata-voting {
+	display: -webkit-flex;
+	-webkit-flex-direction: column;
+	-webkit-align-items: center;
+}
+
+div.assistance-comment__comment-metadata-voting_voted {
+	color: orange;
+	cursor: auto;
+}
+
+div.assistance-comment__comment-metadata-name {
+	text-align: center;
+	width: 100%;
+}
+
+div.assistance-comment__comment-metadata-voting_up, div.assistance-comment__comment-metadata-voting_down, div.assistance-comment__comment-metadata-score {
 	-webkit-flex: 1;
-	margin: auto 1rem;
+}
+
+div.assistance-comment__comment-metadata-voting_up:hover, 
+div.assistance-comment__comment-metadata-voting_down:hover,
+div.assistance-comment__comment-metadata-reply:hover,
+div.assistance-comment__comment-metadata-show-annos:hover {
+	color: orange;
+	cursor: pointer;
+	-webkit-transition: color .2s;
 }
 
 img.assistance-comment__comment-metadata-avatar {
-	width: 64px;
+	width: 128px;
+	height: 128px;
+	border: 1px solid white;
+	border-radius: 5%;
+	margin: 1rem 0;
 }
 
 div.assistance-comment__comment-content {
 	-webkit-flex: 1;
-	margin: auto 1rem;
+	margin: 0 1rem;
+	min-width: 18rem;
+	line-height: 24px;
 }
 
 /* SPINNER STUFF */
