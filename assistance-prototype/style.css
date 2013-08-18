@@ -31,15 +31,14 @@ body {
 }
 
 .assistance-howto__item {
-	background-color: #16161D;
 	color: white;
+	-webkit-transition: color .2s;
 	width: 80%;
 	position:relative;
 }
 
 .assistance-howto__item_selected {
-	background-color: white;
-	color: #16161D;
+	color: orange;
 	cursor: pointer;
 }
 
@@ -60,8 +59,7 @@ body {
 }
 
 .assistance-base__close:hover {
-	background-color: white;
-	color: #16161D;
+	color: orange;
 	cursor: pointer;
 }
 
@@ -73,7 +71,7 @@ body {
 	border-radius: 5%;
 	position: absolute;
 	border: 1px solid #686868;
-	-webkit-box-shadow: 2px 2px 20px #686868;
+	-webkit-box-shadow: 2px 2px 32px #686868;
 }
 
 .assistance-comic {
@@ -113,11 +111,17 @@ body {
 	width: 48px;
 	height: 36px;
 	background-color: #16161d;
+	-webkit-transition: background-color .2s;
+	-webkit-box-shadow: 1px 1px 10px #16161d;
 	color: white;
 	border: 1px solid white;
 	font-size: 22px;
 	padding-top: 12px;
 	text-align: center;
+}
+
+.vizboard-badge-selected {
+	background-color: orange;
 }
 
 .vizboard-badge:hover {

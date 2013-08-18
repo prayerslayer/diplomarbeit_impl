@@ -5,6 +5,10 @@
 		<title>Test</title>
 		<!-- templates -->
 		
+		<script type="text/template" id="badgeViewTemplate">
+
+		</script>
+
 		<script type="text/template" id="howtoItemTemplate">
 			<%= action %> <%= variable %>
 		</script>
@@ -86,6 +90,7 @@
 		<script src="libs/models/AssistanceHowtoCollection.js"></script>
 		<script src="libs/models/AssistanceCommentModel.js"></script>
 		<script src="libs/models/AssistanceCommentCollection.js"></script>
+		<script src="libs/models/AssistanceCommentBadgeModel.js"></script>
 		<script src="libs/views/AssistanceSpinner.js"></script>
 		<!-- howto views -->
 		<script src="libs/views/AssistanceBaseView.js"></script>
@@ -98,6 +103,7 @@
 		<!-- comment views -->
 		<script src="libs/views/AssistanceCommentView.js"></script>
 		<script src="libs/views/AssistanceReadCommentsView.js"></script>
+		<script src="libs/views/AssistanceCommentBadgeView.js"></script>
 		<!-- mock apis -->
 		<script type="text/javascript">
 			var fake_server = sinon.fakeServer.create();
@@ -187,7 +193,39 @@
 					                "text": "OLOLZ"
 					            }
 					        ]
-						}]}];
+						}]}, {"comment_id": "dfghdfgh",
+					    "component_id": "http://mmt.inf.tu-dresden.de/VizBoard/Something",
+						"dataset_id": "testdataset",
+					    "user_id": "ronald",
+						"user_name": "Ronald McDonald",
+						"avatar_url": "http://www.brandchannel.com/images/Forum/152_debate_mcdonalds_02.jpg",
+						"visualized_properties": [],
+						"component_memento": {},
+						"timestamp": 123789999,
+						"text": "lol",
+						"number": 1,
+						"score": -1,
+						"annotations": [{
+							"type": "point",
+							"uri": "testinstance2",
+							"values": {
+								"testproperty1": 423,
+								"testproperty2": true
+							}
+						},{
+					        "type": "area",
+					        "visualization_width": 400,
+					        "visualization_height": 400,
+					        "elements": [
+					            {
+					                "type": "text",
+					                "x": 220,
+					                "y": 50.5,
+					                "text": "OLOLZ"
+					            }
+					        ]
+						}]}
+						];
 				xhr.respond( 200, { "Content-Type": "application/json"}, JSON.stringify( data ) );
 			});
 		</script>

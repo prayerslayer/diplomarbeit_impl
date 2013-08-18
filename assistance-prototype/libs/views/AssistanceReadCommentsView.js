@@ -6,6 +6,8 @@ var assistance = assistance || {};
 		className: "assistance-comment__read-comments",
 		itemView: assistance.CommentView,
 
+		badges: [],
+
 		init: function() {
 			var spinner = new assistance.Spinner({
 					"caller": this.$el
@@ -16,30 +18,32 @@ var assistance = assistance || {};
 				"success": function( collection, response ) {
 					spinner.close();
 
-					var point_annos = {};
+					var point_commies = {};
 					// collect point annotations
 					_.each( collection.models, function( comment ) {
 						_.each( comment.get( "annotations" ), function( anno ) {
 							if ( anno.type === "point" ) {
-								if ( !point_annos[ anno.uri ] )
-									point_annos[ anno.uri ] = [ anno ];
+								if ( !point_commies[ anno.uri ] )
+									point_commies[ anno.uri ] = [ comment ];
 								else 
-									point_annos[ anno.uri ].push( anno );
+									point_commies[ anno.uri ].push( comment );
 							}
 						});
 					});
-					//TODO badges in eigenen view auslagern
+					
 					// draw badges
-					_.each( point_annos, function( annos , uri ) {
-						var badge = $( document.createElement( "div" ) );
-						badge.text( annos.length );
-						badge.addClass( "vizboard-badge" );
-						$( that.options.component ).append( badge );
-						badge.position({
-							"of": $( "[resource=" + uri + "]" ),
-							"my": "center center",
-							"at": "right top"
+					_.each( point_commies, function( comments , uri ) {
+						var badge = new assistance.CommentBadge({
+							"component": that.options.component,
+							"uri": uri,
+							"comments": comments
 						});
+						var badgeview = new assistance.CommentBadgeView({
+							"model": badge	
+						});
+						badgeview.on( "showcomments", that.showComments, that );
+						badgeview.on( "hidecomments", that.hideComments, that );
+						that.badges.push( badgeview );						
 					});
 				},
 				"error": function( col, res) {
@@ -47,6 +51,27 @@ var assistance = assistance || {};
 				}
 			});
 
+		},
+
+		showComments: function( comments ) {
+			console.log( "show", comments );
+			_.each( this.collection.models, function( c ) {
+				if ( !_.contains( comments, c ) ) {
+					c.trigger( "hide" );
+				}
+			});
+		},
+
+		hideComments: function( comments ) {
+			console.log( "hide", comments );
+		},
+
+		onBeforeClose: function() {
+			// destroy badges
+			_.each( this.badges, function( b ) {
+				b.close();
+			});
+			this.badges = null;
 		}
 	});
 })( jQuery );

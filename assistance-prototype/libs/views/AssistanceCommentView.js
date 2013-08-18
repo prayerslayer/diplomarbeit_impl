@@ -18,6 +18,11 @@ var assistance = assistance || {};
 		initialize: function() {
 			_.bindAll(this, "render");
     		this.model.bind('change', this.render);
+    		this.model.bind('hide', this.hide );
+		},
+
+		hide: function() {
+			this.$el.hide();	//TODO $el undefined?
 		},
 
 		showAnnotations: function() {
