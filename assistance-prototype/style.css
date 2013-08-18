@@ -256,6 +256,7 @@ div.assistance-comment__comment-content {
 	-webkit-flex: 1;
 	margin: 0 1rem;
 	min-width: 18rem;
+	max-width: 24rem;
 	line-height: 24px;
 }
 
