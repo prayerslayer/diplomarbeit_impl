@@ -231,8 +231,11 @@ div.assistance-comment__comment-metadata-voting_voted {
 }
 
 div.assistance-comment__comment-metadata-name {
-	text-align: center;
-	width: 100%;
+	font-weight: 700;
+}
+
+div.assistance-comment__comment-metadata-score {
+	font-family: "Source Code Pro", monospace;
 }
 
 div.assistance-comment__comment-metadata-voting_up, div.assistance-comment__comment-metadata-voting_down, div.assistance-comment__comment-metadata-score {
