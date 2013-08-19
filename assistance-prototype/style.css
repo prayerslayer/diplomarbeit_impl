@@ -83,7 +83,6 @@ body {
 .assistance-base__content {
 	margin: 1rem;
 	max-height: 75%; /* TODO magic number alert */
-	overflow: scroll;
 }
 
 .vizboard-copy {
