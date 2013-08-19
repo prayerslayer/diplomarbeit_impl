@@ -82,6 +82,7 @@ body {
 
 .assistance-base__content {
 	margin: 1rem;
+	overflow-y: scroll;
 	max-height: 75%; /* TODO magic number alert */
 }
 
@@ -193,6 +194,10 @@ div.assistance-comic__operation-panel div.assistance-comic__panel-caption-conten
 }
 
 /* COMMENT STUFF */
+
+div.assistance-comment__read-comments {
+
+}
 
 div.assistance-comment__comment {
 	display: -webkit-flex;
