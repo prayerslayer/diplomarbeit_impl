@@ -18,7 +18,12 @@ var assistance = assistance || {};
 		count: 0,
 		spinner: null,
 
-		onClose: function() {
+		onBeforeClose: function() {
+			_.each( this.views, function( v ) {
+				v.stopListening();
+				v.close();
+			});
+			this.views = [];
 			this.options.creator.collection.unlock();
 		},
 
@@ -61,6 +66,7 @@ var assistance = assistance || {};
 			this.spinner = new assistance.Spinner({
 				"caller": this.$el
 			});
+			this.views = [];
 			this.count = that.options.data.operations.length+2;
 
 			// construct models and views of panels
