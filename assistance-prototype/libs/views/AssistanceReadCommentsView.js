@@ -7,6 +7,8 @@ var assistance = assistance || {};
 		itemView: assistance.CommentView,
 
 		badges: new assistance.CommentBadgeCollection(),
+		badgesviews: [],
+
 
 		initialize: function() {
 			this.listenTo( this.badges, "showcomments", this.showComments, this );
@@ -45,6 +47,7 @@ var assistance = assistance || {};
 						var badgeview = new assistance.CommentBadgeView({
 							"model": badge	
 						});
+						that.badgesviews.push( badgeview );
 						that.badges.add( badge );						
 					});
 				},
@@ -71,6 +74,14 @@ var assistance = assistance || {};
 				});
 			}
 			
+		},
+
+		onBeforeClose: function() {
+			_.each( this.badgesviews, function( v ) {
+				v.stopListening();
+				v.close();
+			});
+			this.badgesviews = null;
 		}
 	});
 })( jQuery );
