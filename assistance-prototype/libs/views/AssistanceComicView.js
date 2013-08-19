@@ -55,10 +55,13 @@ var assistance = assistance || {};
 				wrapper.css( "-webkit-transition-delay", i+"s" );
 				wrapper.one( "webkitTransitionEnd", function() {
 					v.zoom();
-					setTimeout( function() {
-						v.showCaption();
-					}, 500 );
 				});
+				// show caption after zoom finished
+				// this block does not work properly inside event handler?
+				setTimeout( function() {
+					v.showCaption();
+				}, i*1000 + 500 );
+				// start animation
 				model.get( "type" ) === "caption" ? wrapper.css( "left", "0px" ) : 
 				wrapper.css( "top", "0px" );
 			});
