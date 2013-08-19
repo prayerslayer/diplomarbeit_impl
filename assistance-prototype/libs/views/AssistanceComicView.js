@@ -13,13 +13,11 @@ var assistance = assistance || {};
 		tagName: "div",
 		className: "assistance-comic__content",
 		template: "#comicViewTemplate",
-		collection: null,
 
 		count: 0,
 		spinner: null,
 
 		initialize: function() {
-			this.collection = new assistance.PanelCollection();
 			this.once( "itemview:imagesloaded", this.animate, this );
 		},
 
@@ -76,34 +74,8 @@ var assistance = assistance || {};
 				"caller": this.$el
 			});
 
-			this.count = that.options.data.operations.length+2;
-
-			// construct models and views of panels
-			var m_initial = new assistance.Panel({
-				"image_url": data.initial,
-				"type": "initial",
-				"task": that.options.task,
-				"caption": "Use this element..."
-			});
-			this.collection.add( m_initial );
-
-			_.each( data.operations, function( op ) {
-				var model = new assistance.OperationPanel({
-						"image_url": op.url,
-						"bbox": op.bbox,
-						"operation": op.operation,
-						"caption": op.operation
-					});
-				that.collection.add( model );
-			});
-
-			var m_result = new assistance.Panel({
-				"image_url": data.result,
-				"type": "result",
-				"task": that.options.task,
-				"caption": "...to " + that.options.task + "."
-			});
-			that.collection.add( m_result );
+			this.count = this.collection.size();
+			console.log( this.collection );
 			that.render();
 		}
 	});

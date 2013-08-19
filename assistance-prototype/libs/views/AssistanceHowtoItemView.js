@@ -56,36 +56,44 @@ var assistance = assistance || {};
 			var spinner = new assistance.Spinner({
 				"caller": this.$el
 			});
-			$.get( "componentCapability", function( data ) {
-				spinner.close();
-				// create a normal base view if images do not fit inside component
-				var component = that.model.get( "component" );
-				if ( $( component ).width() < (2+data.operations.length)*170 ) {
-					that.comic = new assistance.BaseView({
-						"type": "comic",
-						"headline": task,
-						"component": component
-					});
-					that.comic.overlay( component );
-					that.comic.$el.css( "width", "auto" );
-				} else {
-					that.comic = new assistance.ComicBaseView({
-						"type": "comic",
-						"headline": task,
-						"component": component
-					});
-				}
-				// show comic view
-				var comic_view = new assistance.ComicView({
-					"component_id": that.model.get( "component_id" ),
-					"capability": that.model.get( "capability" ),
-					"task": task,
-					"data": data,
-					"creator": that.model
-				});
-				that.comic.content.show( comic_view );
+
+			var panelCollection = new assistance.PanelCollection([], {
+				"url": "componentCapability"
 			});
-				
+			panelCollection.fetch({
+				"success": function( collection, res ) {
+					spinner.close();
+					// create a normal base view if images do not fit inside component
+					var component = that.model.get( "component" );
+					if ( $( component ).width() < collection.size() * 170 ) {
+						that.comic = new assistance.BaseView({
+							"type": "comic",
+							"headline": task,
+							"component": component
+						});
+						that.comic.overlay( component );
+						that.comic.$el.css( "width", "auto" );
+					} else {
+						that.comic = new assistance.ComicBaseView({
+							"type": "comic",
+							"headline": task,
+							"component": component
+						});
+					}
+					// show comic view
+					var comic_view = new assistance.ComicView({
+						"component_id": that.model.get( "component_id" ),
+						"capability": that.model.get( "capability" ),
+						"task": task,
+						"collection": collection,
+						"creator": that.model
+					});
+					that.comic.content.show( comic_view );
+					},
+					"error": function( col, res, opt ) {
+						console.debug( col, res, opt );
+					}
+			});			
 		},
 
 		highlightSelf: function() {
