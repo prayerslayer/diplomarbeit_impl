@@ -23,6 +23,18 @@ rect.bar:hover {
 }
 
 /* ################################### */
+@font-face {
+	font-family: 'Komika';
+    src: url('fonts/KomikaTitle-webfont.eot');
+    src: url('fonts/KomikaTitle-webfont.eot?#iefix') format('embedded-opentype'),
+         url('fonts/KomikaTitle-webfont.woff') format('woff'),
+         url('fonts/KomikaTitle-webfont.ttf') format('truetype'),
+         url('fonts/KomikaTitle-webfont.svg#komika_titleregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
 body {
 	font-family: "Source Sans Pro";
 	font-weight: 300;
@@ -210,7 +222,7 @@ div.assistance-comic__caption-panel > div.assistance-comic__panel-caption {
 }
 
 div.assistance-comic__caption-panel div.assistance-comic__panel-caption-content {
-	font-family: "Lilita One";
+	font-family: "Komika", Impact;
 	font-size: 32px;
 	line-height: 32px;
 	-webkit-transform: translateY(60px)rotate(-45deg);
