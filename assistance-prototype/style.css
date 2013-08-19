@@ -111,13 +111,15 @@ body {
 	width: 48px;
 	height: 36px;
 	background-color: #16161d;
-	-webkit-transition: background-color .2s;
+	-webkit-transition: all .2s;
 	-webkit-box-shadow: 1px 1px 10px #16161d;
 	color: white;
+	opacity: .5;
 	border: 1px solid white;
 	font-size: 22px;
 	padding-top: 12px;
 	text-align: center;
+	cursor:pointer;
 }
 
 .vizboard-badge-selected {
@@ -125,8 +127,8 @@ body {
 }
 
 .vizboard-badge:hover {
-	cursor:pointer;
 	background-color: orange;
+	opacity: 1;
 }
 
 div.vizboard-ground {
@@ -139,28 +141,49 @@ div.assistance-comic__content {
 
 }
 
-div.assistance-comic__panel, div.assistance-comic__operation-panel {
+div.assistance-comic__operation-panel {
 	float: left;
 	margin: .5rem;
-	height: 180px;
+	height: 150px;
 	overflow:hidden;
+	border: 1px solid white;
+}
+
+div.assistance-comic__caption-panel {
+	float: left;
+	margin: .5rem;
+	height: 150px;
+	overflow:hidden;
+	border: 1px solid white;
 }
 
 div.assistance-comic__panel-wrapper {
 	width: 150px;
 	height: 150px;
-	margin-top: -180px;
 	overflow: hidden;
-	-webkit-transition-property: margin-top;
+	position: relative;
+}
+
+div.assistance-comic__operation-panel > div.assistance-comic__panel-wrapper {
+	top: -180px;
+	-webkit-transition-property: top;
+	-webkit-transition-duration: .5s;
+	-webkit-transition-timing-function: cubic-bezier(0,.97,.41,1.5);
+}
+
+div.assistance-comic__caption-panel > div.assistance-comic__panel-wrapper {
+	left: -150px;
+	-webkit-transition-property: left;
 	-webkit-transition-duration: .5s;
 	-webkit-transition-timing-function: cubic-bezier(0,.97,.41,1.5);
 }
 
 img.assistance-comic__panel-image {
+	position:relative;
 	width: 150px;
 	height: auto;
-	-webkit-transition-property: margin-left, margin-top, width, height;
-	-webkit-transition-duration: 1s;
+	-webkit-transition-property: left, top, width, height;
+	-webkit-transition-duration: .5s;
 }
 
 div.assistance-comic__panel-caption {
@@ -170,23 +193,23 @@ div.assistance-comic__panel-caption {
 	height: 30px;
 	font-size: 12px;
 	text-align: center;
-	visibility: hidden;
-	-webkit-transition: margin-top .5s;
-	margin-top: 30px;
+	position:relative;
+	top: 0px;
+	-webkit-transition: top .5s;
 }
 
-div.assistance-comic__operation-panel > div.assistance-comic__panel-caption {
+div.assistance-comic__caption-panel > div.assistance-comic__panel-caption {
 	background: rgba( 22, 23, 23, 0.25 );
 	color: white;
 	width: 150px;
 	height: 150px;
 	position: relative;
-	visibility: hidden;
-	-webkit-transition: margin-top .5s;
-	-webkit-transition-timing-function: cubic-bezier(0,.97,.41,1.5);
+	opacity: 0;
+	top: -150px;
+	-webkit-transition: opacity .5s;
 }
 
-div.assistance-comic__operation-panel div.assistance-comic__panel-caption-content {
+div.assistance-comic__caption-panel div.assistance-comic__panel-caption-content {
 	font-family: "Lilita One";
 	font-size: 32px;
 	line-height: 32px;

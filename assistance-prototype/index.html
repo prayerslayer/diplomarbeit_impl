@@ -41,7 +41,7 @@
 
 		<script type="text/template" id="baseViewTemplate">
 			<h2 class="assistance-base__headline">Headline</h2>
-			<span class="assistance-base__close" data-action="close">X</span>
+			<span class="assistance-base__close" data-action="close"><i class="icon-remove icon-large"></i></span>
 			<p class="assistance-base__explanation">Some explanations maybe</p>
 			<div class='assistance-base__content'>
 			</div>
@@ -98,6 +98,7 @@
 		<!-- howto views -->
 		<script src="libs/views/AssistanceBaseView.js"></script>
 		<script src="libs/views/AssistancePanelView.js"></script>
+		<script src="libs/views/AssistanceCaptionPanelView.js"></script>
 		<script src="libs/views/AssistanceOperationPanelView.js"></script>
 		<script src="libs/views/AssistanceComicBaseView.js"></script>
 		<script src="libs/views/AssistanceHowtoItemView.js"></script>
@@ -115,7 +116,6 @@
 
 			fake_server.respondWith( /componentCapability/, function(xhr){
 				var data = {
-				    "initial": "http://baconmockup.com/400/400/",
 				    "result": "http://baconmockup.com/1000/750/",
 				    "operations": [{
 				        "url": "http://s10.postimg.org/fc6iv6rp5/testimage.png",

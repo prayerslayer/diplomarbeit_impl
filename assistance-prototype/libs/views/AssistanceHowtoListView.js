@@ -20,7 +20,7 @@ var assistance = assistance || {};
 
 			// highlight these elements
 			var viz = d3.select( this.collection.at(0).get( "component" ) ),
-				$viz= $( viz.node() ),
+				$viz = $( viz.node() ),
 				root = d3.select( this.collection.at(0).get( "visualization" ) ),
 				$root = $( this.collection.at(0).get( "visualization" ) ),
 				root_offset = $root.offset();

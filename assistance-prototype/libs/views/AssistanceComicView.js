@@ -26,10 +26,10 @@ var assistance = assistance || {};
 		},
 
 		getItemView: function( item ) {
-			if ( item.get( "type" ) === "operation" ) {
-				return assistance.OperationPanelView;
+			if ( item.get( "type" ) === "caption" ) {
+				return assistance.CaptionPanelView;
 			}
-			return assistance.PanelView;
+			return assistance.OperationPanelView;
 		},
 
 		// animate the panels
@@ -50,19 +50,18 @@ var assistance = assistance || {};
 			// animate the images
 			_.each( this.collection.models, function( model, i ) {
 				var v = that.children.findByModel( model );
-				var wrapper = v.$el.find( ".assistance-comic__panel-wrapper" );
-				// each image has 1.5s for its animation: 1s image, .5s resizing
-				wrapper.css( "-webkit-transition-delay", i*1.5+"s" );
+				var wrapper = v.ui.wrapper;
+				// each image has 1.5s for its animation: .5s image, .5s zoom
+				wrapper.css( "-webkit-transition-delay", i+"s" );
 				wrapper.one( "webkitTransitionEnd", function() {
-					v.resize();	
+					v.zoom();
+					setTimeout( function() {
+						v.showCaption();
+					}, 500 );
 				});
-				// this starts the actual animation (see css)
-				wrapper.css( "margin-top", "0px" );
+				model.get( "type" ) === "caption" ? wrapper.css( "left", "0px" ) : 
+				wrapper.css( "top", "0px" );
 			});
-			// ok, i know this doesn't look so good
-			setTimeout( function() {
-				that.children.call( "showCaption" ); // show caption
-			}, size*1500 );	// after images are finished
 		},
 
 		// create panel models and render views

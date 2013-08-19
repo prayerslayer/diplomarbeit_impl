@@ -30,7 +30,8 @@ var assistance = assistance || {};
 		},
 
 		renderScore: function() {
-			this.ui.score.text( this.model.get( "score" ) );
+			this.model.readableScore();
+			this.ui.score.text( this.model.get( "hr_score" ) );
 		},
 
 		show: function() {

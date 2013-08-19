@@ -7,36 +7,36 @@ var assistance = assistance || {};
 		parse: function( data, response ) {
 			var that = this;
 			var collection = [];
-			var m_initial = {
-				"image_url": data.initial,
-				"type": "initial",
-				"source_bbox": [ 0, 0, 100, 100 ],
-				"target_bbox": data.operations[0].bbox
-			};
-			collection.push( m_initial );
-
 			_.each( data.operations, function( op ) {
-				var model = {
-						"type": "operation",
-						"image_url": op.url,
-						"target_bbox": op.bbox,
-						"operation": op.operation
-					};
-				collection.push( model );
+				var element_panel = {
+					"type": "operation",
+					"image_url": op.url,
+					"animate": true,
+					"source_bbox": [ 0, 0, 100, 100 ],
+					"target_bbox": op.bbox
+				};
+				collection.push( element_panel );
+				var caption_panel = {
+					"type": "caption",
+					"image_url": op.url,
+					"source_bbox": op.bbox,
+					"animate": false,
+					"operation": op.operation
+				}
+				collection.push( caption_panel );
 			})
 
 			var m_result = {
 				"image_url": data.result,
 				"type": "result",
+				"animate": true,
 				"target_bbox": [ 0, 0, 100, 100 ]
 			};
 			collection.push( m_result );
 
-			for (var i = collection.length - 1; i >= 1; i--) {
-				var m = collection[ i ],
-					n = collection[ i - 1 ];
-				m.source_bbox = n.target_bbox;
-			}
+			var len = collection.length;
+			collection[ len - 1 ].source_bbox = collection[ len - 3 ].target_bbox;
+			console.debug( collection );
 			return collection;
 		}
 	});
