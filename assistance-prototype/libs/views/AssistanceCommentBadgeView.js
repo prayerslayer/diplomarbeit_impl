@@ -30,10 +30,10 @@ var assistance = assistance || {};
 			if ( this.toggled ) {
 				// now untoggle
 				this.$el.removeClass( "vizboard-badge-selected" );
-				this.trigger( "hidecomments", this.model.get( "comments" ) );
+				this.model.set( "visible", false );
 			} else {
 				this.$el.addClass( "vizboard-badge-selected" );
-				this.trigger( "showcomments", this.model.get( "comments" ) );
+				this.model.set( "visible", true );
 			}
 			this.toggled = !this.toggled;
 		}

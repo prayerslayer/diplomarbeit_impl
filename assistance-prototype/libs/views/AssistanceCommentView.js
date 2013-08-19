@@ -17,12 +17,18 @@ var assistance = assistance || {};
 
 		initialize: function() {
 			_.bindAll(this, "render");
-    		this.model.bind('change', this.render);
-    		this.model.bind('hide', this.hide );
+    		this.model.bind( 'change', this.render, this);
+    		this.model.bind( 'hide', this.hide, this );
+    		this.model.bind( "show", this.show, this );
+
+		},
+
+		show: function() {
+			this.$el.fadeIn();
 		},
 
 		hide: function() {
-			this.$el.hide();	//TODO $el undefined?
+			this.$el.fadeOut();
 		},
 
 		showAnnotations: function() {

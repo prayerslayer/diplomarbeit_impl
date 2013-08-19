@@ -6,6 +6,7 @@ var assistance = assistance || {};
 		model: assistance.Comment,
 
 		initialize: function( options ) {
+			
 		}
 		
 	});

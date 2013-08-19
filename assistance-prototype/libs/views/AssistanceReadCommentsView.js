@@ -6,7 +6,11 @@ var assistance = assistance || {};
 		className: "assistance-comment__read-comments",
 		itemView: assistance.CommentView,
 
-		badges: [],
+		badges: new assistance.CommentBadgeCollection(),
+
+		initialize: function() {
+			this.listenTo( this.badges, "showcomments", this.showComments, this );
+		},
 
 		init: function() {
 			var spinner = new assistance.Spinner({
@@ -41,9 +45,7 @@ var assistance = assistance || {};
 						var badgeview = new assistance.CommentBadgeView({
 							"model": badge	
 						});
-						badgeview.on( "showcomments", that.showComments, that );
-						badgeview.on( "hidecomments", that.hideComments, that );
-						that.badges.push( badgeview );						
+						that.badges.add( badge );						
 					});
 				},
 				"error": function( col, res) {
@@ -54,24 +56,21 @@ var assistance = assistance || {};
 		},
 
 		showComments: function( comments ) {
-			console.log( "show", comments );
-			_.each( this.collection.models, function( c ) {
-				if ( !_.contains( comments, c ) ) {
+			if ( comments.length > 0 ) {
+				_.each( this.collection.models, function( c ) {
 					c.trigger( "hide" );
-				}
-			});
-		},
-
-		hideComments: function( comments ) {
-			console.log( "hide", comments );
-		},
-
-		onBeforeClose: function() {
-			// destroy badges
-			_.each( this.badges, function( b ) {
-				b.close();
-			});
-			this.badges = null;
+					if ( _.contains( comments, c ) ) {
+						c.trigger( "show" );
+					}
+				});	
+			} else {
+				// there are no comments to be shown, so show all.
+				_.each( this.collection.models, function( c ) {
+					c.trigger( "hide" );	// to make the change visible
+					c.trigger( "show" );
+				});
+			}
+			
 		}
 	});
 })( jQuery );
