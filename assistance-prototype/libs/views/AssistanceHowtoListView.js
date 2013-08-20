@@ -78,9 +78,13 @@ var assistance = assistance || {};
 			// now copy relevant elements in rootcopy and position them
 
 			var cpys = comp.selectAll( selectorAll );
-			cpys.each( function( ) {
+			cpys.each( function( d, i ) {
 				var original = d3.select( this ),
 					cpy = original.clone();	// jquery won't copy SVG elements...
+
+				// this attribute is later used of the item views in highlighting
+				original.attr( "data-vizboard-copy", "copy" + i );
+				cpy.attr( "data-vizboard-copy", "copy" + i );
 				// put svg elements in svg
 				if ( that.isSvgElement( cpy.node() ) )
 					svg.appendChild( cpy );

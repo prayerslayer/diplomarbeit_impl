@@ -111,19 +111,30 @@ var assistance = assistance || {};
 		highlightElements: function() {
 			if ( this.model.get( "lock" ) )
 				return;
+			var that = this;
 			this.highlightSelf();
-			var eels = d3.selectAll( ".vizboard-rootcopy[data-vizboard-component=" + this.model.get( "component" ).substring(1) + "] " + this.model.get( "elements") );
-			// not necessary to remember original class since these elements are a copy anyway
-			eels.attr( "class", "vizboard-highlight" );
+			var eels = d3.selectAll( this.model.get( "component" ) + " " + this.model.get( "elements") );
+			eels.each( function( ) {
+				var el = d3.select( this ),
+					copy_id = el.attr( "data-vizboard-copy" );
+
+				d3.selectAll( ".vizboard-rootcopy[data-vizboard-component=" + that.model.get( "component" ).substring(1) + "] [data-vizboard-copy=" + copy_id + "]" ).attr( "class", "vizboard-highlight" );
+			});
 		},
 
 		// unhighlights highlighted elements
 		unhighlightElements: function() {
 			if ( this.model.get( "lock" ) )
 				return;
+			var that = this;
 			this.unhighlightSelf();
-			var eels = d3.selectAll( ".vizboard-rootcopy[data-vizboard-component=" + this.model.get( "component" ).substring(1) + "] " + this.model.get( "elements") );
-			eels.attr("class", "vizboard-relevant-element" );
+			var eels = d3.selectAll( this.model.get( "component" ) + " " + this.model.get( "elements") );
+			eels.each( function( ) {
+				var el = d3.select( this ),
+					copy_id = el.attr( "data-vizboard-copy" );
+
+				d3.selectAll( ".vizboard-rootcopy[data-vizboard-component=" + that.model.get( "component" ).substring(1) + "] [data-vizboard-copy=" + copy_id + "]" ).attr( "class", "vizboard-relevant-element" );
+			});
 		}
 
 	});
