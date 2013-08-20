@@ -20,18 +20,23 @@ var assistance = assistance || {};
 			"image": ".assistance-comic__panel-image" 
 		},
 
+		initialize: function( opts ) {
+			console.log( "initialized panelview", opts.model );
+		},
+
 		// triggers event when image is completely loaded
 		onRender: function() {
 			var that = this;
-			this.ui.image.imagesLoaded( function() {
+			var callback = function() {
 				if ( typeof that.ui.image === "string" ) {
 					// somehow this may get called before ui hash is bound to elements
 					that.bindUIElements();
 				}
-
-				that.trigger( "imagesloaded" );
-				that.applyBBox( "source_bbox", false );
-			});
+				console.log( "in callback of", that.ui.image );
+				that.trigger( "imgloaded" );
+				that.applyBBox( "source_bbox", true );
+			};
+			this.ui.image.imagesLoaded().done( callback );
 		},
 
 		applyBBox: function( box_type, animate ) {
@@ -47,7 +52,7 @@ var assistance = assistance || {};
 			var original = new Image();
 			original.src = img.attr( "src" );
 			var aspect = original.width / original.height;
-
+			console.log( "bbox", box_type, original.src, original.width, original.height );
 			var	img_w = original.width,
 				img_h = original.height,
 				bbox = this.model.get( box_type ),

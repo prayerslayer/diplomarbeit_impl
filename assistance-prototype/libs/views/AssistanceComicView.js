@@ -18,7 +18,7 @@ var assistance = assistance || {};
 		spinner: null,
 
 		initialize: function() {
-			this.once( "itemview:imagesloaded", this.animate, this );
+			this.once( "itemview:imgloaded", this.animate, this );
 		},
 
 		onBeforeClose: function() {
@@ -38,7 +38,7 @@ var assistance = assistance || {};
 			this.count--;
 			if ( this.count > 0 ) {
 				// ensure that this function is only called once after count is 0
-				this.once( "itemview:imagesloaded", this.animate, this );
+				this.once( "itemview:imgloaded", this.animate, this );
 				return;
 			}
 
@@ -48,12 +48,14 @@ var assistance = assistance || {};
 			var that = this,
 				size = this.collection.size();
 			// animate the images
-			_.each( this.collection.models, function( model, i ) {
+			this.collection.each( function( model, i ) {
 				var v = that.children.findByModel( model );
 				var wrapper = v.ui.wrapper;
 				// each image has 1.5s for its animation: .5s image, .5s zoom
 				wrapper.css( "-webkit-transition-delay", i+"s" );
+				console.log( "starting animation", v.ui.image );
 				wrapper.one( "webkitTransitionEnd", function() {
+					console.log( "animation finished", v.ui.image);
 					v.zoom();
 				});
 				// show caption after zoom finished
@@ -62,8 +64,10 @@ var assistance = assistance || {};
 					v.showCaption();
 				}, i*1000 + 500 );
 				// start animation
-				model.get( "type" ) === "caption" ? wrapper.css( "left", "0px" ) : 
-				wrapper.css( "top", "0px" );
+				if ( model.get( "type" ) === "caption" )
+					wrapper.css( "left", "0px" );
+				else /*if ( model.get( "type" ) === "operation" )*/
+					wrapper.css( "top", "0px" );
 			});
 		},
 
@@ -75,10 +79,7 @@ var assistance = assistance || {};
 			this.spinner = new assistance.Spinner({
 				"caller": this.$el
 			});
-
 			this.count = this.collection.size();
-			console.log( this.collection );
-			that.render();
 		}
 	});
 })( jQuery );
