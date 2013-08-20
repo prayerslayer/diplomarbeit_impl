@@ -91,7 +91,7 @@ var assistance = assistance || {};
 				else
 					div.appendChild( cpy );
 
-				//wrap in jquery and attach event handler
+				// find model, it's needed for event triggering
 				var $cpy = $( cpy.node() ),
 					m = _.find( modelselektor, function( v, k ) {
 						return _.contains( comp.selectAll( k )[0], original.node() );
@@ -103,6 +103,8 @@ var assistance = assistance || {};
 					$cpy.css( "position", "absolute" );
 					that.samePosition( $( original.node() ), $cpy );
 				}
+
+				//attach event handler
 				cpy.attr( "class", "vizboard-relevant-element" );
 				$cpy.click( function() {
 					m.trigger( "showassistance" );
@@ -113,10 +115,6 @@ var assistance = assistance || {};
 					m.trigger( "unhighlight" );
 				});
 			});
-
-			_.each( this.collection.models, function( m, i ) {
-
-			})
 		},
 
 		isSvgElement: function( node ) {
@@ -135,6 +133,10 @@ var assistance = assistance || {};
 			var comp_id = this.collection.at(0).get( "component" ),
 				comp = d3.select( comp_id );
 			
+			// clean component up
+			comp.selectAll( "[data-vizboard-copy]" ).each( function() {
+				d3.select( this ).attr( "data-vizboard-copy", null );
+			});
 			comp.selectAll("div.vizboard-ground").remove( );
 			$( ".vizboard-rootcopy[data-vizboard-component=" + comp_id.substring(1) + "]" ).remove();
 		}
