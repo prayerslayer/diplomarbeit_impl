@@ -61,9 +61,11 @@ var assistance = assistance || {};
 			var panelCollection = new assistance.PanelCollection([], {
 				"url": "componentCapability"
 			});
+			panelCollection.task = task;
 			panelCollection.fetch({
 				"success": function( collection, res ) {
 					spinner.close();
+
 					// create a normal base view if images do not fit inside component
 					var component = that.model.get( "component" );
 					if ( $( component ).width() < collection.size() * 170 ) {
