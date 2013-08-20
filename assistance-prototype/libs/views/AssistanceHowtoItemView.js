@@ -112,7 +112,7 @@ var assistance = assistance || {};
 			if ( this.model.get( "lock" ) )
 				return;
 			this.highlightSelf();
-			var eels = d3.selectAll( this.model.get( "component" ) + " > .vizboard-rootcopy " + this.model.get( "elements") );
+			var eels = d3.selectAll( ".vizboard-rootcopy[data-vizboard-component=" + this.model.get( "component" ).substring(1) + "] " + this.model.get( "elements") );
 			// not necessary to remember original class since these elements are a copy anyway
 			eels.attr( "class", "vizboard-highlight" );
 		},
@@ -122,7 +122,7 @@ var assistance = assistance || {};
 			if ( this.model.get( "lock" ) )
 				return;
 			this.unhighlightSelf();
-			var eels = d3.selectAll( this.model.get( "component" ) + " > .vizboard-rootcopy " + this.model.get( "elements") );
+			var eels = d3.selectAll( ".vizboard-rootcopy[data-vizboard-component=" + this.model.get( "component" ).substring(1) + "] " + this.model.get( "elements") );
 			eels.attr("class", "vizboard-relevant-element" );
 		}
 

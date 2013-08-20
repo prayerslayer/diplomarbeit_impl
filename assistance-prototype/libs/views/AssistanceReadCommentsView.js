@@ -18,7 +18,6 @@ var assistance = assistance || {};
 
 		badges: new assistance.CommentBadgeCollection(),
 		badgesviews: [],	// we need to maintain these views ourselves because the actual collection are the comments
-							// could probably be fixed later by using a CompositeView.
 
 
 		initialize: function() {

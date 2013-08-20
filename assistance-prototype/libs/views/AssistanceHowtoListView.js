@@ -19,28 +19,54 @@ var assistance = assistance || {};
 			var that = this;
 
 			// highlight these elements
-			var viz = d3.select( this.collection.at(0).get( "component" ) ),
-				$viz = $( viz.node() ),
-				root = d3.select( this.collection.at(0).get( "visualization" ) ),
-				$root = $( this.collection.at(0).get( "visualization" ) ),
-				root_offset = $root.offset();
+			var comp = d3.select( this.collection.at(0).get( "component" ) ),
+				$comp = $( comp.node() ),
+				comp_offset = $comp.offset();
 
 			// make dark background
 			var ground = $( document.createElement( "div" ) )
-							.css( "width", $root.width() )
-							.css( "height", $root.height() )
+							.css( "width", $comp.width() )
+							.css( "height", $comp.height() )
 							.attr( "class", "vizboard-ground" );
-			$viz.prepend( ground );
-			// shallow copy of  visualization - this is because we don't know (and don't want to) if it's a HTML or SVG visualization
-			var copyroot = root.clone( false );
-			// prepend to visualization
-			viz.appendChild( copyroot );
-			copyroot.attr( "class", "vizboard-rootcopy" );
-			$( copyroot.node() ).css( "left", root_offset.left );
-			$( copyroot.node() ).css( "top", root_offset.top );
+			$comp.prepend( ground );
+			
+			// create a new div with class rootcopy
+			var domDiv = document.createElement( "div" ),
+				$div = $( domDiv ),	// wrapped in jquery
+				div = d3.select( domDiv );	// wrapped in d3
 
-			// now copy relevant elements and display them above
-			//TODO problem: reihenfolge passt nicht
+			$div.addClass( "vizboard-rootcopy" );
+			$div.attr( "data-vizboard-component", this.collection.at(0).get("component").substring(1) ); // in case there are more help views open
+			$( "body" ).append( $div );
+			// make this rootcopy the same size as component and overlay it
+			$div.css( "width", $comp.width() );
+			$div.css( "height", $comp.height() );
+			$div.position({
+				"at": $comp,
+				"my": "left top",
+				"at": "left top"
+			});
+
+			// append an svg element to rootcopy
+			// this is necessary because the css selectors might hit elements of the visualization
+			// which in turn may be an svg element
+
+			var domSvg = document.createElementNS( "http://www.w3.org/2000/svg", "svg" ),
+				svg = d3.select( domSvg ),
+				$svg = $( svg.node() );
+
+			// make svg the same width and height as rootcopy
+			var $visualization = $comp.find( this.collection.at(0).get( "visualization" ) );
+			svg.attr( "width", $visualization.width() );
+			svg.attr( "height", $visualization.height() );
+			$svg.css( "position", "absolute" );
+			// jquery.position does not work well with svg, so we do it ourselves
+			this.samePosition( $visualization, $svg );
+			$div.append( $svg );
+
+			// make a global selector to preserve at least SOME markup order
+			// don't know if it works in all cases, it did when dealing with nth-child(even) and nth-child(odd) selectors.
+
 			var modelselektor = {},
 				selectorAll = "";
 			_.each( this.collection.models, function( m, i ) {
@@ -49,16 +75,31 @@ var assistance = assistance || {};
 				selectorAll += ( i > 0 ? ", " : "" ) + selector;
 			});
 
-			var cpys = viz.selectAll( selectorAll );
+			// now copy relevant elements in rootcopy and position them
+
+			var cpys = comp.selectAll( selectorAll );
 			cpys.each( function( ) {
-				var cpy = d3.select( this ).clone();
-				copyroot.appendChild( cpy );
-				cpy.attr( "class", "vizboard-relevant-element" );
+				var original = d3.select( this ),
+					cpy = original.clone();	// jquery won't copy SVG elements...
+				// put svg elements in svg
+				if ( that.isSvgElement( cpy.node() ) )
+					svg.appendChild( cpy );
+				else
+					div.appendChild( cpy );
+
 				//wrap in jquery and attach event handler
 				var $cpy = $( cpy.node() ),
 					m = _.find( modelselektor, function( v, k ) {
-						return _.contains( viz.selectAll( k )[0], cpy.node() );
+						return _.contains( comp.selectAll( k )[0], original.node() );
 					});
+
+				// I argue that svg elements already have their position set in form of transform or x,y attributes
+				if ( !that.isSvgElement( cpy.node() ) ) {
+					// so only html elements need positioning
+					$cpy.css( "position", "absolute" );
+					that.samePosition( $( original.node() ), $cpy );
+				}
+				cpy.attr( "class", "vizboard-relevant-element" );
 				$cpy.click( function() {
 					m.trigger( "showassistance" );
 				});
@@ -67,16 +108,31 @@ var assistance = assistance || {};
 				}, function() {
 					m.trigger( "unhighlight" );
 				});
+			});
+
+			_.each( this.collection.models, function( m, i ) {
+
 			})
+		},
+
+		isSvgElement: function( node ) {
+			return node.namespaceURI === "http://www.w3.org/2000/svg";
+		},
+
+		samePosition: function( $source, $target ) {
+			// this works because source and target have equally sized and positioned parents
+			// also: offsetTop uses top as well as margin-top
+			$target.css( "top", $source[0].offsetTop );
+			$target.css( "left", $source[0].offsetLeft );
 		},
 
 		onBeforeClose: function() {
 			this.collection.unlock();
-			var viz = d3.select( this.collection.at(0).get( "component" ) ),
-				root = d3.select( this.collection.at(0).get( "visualization" ) );
+			var comp_id = this.collection.at(0).get( "component" ),
+				comp = d3.select( comp_id );
 			
-			viz.selectAll("div.vizboard-ground").remove( );
-			viz.selectAll(".vizboard-rootcopy" ).remove();
+			comp.selectAll("div.vizboard-ground").remove( );
+			$( ".vizboard-rootcopy[data-vizboard-component=" + comp_id.substring(1) + "]" ).remove();
 		}
 	});
 })( jQuery );

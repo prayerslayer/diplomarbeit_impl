@@ -257,9 +257,9 @@
 						"action": "sort",
 						"variable": "player",
 						"capability": "cap01",
-						"elements": "rect:nth-child(even)",
+						"elements": "button",
 						"component": "#barchart",
-						"visualization": "#barchart > svg"
+						"visualization": "svg"
 					});
 					var item2 = new assistance.HowtoItem({
 						"component_id": "http://mmt.inf.tu-dresden.de/VizBoard/Something",
@@ -267,7 +267,7 @@
 						"capability": "cap02",
 						"elements": "rect:nth-child(odd)",
 						"component": "#barchart",
-						"visualization": "#barchart > svg"
+						"visualization": "svg"
 					});
 					var items = new assistance.HowtoCollection();
 					items.add( item );
@@ -293,9 +293,19 @@
 		<div class="button" id="showcomments">show comments</div>
 
 		<div id="barchart">
-			<svg>
-				<rect resource="testinstance1" class="bar" x="20px" y="120px" width="40px" height="280px" />
-				<rect resource="testinstance2" class="bar" x="70px" y="260px" width="40px" height="140px" />
+			<div class="aside" style="float:right;">
+				<ul>
+					<li>I am </li>
+					<li>the list</li>
+					<li>of five</li>
+					<li>Items and</li>
+					<li>two words.</li>
+				</ul>
+				<button type="submit" value="hello">hello</button>
+			</div>
+			<svg style="top: 5px;margin-top: -30px;left: 30px;position:absolute;" width="300" height="400">
+				<rect resource="testinstance1" class="bar" x="20px" y="120px" width="40px" height="280px" transform="rotate(2)"/>
+				<rect resource="testinstance2" class="bar" x="70px" y="260px" width="40px" height="140px" transform="rotate(-1)"/>
 				<rect resource="testinstance3" class="bar" x="120px" y="310px" width="40px" height="90px" />
 				<rect resource="testinstance4" class="bar" x="170px" y="240px" width="40px" height="160px" />
 				<rect resource="testinstance5" class="bar" x="220px" y="290px" width="40px" height="110px" />
