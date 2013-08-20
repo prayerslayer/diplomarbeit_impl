@@ -51,13 +51,11 @@ var assistance = assistance || {};
 			this.collection.each( function( model, i ) {
 				var v = that.children.findByModel( model );
 				var wrapper = v.ui.wrapper;
-				// each image has 1.5s for its animation: .5s image, .5s zoom
+				// each image has 1.5s for its animation: .5s image, .5s zoom, .5s caption
 				wrapper.css( "-webkit-transition-delay", i+"s" );
-				console.log( "starting animation", v.ui.image );
-				wrapper.one( "webkitTransitionEnd", function() {
-					console.log( "animation finished", v.ui.image);
+				setTimeout( function() {
 					v.zoom();
-				});
+				}, i * 1000 + 500 );
 				// show caption after zoom finished
 				// this block does not work properly inside event handler?
 				setTimeout( function() {
