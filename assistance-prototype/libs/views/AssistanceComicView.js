@@ -52,19 +52,19 @@ var assistance = assistance || {};
 				var v = that.children.findByModel( model );
 				var wrapper = v.ui.wrapper;
 				// each image has 1.5s for its animation: .5s image, .5s zoom, .5s caption
-				wrapper.css( "-webkit-transition-delay", i+"s" );
+				wrapper.css( "-webkit-transition-delay", i*1.5+"s" );
 				setTimeout( function() {
 					v.zoom();
-				}, i * 1000 + 500 );
+				}, i * 1500 + 500 ); 
 				// show caption after zoom finished
 				// this block does not work properly inside event handler?
 				setTimeout( function() {
 					v.showCaption();
-				}, i*1000 + 500 );
+				}, i*1500 + 500 );
 				// start animation
 				if ( model.get( "type" ) === "caption" )
 					wrapper.css( "left", "0px" );
-				else /*if ( model.get( "type" ) === "operation" )*/
+				else
 					wrapper.css( "top", "0px" );
 			});
 		},

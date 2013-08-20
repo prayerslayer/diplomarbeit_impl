@@ -1,3 +1,12 @@
+/*
+	Comment Badge View
+	====================	
+ 	
+ 	Look and feel of a Comment Badge.
+
+	@author npiccolotto
+*/
+
 var assistance = assistance || {};
 
 ( function( $ ) {
@@ -22,7 +31,7 @@ var assistance = assistance || {};
 			this.$el.position({
 				"of": $( "[resource=" + this.model.get("uri" ) + "]" ),
 				"my": "center center",
-				"at": "right top"
+				"at": "right top"	// this does not work with SVG, sadly
 			});
 		},
 

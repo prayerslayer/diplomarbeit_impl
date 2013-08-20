@@ -59,6 +59,7 @@ var assistance = assistance || {};
 					view.init();
 			});
 			
+			// width in css is for list view
 			if ( this.options.type === "readcomment" )
 				this.$el.css( "width", "auto" );
 		},
@@ -71,8 +72,8 @@ var assistance = assistance || {};
 
 			this.$el.position({
 				"of": $bro,
-				"my": "left center",
-				"at": "right center"
+				"my": position_left ? "right center": "left center",
+				"at": position_left ? "left center" : "right center"
 			});
 		},
 

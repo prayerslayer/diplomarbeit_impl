@@ -1,7 +1,7 @@
 /*
 	Howto List View
 =======================	
- 	Displays the Howto Items. Does not much else.
+ 	Displays the Howto Items and highlights relevant UI elements of the component.
 
 	@author npiccolotto
 */

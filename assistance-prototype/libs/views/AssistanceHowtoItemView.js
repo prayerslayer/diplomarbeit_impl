@@ -1,6 +1,7 @@
 /*
 	Howto Item View
-=======================	
+	====================	
+ 	
  	Look and feel of Howto Items. They highlight elements at mouseover and display assistance on click.
 
 	@author npiccolotto

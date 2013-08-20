@@ -1,7 +1,7 @@
 /*
 	Operation Panel View
 =======================	
- 	View of an operation panel. They are different from regular (e.g. the initial and result) panels, as the caption is layed over the panel instead of located at the bottm.
+ 	View of an operation panel. Difference to caption panel is the UI of the caption.
 
 	@author npiccolotto
 */

@@ -1,7 +1,7 @@
 /*
 	Operation Panel
 =======================	
- 	Represents a comic panel of an operation.
+ 	Represents a comic panel that shows relevant UI elements.
 
 	@author npiccolotto
 */
@@ -15,10 +15,6 @@ var assistance = assistance || {};
 			"type": "operation",							// other types are initial and result
 			"bbox": [ 40, 20, 48, 28 ],						// bounding box of elements in screenshot
 			"operation": "click"							// name of operation
-		},
-
-		initialize: function() {
-			assistance.Panel.prototype.initialize.call( this );
 		}
 	});
 })( jQuery );

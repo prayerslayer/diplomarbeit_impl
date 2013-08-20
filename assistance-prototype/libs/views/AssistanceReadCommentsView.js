@@ -1,3 +1,13 @@
+/*
+*	Read Comments View
+*	===================
+*
+*	This view lists a bunch of comments and shows some badges in the visualization.
+*
+*	@author npiccolotto
+*/
+
+
 var assistance = assistance || {};
 
 ( function( $ ) {
@@ -7,14 +17,17 @@ var assistance = assistance || {};
 		itemView: assistance.CommentView,
 
 		badges: new assistance.CommentBadgeCollection(),
-		badgesviews: [],
+		badgesviews: [],	// we need to maintain these views ourselves because the actual collection are the comments
+							// could probably be fixed later by using a CompositeView.
 
 
 		initialize: function() {
+			// this event tells that a badge was clicked, its comments shall therefore be shown
 			this.listenTo( this.badges, "showcomments", this.showComments, this );
 		},
 
 		init: function() {
+			// create a spinner before fetching comments
 			var spinner = new assistance.Spinner({
 					"caller": this.$el
 				}),
@@ -24,8 +37,9 @@ var assistance = assistance || {};
 				"success": function( collection, response ) {
 					spinner.close();
 
-					var point_commies = {};
+
 					// collect point annotations
+					var point_commies = {};
 					_.each( collection.models, function( comment ) {
 						_.each( comment.get( "annotations" ), function( anno ) {
 							if ( anno.type === "point" ) {
@@ -37,7 +51,7 @@ var assistance = assistance || {};
 						});
 					});
 					
-					// draw badges
+					// now create and render badges
 					_.each( point_commies, function( comments , uri ) {
 						var badge = new assistance.CommentBadge({
 							"component": that.options.component,
@@ -58,6 +72,7 @@ var assistance = assistance || {};
 
 		},
 
+		// hides all the comments, then shows those that should be visible
 		showComments: function( comments ) {
 			if ( comments.length > 0 ) {
 				_.each( this.collection.models, function( c ) {
@@ -69,13 +84,13 @@ var assistance = assistance || {};
 			} else {
 				// there are no comments to be shown, so show all.
 				_.each( this.collection.models, function( c ) {
-					c.trigger( "hide" );	// to make the change visible
+					c.trigger( "hide" );	// to make a change visible
 					c.trigger( "show" );
 				});
 			}
 			
 		},
-
+		// before closing this view, we must free the badge views to prevent zombie views and memory leaks
 		onBeforeClose: function() {
 			_.each( this.badgesviews, function( v ) {
 				v.stopListening();

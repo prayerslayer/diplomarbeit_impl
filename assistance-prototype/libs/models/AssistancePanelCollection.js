@@ -1,3 +1,15 @@
+/*
+*	Panel Collection
+*	===================
+*
+*	This collection fetches image data from the CoRe backend and constructs a 
+*	bunch of panel models.
+*
+*	@author npiccolotto
+*/
+
+//TODO in echt ist alles kein JSON sondern SOAP/XML mit JSON content
+
 var assistance = assistance || {};
 
 ( function( $ ) {

@@ -1,3 +1,12 @@
+/*
+	Comment Collection
+	====================	
+ 	
+ 	Fetches comments from backend and holds them together.
+
+	@author npiccolotto
+*/
+
 var assistance = assistance || {};
 
 ( function( $ ) {

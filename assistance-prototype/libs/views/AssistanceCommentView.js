@@ -1,3 +1,12 @@
+/*
+*	Comment View
+*	===================
+*
+*	Does what you would expect...
+*
+*	@author npiccolotto
+*/
+
 var assistance = assistance || {};
 
 ( function( $ ) {
@@ -26,18 +35,19 @@ var assistance = assistance || {};
     		this.model.bind( 'change:score', this.renderScore, this);
     		this.model.bind( 'hide', this.hide, this );
     		this.model.bind( "show", this.show, this );
-
 		},
 
+		// update score
 		renderScore: function() {
-			this.model.readableScore();
 			this.ui.score.text( this.model.get( "hr_score" ) );
 		},
 
+		// show comment
 		show: function() {
 			this.$el.fadeIn();
 		},
 
+		// hide comment - this and show are used by the comment badges, essentially
 		hide: function() {
 			this.$el.fadeOut();
 		},
