@@ -10,7 +10,7 @@
 var assistance = assistance || {};
 
 ( function( $ ) {
-	assistance.TextAnnotation = Backbone.Model.extend({
+	assistance.TextAnnotation = assistance.AnnotationElement.extend({
 		defaults: {
 			"component": "#barchart",
 			"x": 24,

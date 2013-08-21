@@ -40,12 +40,13 @@ var assistance = assistance || {};
 					// collect point annotations
 					var point_commies = {};
 					_.each( collection.models, function( comment ) {
-						_.each( comment.get( "annotations" ), function( anno ) {
-							if ( anno.type === "point" ) {
-								if ( !point_commies[ anno.uri ] )
-									point_commies[ anno.uri ] = [ comment ];
+						comment.get( "annotations" ).each( function( anno ) {
+							if ( anno.get( "type" ) === "point" ) {
+								var uri = anno.get( "uri" );
+								if ( !point_commies[ uri ] )
+									point_commies[ uri ] = [ comment ];
 								else 
-									point_commies[ anno.uri ].push( comment );
+									point_commies[ uri ].push( comment );
 							}
 						});
 					});

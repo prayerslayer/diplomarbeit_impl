@@ -10,10 +10,23 @@
 var assistance = assistance || {};
 
 ( function( $ ) {
-	assistance.CommentView = Backbone.Marionette.ItemView.extend({
+	assistance.CommentView = Backbone.Marionette.CompositeView.extend({
 		tagName: "div",
 		className: "assistance-comment__comment",
 		template: "#commentViewTemplate",
+		model: assistance.Comment,
+
+		getItemView: function( item ) {
+			if ( item.get( "type" ) === "area" ) {
+				return assistance.AreaAnnotationView;
+			} else if ( item.get( "type" ) === "point" )
+				return assistance.DatapointAnnotationView;
+		},
+
+		// do not render annotations inside of this view plz kthxbai
+		appendHtml: function( collectionview, itemview, index ) {
+			$( "body" ).append( itemview.el );
+		},
 
 		voted: null,
 
@@ -30,8 +43,10 @@ var assistance = assistance || {};
 			"click [data-action=vote-down]": "voteDown"
 		},
 
-		initialize: function() {
+		initialize: function( opts ) {
 			// no need to re-render the whole view if just the score changed after voting
+			console.log( opts.model.get( "annotations" ) );
+			this.collection = opts.model.get( "annotations" );
     		this.model.bind( 'change:score', this.renderScore, this);
     		this.model.bind( 'hide', this.hide, this );
     		this.model.bind( "show", this.show, this );
