@@ -2,7 +2,8 @@
 *	Datapoint View
 *	===================
 *
-*	Does what you would expect...
+*	This is just for fewer edge cases. Datapoint annotations are not explicitly
+* 	shown, instead they are used by comment badges.
 *
 *	@author npiccolotto
 */

@@ -1,5 +1,7 @@
 # TODO
 
+* Was ist der Unterschied zwischen CommentBadge und DatapointAnnotationView? Machen die nicht fast dasselbe?
+* Kann ich die ganzen show()s und hide()s Funktionen irgendwo zusammenfassen? Sieht nisch so dolle aus, nor.
 * Annotationen in Kommentaren
 	* CommentView als CollectionView umschreiben
 	* Collection = Annotationen

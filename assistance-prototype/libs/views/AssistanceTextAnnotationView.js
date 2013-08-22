@@ -14,7 +14,12 @@ var assistance = assistance || {};
 		
 		tagName: "div",
 		className: "assistance-comment__textannotation",
-		template: "textannotationViewTemplate"
+		template: "#textannotationViewTemplate",
+
+		onRender: function() {
+			this.$el.css( "left", this.model.get( "x" ) +"%" );
+			this.$el.css( "top", this.model.get( "y" ) + "%" );
+		}
 
 	});
 })( jQuery );

@@ -9,12 +9,8 @@
 
 		</script>
 
-		<script type="text/template" id="areaannotationViewTemplate">
-
-		</script>
-
 		<script type="text/template" id="pointannotationViewTemplate">
-			<%= uri %>
+
 		</script>
 
 		<script type="text/template" id="textannotationViewTemplate">
@@ -35,10 +31,10 @@
 				<div class="assistance-comment__comment-metadata-date"><%= hr_timestamp %></div>
 				<div class="assistance-comment__comment-metadata-edit-delete"></div>
 				<div class="assistance-comment__comment-metadata-show-annos" data-action="show-annotations">
-				<i class="icon-eye-open"></i> Show annotations
+				<i class="icon-eye-open assistance-comment__comment-metadata-show-annos_icon"></i> Show annotations
 				</div>
 				<div class="assistance-comment__comment-metadata-reply" data-action="reply">
-				<i class="icon-reply"></i> Reply to comment</div>
+				<i class="icon-reply assistance-comment__comment-metadata-reply_icon"></i> Reply to comment</div>
 				<div class="assistance-comment__comment-metadata-voting">
 				Vote for comment:
 					<div class="assistance-comment__comment-metadata-voting_up" data-action="vote-up"><i class="icon-thumbs-up"></i> Agree</div>
@@ -53,7 +49,7 @@
 
 		<script type="text/template" id="baseViewTemplate">
 			<h2 class="assistance-base__headline">Headline</h2>
-			<span class="assistance-base__close" data-action="close"><i class="icon-remove icon-large"></i></span>
+			<span class="assistance-base__close" data-action="close"><i class="icon-remove icon-large"></i> Close</span>
 			<p class="assistance-base__explanation">Some explanations maybe</p>
 			<div class='assistance-base__content'>
 			</div>
@@ -179,7 +175,7 @@
 					        "elements": [
 					            {
 					                "type": "text",
-					                "x": 220,
+					                "x": 22,
 					                "y": 50.5,
 					                "text": "OLOLZ"
 					            }
@@ -211,7 +207,7 @@
 					        "elements": [
 					            {
 					                "type": "text",
-					                "x": 220,
+					                "x": 22,
 					                "y": 50.5,
 					                "text": "OLOLZ"
 					            }
@@ -242,7 +238,7 @@
 					        "elements": [
 					            {
 					                "type": "text",
-					                "x": 220,
+					                "x": 22,
 					                "y": 50.5,
 					                "text": "OLOLZ"
 					            }

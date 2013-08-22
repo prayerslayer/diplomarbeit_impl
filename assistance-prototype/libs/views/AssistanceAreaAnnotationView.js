@@ -13,15 +13,26 @@ var assistance = assistance || {};
 	assistance.AreaAnnotationView = Backbone.Marionette.CollectionView.extend({
 		tagName: "div",
 		className: "assistance-comment__areaannotation",
-		template: "#areaannotationViewTemplate",
-
+		
 		getItemView: function( item ) {
-			if ( item.get( "type" ) === "text" )
+			if ( item.get( "type" ) === "text" ) 
 				return assistance.TextAnnotationView;
 		},
 
-		appendHtml: function( colview, itemview, index ) {
-			$( "body" ).append( itemview.el );
+		onRender: function() {
+			this.$el.hide();
+		},
+
+		show: function() {
+			this.$el.show();
+		},
+
+		hide: function() {
+			this.$el.hide();
+		},
+
+		initialize: function( opts ) {
+			this.collection = opts.model.get( "elements" );
 		}
 	});
 })( jQuery );

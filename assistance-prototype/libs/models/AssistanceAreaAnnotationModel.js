@@ -17,7 +17,7 @@ var assistance = assistance || {};
 		},
 
 		initialize: function() {
-			this.set( "elements", new Backbone.Collection({
+			this.set( "elements", new Backbone.Collection([], {
 				"model": assistance.AnnotationElement
 			}) );
 		}

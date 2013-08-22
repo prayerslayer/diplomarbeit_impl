@@ -19,7 +19,6 @@ var assistance = assistance || {};
 		badges: new assistance.CommentBadgeCollection(),
 		badgesviews: [],	// we need to maintain these views ourselves because the actual collection are the comments
 
-
 		initialize: function() {
 			// this event tells that a badge was clicked, its comments shall therefore be shown
 			this.listenTo( this.badges, "showcomments", this.showComments, this );
@@ -40,6 +39,8 @@ var assistance = assistance || {};
 					// collect point annotations
 					var point_commies = {};
 					_.each( collection.models, function( comment ) {
+						
+						comment.set( "component", that.options.component );	//komponente durchreichen - irgendwie zu spät
 						comment.get( "annotations" ).each( function( anno ) {
 							if ( anno.get( "type" ) === "point" ) {
 								var uri = anno.get( "uri" );
@@ -64,12 +65,30 @@ var assistance = assistance || {};
 						that.badgesviews.push( badgeview );
 						that.badges.add( badge );						
 					});
+
+					// this is sort of a hack. it causes marionette to re-render the collection
+					// it's necessary so that the itemviews know the component in which they shall render themselves
+					that.collection.trigger( "reset");
+					that.listenTo( that.collection, "showannotations", that.hideBadges, that );
+					that.listenTo( that.collection, "hideannotations", that.showBadges, that );
 				},
 				"error": function( col, res) {
 					console.debug( col, res );
 				}
 			});
 
+		},
+
+		hideBadges: function() {
+			_.each( this.badgesviews, function( v ) {
+				v.hide( 200 );
+			});
+		},
+
+		showBadges: function() {
+			_.each( this.badgesviews, function( v ) {
+				v.show( 200 );
+			});
 		},
 
 		// hides all the comments, then shows those that should be visible

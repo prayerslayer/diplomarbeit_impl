@@ -16,6 +16,10 @@ var assistance = assistance || {};
 			"x": 24,
 			"y": 42,
 			"text": "Looooser"
+		},
+
+		onRender: function() {
+			this.$el.hide();
 		}
 
 	});

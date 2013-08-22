@@ -25,6 +25,14 @@ var assistance = assistance || {};
 			"click": "toggleComments",
 		},
 
+		show: function() {
+			this.$el.show();
+		},
+
+		hide: function() {
+			this.$el.hide();
+		},
+
 		onRender: function() {
 			this.$el.text( this.model.get( "comments" ).length );
 			$( this.model.get("component" ) ).append( this.$el );

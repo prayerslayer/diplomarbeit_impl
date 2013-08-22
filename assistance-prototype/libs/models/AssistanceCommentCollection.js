@@ -15,12 +15,22 @@ var assistance = assistance || {};
 		model: assistance.Comment,
 
 		initialize: function( options ) {
-			
+			this.on( "model:showannotations", this.triggerShowAnnotations, this );
+			this.on( "model:hideannotations", this.triggerHideAnnotations, this );
+		},
+
+		triggerShowAnnotations: function() {
+			console.log( "collection trigger show" );
+			this.trigger( "showannotations" );
+		},
+
+		triggerHideAnnotations: function() {
+			this.trigger( "hideannotations" );
 		},
 
 		parse: function( data ) {
 			_.each( data, function( c ) {
-				var annos = new assistance.AnnotationCollection( c.annotations );
+				var models = [];
 				_.each( c.annotations, function( anno ) {
 					var model = null;
 					if ( anno.type === "area" ) {
@@ -30,21 +40,22 @@ var assistance = assistance || {};
 							"visualization_height": anno.visualization_height
 						});
 						_.each( anno.elements, function( el ) {
-							if ( el.type === "text" )
+							if ( el.type === "text" ) {
 								model.get( "elements" ).add( new assistance.TextAnnotation( el ) );
+							}
 						});
 					} else if ( anno.type === "point" ) {
-
+						model = new assistance.DatapointAnnotation( anno );
 					} else if ( anno.type === "group" ) {
 
 					} else if ( anno.type === "data" ) {
-						model = new assistance.DatapointAnnotation( anno );
+						
 					}
-					annos.add( model );
+					models.push( model );
 				});
-				c.annotations = annos;
+				c.annotations = new assistance.AnnotationCollection( models );
 			});
-
+			console.log( data );
 			return data;
 		}
 		

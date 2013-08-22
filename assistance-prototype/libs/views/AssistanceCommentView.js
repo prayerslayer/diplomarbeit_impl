@@ -16,6 +16,8 @@ var assistance = assistance || {};
 		template: "#commentViewTemplate",
 		model: assistance.Comment,
 
+		annotationsShown: false,
+
 		getItemView: function( item ) {
 			if ( item.get( "type" ) === "area" ) {
 				return assistance.AreaAnnotationView;
@@ -25,7 +27,7 @@ var assistance = assistance || {};
 
 		// do not render annotations inside of this view plz kthxbai
 		appendHtml: function( collectionview, itemview, index ) {
-			$( "body" ).append( itemview.el );
+			$( collectionview.model.get( "component" ) ).append( itemview.el );
 		},
 
 		voted: null,
@@ -33,7 +35,10 @@ var assistance = assistance || {};
 		ui: {
 			"voteup": ".assistance-comment__comment-metadata-voting_up",
 			"votedown": ".assistance-comment__comment-metadata-voting_down",
-			"score": ".assistance-comment__comment-metadata-score"
+			"score": ".assistance-comment__comment-metadata-score",
+			"annos": ".assistance-comment__comment-metadata-show-annos",
+			"annosicon": ".assistance-comment__comment-metadata-show-annos_icon",
+			"reply": ".assistance-comment__comment-metadata-reply"
 		},
 
 		events: {
@@ -45,7 +50,6 @@ var assistance = assistance || {};
 
 		initialize: function( opts ) {
 			// no need to re-render the whole view if just the score changed after voting
-			console.log( opts.model.get( "annotations" ) );
 			this.collection = opts.model.get( "annotations" );
     		this.model.bind( 'change:score', this.renderScore, this);
     		this.model.bind( 'hide', this.hide, this );
@@ -68,11 +72,27 @@ var assistance = assistance || {};
 		},
 
 		showAnnotations: function() {
-			console.log( "triggered show" );
+			var that = this;
+
+			// show/hide annotations
+			this.children.call( this.annotationsShown ? "hide" : "show" );
+			// update ui
+			if ( !this.annotationsShown ) {
+				this.ui.annos.text( "Hide annotations" );
+				this.ui.annosicon.removeClass( "icon-eye-open" ).addClass( "icon-eye-closed" );
+				this.model.trigger( "showannotations" );
+			} else {
+				this.ui.annos.text( "Show annotations" );
+				this.ui.annosicon.removeClass( "icon-eye-closed" ).addClass( "icon-eye-open" );
+				this.model.trigger( "hideannotations" );
+			}
+
+			this.annotationsShown = !this.annotationsShown;
 		},
 
 		reply: function() {
 			console.log( "triggered reply" );
+
 		},
 
 		voteUp: function() {
