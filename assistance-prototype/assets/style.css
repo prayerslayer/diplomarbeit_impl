@@ -309,7 +309,7 @@ div.assistance-comment__comment-content {
 
 /* ANNOTATION STUFF */
 
-div.assistance-comment__areaannotation,
+svg.assistance-comment__areaannotation,
 div.assistance-comment__datapointannotation {
 	position: absolute;
 	width: 100%;
@@ -318,8 +318,8 @@ div.assistance-comment__datapointannotation {
 	top: 0px;
 }
 
-div.assistance-comment__textannotation {
-	position: absolute;
+.assistance-comment__arrowannotation {
+	stroke: black;
 }
 
 /* SPINNER STUFF */

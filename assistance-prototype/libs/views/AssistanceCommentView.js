@@ -36,7 +36,7 @@ var assistance = assistance || {};
 			"voteup": ".assistance-comment__comment-metadata-voting_up",
 			"votedown": ".assistance-comment__comment-metadata-voting_down",
 			"score": ".assistance-comment__comment-metadata-score",
-			"annos": ".assistance-comment__comment-metadata-show-annos",
+			"annos": ".assistance-comment__comment-metadata-show-annos_text",
 			"annosicon": ".assistance-comment__comment-metadata-show-annos_icon",
 			"reply": ".assistance-comment__comment-metadata-reply"
 		},
@@ -49,11 +49,8 @@ var assistance = assistance || {};
 		},
 
 		initialize: function( opts ) {
-			// no need to re-render the whole view if just the score changed after voting
 			this.collection = opts.model.get( "annotations" );
     		this.model.bind( 'change:score', this.renderScore, this);
-    		this.model.bind( 'hide', this.hide, this );
-    		this.model.bind( "show", this.show, this );
 		},
 
 		// update score
@@ -63,12 +60,12 @@ var assistance = assistance || {};
 
 		// show comment
 		show: function() {
-			this.$el.fadeIn();
+			this.$el.fadeIn( 200 );
 		},
 
 		// hide comment - this and show are used by the comment badges, essentially
 		hide: function() {
-			this.$el.fadeOut();
+			this.$el.fadeOut( 200 );
 		},
 
 		showAnnotations: function() {
@@ -77,14 +74,16 @@ var assistance = assistance || {};
 			// show/hide annotations
 			this.children.call( this.annotationsShown ? "hide" : "show" );
 			// update ui
+
+			//TODO text ersetzt icon mit
 			if ( !this.annotationsShown ) {
 				this.ui.annos.text( "Hide annotations" );
-				this.ui.annosicon.removeClass( "icon-eye-open" ).addClass( "icon-eye-closed" );
-				this.model.trigger( "showannotations" );
+				this.ui.annosicon.removeClass( "icon-eye-open" ).addClass( "icon-eye-close" );
+				this.trigger( "showannotations" );
 			} else {
 				this.ui.annos.text( "Show annotations" );
-				this.ui.annosicon.removeClass( "icon-eye-closed" ).addClass( "icon-eye-open" );
-				this.model.trigger( "hideannotations" );
+				this.ui.annosicon.removeClass( "icon-eye-close" ).addClass( "icon-eye-open" );
+				this.trigger( "hideannotations" );
 			}
 
 			this.annotationsShown = !this.annotationsShown;

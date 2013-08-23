@@ -15,17 +15,7 @@ var assistance = assistance || {};
 		model: assistance.Comment,
 
 		initialize: function( options ) {
-			this.on( "model:showannotations", this.triggerShowAnnotations, this );
-			this.on( "model:hideannotations", this.triggerHideAnnotations, this );
-		},
-
-		triggerShowAnnotations: function() {
-			console.log( "collection trigger show" );
-			this.trigger( "showannotations" );
-		},
-
-		triggerHideAnnotations: function() {
-			this.trigger( "hideannotations" );
+			
 		},
 
 		parse: function( data ) {
@@ -42,6 +32,10 @@ var assistance = assistance || {};
 						_.each( anno.elements, function( el ) {
 							if ( el.type === "text" ) {
 								model.get( "elements" ).add( new assistance.TextAnnotation( el ) );
+							} else if ( el.type === "arrow" ) {
+								model.get( "elements" ).add( new assistance.ArrowAnnotation( el ) );
+							} else if ( el.type === "rect" ) {
+								model.get( "elements" ).add( new assistance.RectangleAnnotation( el ) );
 							}
 						});
 					} else if ( anno.type === "point" ) {

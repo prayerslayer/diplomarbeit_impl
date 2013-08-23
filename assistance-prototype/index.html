@@ -9,6 +9,15 @@
 
 		</script>
 
+		<script type="text/template" id="arrowannotationViewTemplate">
+		LOOK AT MAH ARROW
+		</script>
+		
+		<script type="text/template" id="rectangleannotationViewTemplate">
+			<div class="assistance-comment__rectangleannotation_area">
+			</div>
+		</script>
+
 		<script type="text/template" id="pointannotationViewTemplate">
 
 		</script>
@@ -30,8 +39,9 @@
 				<img class="assistance-comment__comment-metadata-avatar" src="<%= avatar_url %>"/>
 				<div class="assistance-comment__comment-metadata-date"><%= hr_timestamp %></div>
 				<div class="assistance-comment__comment-metadata-edit-delete"></div>
-				<div class="assistance-comment__comment-metadata-show-annos" data-action="show-annotations">
-				<i class="icon-eye-open assistance-comment__comment-metadata-show-annos_icon"></i> Show annotations
+				<div class="assistance-comment__comment-metadata-show-annos">
+				<i class="icon-eye-open assistance-comment__comment-metadata-show-annos_icon"></i> <span class="assistance-comment__comment-metadata-show-annos_text" data-action="show-annotations">Show annotations
+				</span>
 				</div>
 				<div class="assistance-comment__comment-metadata-reply" data-action="reply">
 				<i class="icon-reply assistance-comment__comment-metadata-reply_icon"></i> Reply to comment</div>
@@ -102,6 +112,8 @@
 		<script src="libs/models/AssistanceAreaAnnotationModel.js"></script>
 		<script src="libs/models/AssistanceDatapointAnnotationModel.js"></script>
 		<script src="libs/models/AssistanceTextAnnotationModel.js"></script>
+		<script src="libs/models/AssistanceArrowAnnotationModel.js"></script>
+		<script src="libs/models/AssistanceRectangleAnnotationModel.js"></script>
 		<script src="libs/models/AssistanceAnnotationCollection.js"></script>
 		<script src="libs/models/AssistanceCommentModel.js"></script>
 		<script src="libs/models/AssistanceCommentCollection.js"></script>
@@ -120,6 +132,8 @@
 		<!-- comment views -->
 		<script src="libs/views/AssistanceDatapointAnnotationView.js"></script>
 		<script src="libs/views/AssistanceTextAnnotationView.js"></script>
+		<script src="libs/views/AssistanceRectangleAnnotationView.js"></script>
+		<script src="libs/views/AssistanceArrowAnnotationView.js"></script>
 		<script src="libs/views/AssistanceAreaAnnotationView.js"></script>
 		<script src="libs/views/AssistanceCommentView.js"></script>
 		<script src="libs/views/AssistanceReadCommentsView.js"></script>
@@ -177,7 +191,21 @@
 					                "type": "text",
 					                "x": 22,
 					                "y": 50.5,
-					                "text": "OLOLZ"
+					                "text": "Zuck says: OLOLZ"
+					            },
+					            {
+					            	"type": "arrow",
+					            	"x1": 10,
+					            	"y1": 10,
+					            	"x2": 20,
+					            	"y2": 30
+					            },
+					            {
+					            	"type": "rect",
+					            	"x1": 10,
+					            	"y1": 10,
+					            	"x2": 20,
+					            	"y2": 30
 					            }
 					        ]
 						}]
@@ -209,7 +237,7 @@
 					                "type": "text",
 					                "x": 22,
 					                "y": 50.5,
-					                "text": "OLOLZ"
+					                "text": "Knuthy"
 					            }
 					        ]
 						}]}, {"comment_id": "dfghdfgh",
@@ -240,7 +268,7 @@
 					                "type": "text",
 					                "x": 22,
 					                "y": 50.5,
-					                "text": "OLOLZ"
+					                "text": "Onald McRonald"
 					            }
 					        ]
 						}]}

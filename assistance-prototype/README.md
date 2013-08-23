@@ -1,6 +1,9 @@
 # TODO
 
-* Was ist der Unterschied zwischen CommentBadge und DatapointAnnotationView? Machen die nicht fast dasselbe?
+
+* Die ganzen Annotations müssen sich in den Visualization Root rendern und nicht in die Komponente. Wobei bei Area Based Dingern nix dagegen sprechen würde, an sich.
+* Annotationen mit SVG? Warum eigentlich nicht? --> weils die templates zerschiesst, aber die vorteile sind immens: clipPaths!
+* Aus irgendeinem Grund sind die UI hashes im Commentview nicht gebunden, wenn man auf voten klickt.
 * Kann ich die ganzen show()s und hide()s Funktionen irgendwo zusammenfassen? Sieht nisch so dolle aus, nor.
 * Annotationen in Kommentaren
 	* CommentView als CollectionView umschreiben

@@ -22,6 +22,10 @@ var assistance = assistance || {};
 		initialize: function() {
 			// this event tells that a badge was clicked, its comments shall therefore be shown
 			this.listenTo( this.badges, "showcomments", this.showComments, this );
+			// render badges after annotations
+			this.on( "render", this.renderBadges, this );
+			this.on( "itemview:showannotations", this.hideBadges, this );
+			this.on( "itemview:hideannotations", this.showBadges, this );
 		},
 
 		init: function() {
@@ -35,48 +39,51 @@ var assistance = assistance || {};
 				"success": function( collection, response ) {
 					spinner.close();
 
-
-					// collect point annotations
-					var point_commies = {};
-					_.each( collection.models, function( comment ) {
-						
-						comment.set( "component", that.options.component );	//komponente durchreichen - irgendwie zu spät
-						comment.get( "annotations" ).each( function( anno ) {
-							if ( anno.get( "type" ) === "point" ) {
-								var uri = anno.get( "uri" );
-								if ( !point_commies[ uri ] )
-									point_commies[ uri ] = [ comment ];
-								else 
-									point_commies[ uri ].push( comment );
-							}
-						});
-					});
-					
-					// now create and render badges
-					_.each( point_commies, function( comments , uri ) {
-						var badge = new assistance.CommentBadge({
-							"component": that.options.component,
-							"uri": uri,
-							"comments": comments
-						});
-						var badgeview = new assistance.CommentBadgeView({
-							"model": badge	
-						});
-						that.badgesviews.push( badgeview );
-						that.badges.add( badge );						
+					collection.each( function( comment ) {
+						comment.set( "component", that.options.component ); //komponente durchreichen
 					});
 
-					// this is sort of a hack. it causes marionette to re-render the collection
-					// it's necessary so that the itemviews know the component in which they shall render themselves
-					that.collection.trigger( "reset");
-					that.listenTo( that.collection, "showannotations", that.hideBadges, that );
-					that.listenTo( that.collection, "hideannotations", that.showBadges, that );
+
+					that.render(); // it's necessary so that the itemviews know the component in which they shall render themselves
+					console.log( "annotations rendered" );
 				},
 				"error": function( col, res) {
 					console.debug( col, res );
 				}
 			});
 
+		},
+
+		renderBadges: function() {
+			// collect point annotations
+			console.log( "rendering badges" );
+			var point_commies = {},
+				that = this;
+			this.collection.each( function( comment ) {
+				comment.get( "annotations" ).each( function( anno ) {
+					if ( anno.get( "type" ) === "point" ) {
+						var uri = anno.get( "uri" );
+						if ( !point_commies[ uri ] )
+							point_commies[ uri ] = [ comment ];
+						else 
+							point_commies[ uri ].push( comment );
+					}
+				});
+			});
+			
+			// now create and render badges
+			_.each( point_commies, function( comments , uri ) {
+				var badge = new assistance.CommentBadge({
+					"component": that.options.component,
+					"uri": uri,
+					"comments": comments
+				});
+				var badgeview = new assistance.CommentBadgeView({
+					"model": badge	
+				});
+				that.badgesviews.push( badgeview );
+				that.badges.add( badge );						
+			});
 		},
 
 		hideBadges: function() {
@@ -93,19 +100,18 @@ var assistance = assistance || {};
 
 		// hides all the comments, then shows those that should be visible
 		showComments: function( comments ) {
+			var that = this;
 			if ( comments.length > 0 ) {
+				this.children.call( "hide" );
 				_.each( this.collection.models, function( c ) {
-					c.trigger( "hide" );
 					if ( _.contains( comments, c ) ) {
-						c.trigger( "show" );
+						that.children.findByModel( c ).show();
 					}
 				});	
 			} else {
 				// there are no comments to be shown, so show all.
-				_.each( this.collection.models, function( c ) {
-					c.trigger( "hide" );	// to make a change visible
-					c.trigger( "show" );
-				});
+				this.children.call( "hide" );	// to make a change visible
+				this.children.call( "show" );
 			}
 			
 		},
