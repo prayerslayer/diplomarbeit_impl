@@ -19,6 +19,11 @@ var assistance = assistance || {};
 			"click [data-action='close']": "close"
 		},
 
+		ui: {
+			"headline": "h2:first-child",
+			"explanation": ".assistance-base__explanation"
+		},
+
 		regions: {
 			"content": "div.assistance-base__content"
 		},
@@ -42,14 +47,14 @@ var assistance = assistance || {};
 			},
 			"writecomment": {
 				"headline": "Write comment",
-				"explanation": ""
+				"explanation": "Annotate your comment with the following tools:"
 			}
 		},
 
 		onRender: function() {
 			// fill view with content
-			this.$el.find( "h2:first" ).text( this.options.headline || this.default_content[ this.options.type ].headline );
-			this.$el.find( "p.assistance-base__explanation" ).text( this.options.explanation || this.default_content[ this.options.type ].explanation );
+			this.ui.headline.text( this.options.headline || this.default_content[ this.options.type ].headline );
+			this.ui.explanation.text( this.options.explanation || this.default_content[ this.options.type ].explanation );
 			// show base view
 			$( "body" ).append( this.el );
 			this.position( this.options.component );
@@ -60,8 +65,8 @@ var assistance = assistance || {};
 			});
 			
 			// width in css is for list view
-			if ( this.options.type === "readcomment" )
-				this.$el.css( "width", "auto" );
+			if ( this.options.type !== "howto" )
+				this.$el.css( "width", "auto" ); // I KNOOOW decoupling css and js and so forth... would be more elegant w/ class
 		},
 
 		// positions this view next to the selector

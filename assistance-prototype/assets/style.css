@@ -308,6 +308,39 @@ div.assistance-comment__comment-content {
 	line-height: 24px;
 }
 
+/* WRITE COMMENT STUFF */
+
+div.assistance-comment__write-comment {
+	
+}
+
+div.assistance-comment__write-comment-anno-select, 
+div.assistance-comment__write-comment-anno-text, 
+div.assistance-comment__write-comment-anno-rect, 
+div.assistance-comment__write-comment-anno-arrow {
+	cursor: pointer;
+	-webkit-transition: all .2s;
+} 
+
+div.assistance-comment__write-comment-anno_selected {
+	color: orange;
+}
+
+div.assistance-comment__write-comment-annotate {
+	display: -webkit-flex;
+	-webkit-flex-direction: row;
+	-webkit-justify-content: space-between;
+	-webkit-align-items: baseline;
+	margin-bottom: 1rem;
+}
+
+div.assistance-comment__write-comment-area {
+	border: 1px solid white;
+	padding: .5rem;
+	min-width: 20rem;
+	min-height: 15rem;
+}
+
 /* ANNOTATION STUFF */
 
 svg.assistance-comment__areaannotation,

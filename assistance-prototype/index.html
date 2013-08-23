@@ -33,6 +33,31 @@
 		<script type="text/template" id="spinnerTemplate">
 		</script>
 
+		<script type="text/template" id="writecommentViewTemplate">
+
+			<div class="assistance-comment__write-comment-annotate">
+				<div class="assistance-comment__write-comment-anno-select assistance-comment__write-comment-anno_selected" data-action="select-select">
+					<i class="icon-hand-up"></i> Selection
+				</div>
+
+				<div class="assistance-comment__write-comment-anno-text" data-action="select-text">
+					<i class="icon-font"></i> Text
+				</div>
+
+				<div class="assistance-comment__write-comment-anno-rect" data-action="select-rect">
+					<i class="icon-unchecked"></i> Rectangle
+				</div>
+
+				<div class="assistance-comment__write-comment-anno-arrow" data-action="select-arrow">
+					<i class="icon-long-arrow-up"></i> Arrow
+				</div>
+			</div>
+
+			<div class="assistance-comment__write-comment-area" contenteditable="true">
+				Edit me to comment.
+			</div>
+		</script>
+
 		<script type="text/template" id="commentViewTemplate">
 			<div class="assistance-comment__comment-metadata">
 				<div class="assistance-comment__comment-metadata-name"><%= user_name %></div>
@@ -138,6 +163,7 @@
 		<script src="libs/views/AssistanceCommentView.js"></script>
 		<script src="libs/views/AssistanceReadCommentsView.js"></script>
 		<script src="libs/views/AssistanceCommentBadgeView.js"></script>
+		<script src="libs/views/AssistanceWriteCommentView.js"></script>
 		<!-- mock apis -->
 		<script type="text/javascript">
 			var fake_server = sinon.fakeServer.create();
@@ -317,6 +343,17 @@
 					
 				});
 
+				$( ".button#writecomment" ).click( function() {
+					var writebase = new assistance.BaseView({
+						"type": "writecomment",
+						"component": "#barchart"
+					});
+					var writer = new assistance.WriteCommentView({
+
+					});
+					writebase.content.show( writer );
+				});
+
 
 				$( ".button#instructions" ).click( function() {
 					var item = new assistance.HowtoItem({
@@ -358,6 +395,7 @@
 
 		<div class="button" id="instructions">show howto</div>
 		<div class="button" id="showcomments">show comments</div>
+		<div class="button" id="writecomment">write comment</div>
 
 		<div id="barchart">
 			<div class="aside" style="float:right;">
