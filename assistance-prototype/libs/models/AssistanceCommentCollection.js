@@ -49,7 +49,7 @@ var assistance = assistance || {};
 				});
 				c.annotations = new assistance.AnnotationCollection( models );
 			});
-			console.log( data );
+			console.debug( "finished parsing comments", data );
 			return data;
 		}
 		

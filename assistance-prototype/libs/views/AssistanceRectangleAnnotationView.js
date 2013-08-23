@@ -19,6 +19,8 @@ var assistance = assistance || {};
 		/**
 			TODO: 	rectangle annotations als clipPaths bauen
 					problem: kein richtiger "view" pro rectangle, die sind markup-technisch nur ein clipPath innerhalb der <def> sektion des SVGs. heißt wiederum auch, dass sich nicht jeder rectangle view selber rendern kann, es braucht einen collectionview/compositeview, der das regelt.
+
+					--> im commentview eine itemviewcontainer function machen
 		*/
 
 		onRender: function() {

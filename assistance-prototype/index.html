@@ -284,16 +284,35 @@
 					var comments = new assistance.CommentCollection([], {
 						"url": "componentComments"
 					});
-					console.log( comments );
-					var comment_view = new assistance.ReadCommentsView({
-						"collection": comments,
-						"component": "#barchart"
+					var spinner = new assistance.Spinner({
+							"caller": $( "#barchart" )
+						}),
+						that = this;
+					// load data
+					comments.fetch({
+						"success": function( collection, response ) {
+							spinner.close();
+
+							collection.each( function( comment ) {
+								comment.set( "component", "#barchart" ); //komponente durchreichen
+							});
+
+							var comment_view = new assistance.ReadCommentsView({
+								"collection": comments,
+								"component": "#barchart"
+							});
+							var commentbase = new assistance.BaseView({
+								"type": "readcomment",
+								"component": "#barchart"
+							});
+							commentbase.content.show( comment_view );
+						},
+						"error": function( col, res) {
+							console.debug( col, res );
+						}
 					});
-					var commentbase = new assistance.BaseView({
-						"type": "readcomment",
-						"component": "#barchart"
-					});
-					commentbase.content.show( comment_view );
+					
+					
 				});
 
 

@@ -23,35 +23,9 @@ var assistance = assistance || {};
 			// this event tells that a badge was clicked, its comments shall therefore be shown
 			this.listenTo( this.badges, "showcomments", this.showComments, this );
 			// render badges after annotations
-			this.on( "render", this.renderBadges, this );
+			this.on( "collection:rendered", this.renderBadges, this );
 			this.on( "itemview:showannotations", this.hideBadges, this );
 			this.on( "itemview:hideannotations", this.showBadges, this );
-		},
-
-		init: function() {
-			// create a spinner before fetching comments
-			var spinner = new assistance.Spinner({
-					"caller": this.$el
-				}),
-				that = this;
-			// load data
-			this.collection.fetch({
-				"success": function( collection, response ) {
-					spinner.close();
-
-					collection.each( function( comment ) {
-						comment.set( "component", that.options.component ); //komponente durchreichen
-					});
-
-
-					that.render(); // it's necessary so that the itemviews know the component in which they shall render themselves
-					console.log( "annotations rendered" );
-				},
-				"error": function( col, res) {
-					console.debug( col, res );
-				}
-			});
-
 		},
 
 		renderBadges: function() {

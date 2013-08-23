@@ -27,7 +27,11 @@ var assistance = assistance || {};
 
 		// do not render annotations inside of this view plz kthxbai
 		appendHtml: function( collectionview, itemview, index ) {
-			$( collectionview.model.get( "component" ) ).append( itemview.el );
+			if ( itemview.model.get( "type" ) !== "rect" )
+				$( collectionview.model.get( "component" ) ).append( itemview.el );
+			else {
+				// if this is a rectangle, things get complicated.
+			}
 		},
 
 		voted: null,
@@ -51,6 +55,15 @@ var assistance = assistance || {};
 		initialize: function( opts ) {
 			this.collection = opts.model.get( "annotations" );
     		this.model.bind( 'change:score', this.renderScore, this);
+    		this.bindUIElements();
+		},
+
+		onBeforeRender: function() {
+			//console.log( "before render", this );
+		},
+
+		onRender: function() {
+			console.log( "rendered comment", this );
 		},
 
 		// update score
@@ -74,8 +87,6 @@ var assistance = assistance || {};
 			// show/hide annotations
 			this.children.call( this.annotationsShown ? "hide" : "show" );
 			// update ui
-
-			//TODO text ersetzt icon mit
 			if ( !this.annotationsShown ) {
 				this.ui.annos.text( "Hide annotations" );
 				this.ui.annosicon.removeClass( "icon-eye-open" ).addClass( "icon-eye-close" );
