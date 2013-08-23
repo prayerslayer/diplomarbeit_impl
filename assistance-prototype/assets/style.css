@@ -318,6 +318,11 @@ div.assistance-comment__datapointannotation {
 	top: 0px;
 }
 
+rect.assistance-comment__areaannotation-bg {
+	fill: black;
+	opacity: .75;
+}
+
 .assistance-comment__arrowannotation {
 	stroke: black;
 }

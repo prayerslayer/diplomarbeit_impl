@@ -27,11 +27,7 @@ var assistance = assistance || {};
 
 		// do not render annotations inside of this view plz kthxbai
 		appendHtml: function( collectionview, itemview, index ) {
-			if ( itemview.model.get( "type" ) !== "rect" )
-				$( collectionview.model.get( "component" ) ).append( itemview.el );
-			else {
-				// if this is a rectangle, things get complicated.
-			}
+			$( collectionview.model.get( "component" ) ).append( itemview.el );
 		},
 
 		voted: null,
@@ -56,14 +52,6 @@ var assistance = assistance || {};
 			this.collection = opts.model.get( "annotations" );
     		this.model.bind( 'change:score', this.renderScore, this);
     		this.bindUIElements();
-		},
-
-		onBeforeRender: function() {
-			//console.log( "before render", this );
-		},
-
-		onRender: function() {
-			console.log( "rendered comment", this );
 		},
 
 		// update score

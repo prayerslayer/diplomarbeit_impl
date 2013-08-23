@@ -204,8 +204,8 @@
 					            	"type": "rect",
 					            	"x1": 10,
 					            	"y1": 10,
-					            	"x2": 20,
-					            	"y2": 30
+					            	"x2": 150,
+					            	"y2": 300
 					            }
 					        ]
 						}]
@@ -299,7 +299,8 @@
 
 							var comment_view = new assistance.ReadCommentsView({
 								"collection": comments,
-								"component": "#barchart"
+								"component": "#barchart",
+								"visualization": "svg"
 							});
 							var commentbase = new assistance.BaseView({
 								"type": "readcomment",
@@ -311,7 +312,7 @@
 							console.debug( col, res );
 						}
 					});
-					
+
 					
 				});
 
