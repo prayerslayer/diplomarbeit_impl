@@ -25,6 +25,22 @@ var assistance = assistance || {};
 			this.set( "hr_timestamp", "on " + moment( data.timestamp ).format( "MMMM Do YYYY" ) );
 			this.formatScore();
 			this.on( "change:score", this.formatScore );
+			this.on( "change:component", this.updateComponent, this );
+			this.on( "change:visualization", this.updateVisualization, this );
+		},
+
+		updateComponent: function( m, value ) {
+			this.tellChildren( "component", value );
+		},
+
+		updateVisualization: function( m, value ) {
+			this.tellChildren( "visualization", value );
+		},
+
+		tellChildren: function( key, value ) {
+			this.get( "annotations" ).each( function( anno ) {
+				anno.set( key, value );
+			});
 		}
 	});
 })( jQuery );

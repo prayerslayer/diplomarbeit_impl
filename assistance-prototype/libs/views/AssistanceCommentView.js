@@ -51,7 +51,6 @@ var assistance = assistance || {};
 		initialize: function( opts ) {
 			this.collection = opts.model.get( "annotations" );
     		this.model.bind( 'change:score', this.renderScore, this);
-    		this.bindUIElements();
 		},
 
 		// update score

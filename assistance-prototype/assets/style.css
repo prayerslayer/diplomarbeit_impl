@@ -12,6 +12,7 @@ div#barchart {
 	height: 420px;
 	border: 1px solid black;
 	background: white;
+	overflow: hidden;	/* also important */
 	position: absolute; /* this is actually important, else no overlay possible */
 }
 

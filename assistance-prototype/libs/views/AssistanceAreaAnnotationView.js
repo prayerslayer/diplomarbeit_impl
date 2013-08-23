@@ -39,8 +39,16 @@ var assistance = assistance || {};
 		},
 
 		doAfterRender: function() {
-			this.ui.bg.attr( "width", this.model.get( "visualization_width" ) );
-			this.ui.bg.attr( "height", this.model.get( "visualization_height" ) );
+			console.log( this.model.attributes );
+			var $comp = $( this.model.get( "component" ) ).first(),
+				$vis = $comp.find( this.model.get( "visualization" ) ).first();
+			console.log( $comp, $vis );
+			this.ui.bg.attr( "width", $vis.width() );
+			this.ui.bg.attr( "height", $vis.height() );
+			this.$el.css( "width", $vis.width() );
+			this.$el.css( "height", $vis.height() );
+			this.$el.css( "top", $vis[0].offsetTop );
+			this.$el.css( "left", $vis[0].offsetLeft );
 			this.$el.hide();
 		},
 
@@ -74,6 +82,8 @@ var assistance = assistance || {};
 
 			this.$el = $( this.el );
 			this.collection = opts.model.get( "elements" );
+			this.model.on( "change:visualization", this.render, this );
+			this.model.on( "change:component", this.render, this );
 			this.on( "render", this.doAfterRender, this );
 
 			this.bindUIElements(); // because we completely re-did the component

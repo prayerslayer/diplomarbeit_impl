@@ -295,6 +295,7 @@
 
 							collection.each( function( comment ) {
 								comment.set( "component", "#barchart" ); //komponente durchreichen
+								comment.set( "visualization", "svg" );
 							});
 
 							var comment_view = new assistance.ReadCommentsView({
