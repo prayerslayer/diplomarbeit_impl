@@ -18,6 +18,8 @@ var assistance = assistance || {};
 			"mask": "defs > mask",
 			"bg": "rect.assistance-comment__areaannotation-bg"
 		},
+
+		hasRects: false,
 		
 		getItemView: function( item ) {
 			var type = item.get( "type" );
@@ -32,17 +34,17 @@ var assistance = assistance || {};
 		appendHtml: function( collectionview, itemview, index ) {
 			if ( itemview.model.get( "type" ) === "rect" ) {
 				// this is the mask path in defs
+				this.hasRects = true;
 				collectionview.ui.mask.append( itemview.el );
 			}
 			else
 				collectionview.$el.append( itemview.el );
 		},
 
-		doAfterRender: function() {
-			console.log( this.model.attributes );
+		onRender: function() {
 			var $comp = $( this.model.get( "component" ) ).first(),
 				$vis = $comp.find( this.model.get( "visualization" ) ).first();
-			console.log( $comp, $vis );
+			
 			this.ui.bg.attr( "width", $vis.width() );
 			this.ui.bg.attr( "height", $vis.height() );
 			this.$el.css( "width", $vis.width() );
@@ -50,6 +52,9 @@ var assistance = assistance || {};
 			this.$el.css( "top", $vis[0].offsetTop );
 			this.$el.css( "left", $vis[0].offsetLeft );
 			this.$el.hide();
+
+			if ( !this.hasRects )
+				d3.select( "#maskBg" ).style( "fill", "white" );
 		},
 
 		show: function() {
@@ -69,8 +74,9 @@ var assistance = assistance || {};
 			var mask = def.append( "mask" );
 			mask.attr( "id", "mask" );
 			var maskBg = mask.append( "rect" );
+			maskBg.attr( "id", "maskBg" );
 			// see http://stackoverflow.com/questions/11404391/invert-svg-clip-show-only-outside-path?lq=1
-			maskBg.style( "fill", "white" );
+			maskBg.style( "fill", "black" );
 			maskBg.attr( "width", "100%" );
 			maskBg.attr( "height", "100%" );
 			var bg = d3.select( this.el ).append( "rect" );
@@ -84,7 +90,6 @@ var assistance = assistance || {};
 			this.collection = opts.model.get( "elements" );
 			this.model.on( "change:visualization", this.render, this );
 			this.model.on( "change:component", this.render, this );
-			this.on( "render", this.doAfterRender, this );
 
 			this.bindUIElements(); // because we completely re-did the component
 	
