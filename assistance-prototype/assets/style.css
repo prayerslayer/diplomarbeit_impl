@@ -109,8 +109,8 @@ body {
 }
 
 .vizboard-highlight, .vizboard-relevant-element:hover {
-	fill: orange;
-	background-color: orange;
+	fill: orange; !important
+	background-color: orange; !important
 	cursor: pointer;
 }
 
@@ -363,6 +363,26 @@ div.assistance-comment__write-comment-area {
 }
 
 /* ANNOTATION STUFF */
+
+.assistance-annotations {
+	position:absolute;	
+}
+
+.assistance-annotations__selection {
+	cursor: pointer;
+}
+
+.assistance-annotations__arrow {
+	cursor: crosshair;
+}
+
+.assistance-annotations__rectangle {
+	cursor: crosshair;
+}
+
+.assistance-annotations__text {
+	cursor: text;
+}
 
 svg.assistance-comment__areaannotation,
 div.assistance-comment__datapointannotation {

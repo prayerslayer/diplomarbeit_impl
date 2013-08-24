@@ -1,7 +1,6 @@
 # TODO
 
 
-* TODO: Bestätigen Button im Baseview von Write Comment. Mag eigentlich keinen WriteCommentBaseView, aber so viel Aufwand isses wahrscheinlich doch nicht.
 * Annotationen mit SVG? Warum eigentlich nicht? --> weils die templates zerschiesst, aber die vorteile sind immens: clipPaths!
 * Kann ich die ganzen show()s und hide()s Funktionen irgendwo zusammenfassen? Sieht nisch so dolle aus, nor.
 * Annotationen in Kommentaren
@@ -15,3 +14,4 @@
 	* --> Kommentar ändern in Backend!
 * Kommunikationsview
 * Kommentar Badges sind immer links oben in der Bounding Box des Elements (weil position() nicht gut klappt). Das ist besonders bei Rotationen oder so blöd.
+* Show annotations ausgrauen wenn keine annotationen vorhanden (gibts ja auch)

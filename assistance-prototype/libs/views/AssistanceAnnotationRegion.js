@@ -9,10 +9,10 @@ var assistance = assistance || {};
 			var $el = view.$el,
 				$v = this.$el.find( this.options.visualization );
 
-			$el.css( "width", $v.width() );
-			$el.css( "height", $v.height() );
-			$el.css( "top", $v[0].offsetTop );
-			$el.css( "left", $v[0].offsetLeft );
+			$el.css( "width", "100%");
+			$el.css( "height",  "100%" );
+			$el.css( "top", 0 );
+			$el.css( "left", 0 );
 		}
 	});
 })( jQuery );

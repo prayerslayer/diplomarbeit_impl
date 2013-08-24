@@ -30,9 +30,10 @@ var assistance = assistance || {};
 			// wie annotationen hinzufügen view bauen?
 			
 			var anno = new assistance.AddAnnotationView({
-
+				"component": component,
+				"visualization": visualization
 			});
-			writer.annotationView = anno;
+			writer.setAnnotationView( anno );
 			if ( !this[ "region" + component ] ) {
 				this[ "region" + component ] = new assistance.AnnotationRegion({
 					"el": component,

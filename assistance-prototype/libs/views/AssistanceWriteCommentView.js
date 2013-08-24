@@ -17,7 +17,7 @@ var assistance = assistance || {};
 		template: "#writecommentViewTemplate",
 
 		ui: {
-			"annos":   ".assistance-comment__write-comment-anno-select, .assistance-comment__write-comment-anno-arrow, .assistance-comment__write-comment-anno-rect, .assistance-comment__write-comment-anno-text",
+			"annos": ".assistance-comment__write-comment-anno-select, .assistance-comment__write-comment-anno-arrow, .assistance-comment__write-comment-anno-rect, .assistance-comment__write-comment-anno-text",
 			"annoSelect": ".assistance-comment__write-comment-anno-select",
 			"annoArrow": ".assistance-comment__write-comment-anno-arrow",
 			"annoRect": ".assistance-comment__write-comment-anno-rect",
@@ -27,40 +27,67 @@ var assistance = assistance || {};
 		},
 
 		events: {
-			"click [data-action=select-text]": "selectText",
-			"click [data-action=select-rect]": "selectRect",
-			"click [data-action=select-select]": "selectSelect",
-			"click [data-action=select-arrow]": "selectArrow",
-			"click [data-action=submit]": "submit"
+			"click [data-action=select-text]": "_selectText",
+			"click [data-action=select-rect]": "_selectRect",
+			"click [data-action=select-select]": "_selectSelect",
+			"click [data-action=select-arrow]": "_selectArrow",
+			"click [data-action=submit]": "_submit"
 		},
 
 		initialize: function( opt ) {
-			this.regions.annotations = opt.component + " " + opt.visualization;
 			this.bindUIElements();
 		},
 
-		submit: function() {
+		setAnnotationView: function( view ) {
+			this.annotationView = view;
+			this.annotationView.on( "selection", this._processSelection, this );
+			this.annotationView.on( "text", this._processText, this );
+			this.annotationView.on( "arrow", this._processArrow, this );
+			this.annotationView.on( "rectangle", this._processRectangle, this );
+		},
+
+		_processRectangle: function( rect ) {
+
+		},
+
+		_processArrow: function( arrow ) {
+
+		},
+
+		_processText: function( text ) {
+
+		},
+
+		_processSelection: function( selection ) {
+			console.log( selection );
+		},
+
+		_submit: function() {
 			console.log( this.regions);
 		},
 
-		selectText: function() {
+		_selectText: function() {
 			this.ui.annos.removeClass( "assistance-comment__write-comment-anno_selected" );
 			this.ui.annoText.addClass( "assistance-comment__write-comment-anno_selected" );
+			this.annotationView.activateText();
 		},
 
-		selectRect: function() {
+		_selectRect: function() {
 			this.ui.annos.removeClass( "assistance-comment__write-comment-anno_selected" );
 			this.ui.annoRect.addClass( "assistance-comment__write-comment-anno_selected" );
+			this.annotationView.activateRectangle();
 		},
 
-		selectSelect: function() {
+		_selectSelect: function() {
 			this.ui.annos.removeClass( "assistance-comment__write-comment-anno_selected" );
 			this.ui.annoSelect.addClass( "assistance-comment__write-comment-anno_selected" );
+			this.annotationView.activateSelection();
 		},
 
-		selectArrow: function() {
+		_selectArrow: function() {
 			this.ui.annos.removeClass( "assistance-comment__write-comment-anno_selected" );
 			this.ui.annoArrow.addClass( "assistance-comment__write-comment-anno_selected" );
+			this.annotationView.activateArrow();
 		}
 
 	});
