@@ -9,6 +9,7 @@
 
 var assistance = assistance || {};
 
+
 ( function( $ ) {
 	assistance.AnnotationElement = Backbone.Model.extend({
 

@@ -52,9 +52,11 @@
 					<i class="icon-long-arrow-up"></i> Arrow
 				</div>
 			</div>
-
 			<div class="assistance-comment__write-comment-area" contenteditable="true">
 				Edit me to comment.
+			</div>
+			<div class="assistance-comment__submit" data-action="submit">
+				<i class="icon-3x icon-ok"></i>
 			</div>
 		</script>
 
@@ -155,6 +157,8 @@
 		<script src="libs/views/AssistanceHowtoListView.js"></script>
 		<script src="libs/views/AssistanceComicView.js"></script>
 		<!-- comment views -->
+		<script src="libs/views/AssistanceAnnotationRegion.js"></script>
+		<script src="libs/views/AssistanceAddAnnotationView.js"></script>
 		<script src="libs/views/AssistanceDatapointAnnotationView.js"></script>
 		<script src="libs/views/AssistanceTextAnnotationView.js"></script>
 		<script src="libs/views/AssistanceRectangleAnnotationView.js"></script>
@@ -164,6 +168,8 @@
 		<script src="libs/views/AssistanceReadCommentsView.js"></script>
 		<script src="libs/views/AssistanceCommentBadgeView.js"></script>
 		<script src="libs/views/AssistanceWriteCommentView.js"></script>
+		<!-- app -->
+		<script src="libs/AssistanceApplication.js"></script>
 		<!-- mock apis -->
 		<script type="text/javascript">
 			var fake_server = sinon.fakeServer.create();
@@ -305,87 +311,28 @@
 		<!-- do actual things -->
 		<script type="text/javascript">
 			$( document ).ready( function() {
+				var app = new assistance.Application();
+				app.start( {
+					"commentUrl": "componentComments",
+					"coreUrl": "core",
+					"components": [{
+						"component": "#barchart",
+						"visualization": "svg"
+					}]
+				} );
+
 
 				$( ".button#showcomments" ).click( function() {
-					var comments = new assistance.CommentCollection([], {
-						"url": "componentComments"
-					});
-					var spinner = new assistance.Spinner({
-							"caller": $( "#barchart" )
-						}),
-						that = this;
-					// load data
-					comments.fetch({
-						"success": function( collection, response ) {
-							spinner.close();
-
-							collection.each( function( comment ) {
-								comment.set( "component", "#barchart" ); //komponente durchreichen
-								comment.set( "visualization", "svg" );
-							});
-
-							var comment_view = new assistance.ReadCommentsView({
-								"collection": comments,
-								"component": "#barchart",
-								"visualization": "svg"
-							});
-							var commentbase = new assistance.BaseView({
-								"type": "readcomment",
-								"component": "#barchart"
-							});
-							commentbase.content.show( comment_view );
-						},
-						"error": function( col, res) {
-							console.debug( col, res );
-						}
-					});
-
-					
+					app.showComments( "#barchart" );
 				});
 
 				$( ".button#writecomment" ).click( function() {
-					var writebase = new assistance.BaseView({
-						"type": "writecomment",
-						"component": "#barchart"
-					});
-					var writer = new assistance.WriteCommentView({
-
-					});
-					writebase.content.show( writer );
+					app.writeComment( "#barchart" );
 				});
 
 
 				$( ".button#instructions" ).click( function() {
-					var item = new assistance.HowtoItem({
-						"component_id": "http://mmt.inf.tu-dresden.de/VizBoard/Something",
-						"action": "sort",
-						"variable": "player",
-						"capability": "cap01",
-						"elements": "button",
-						"component": "#barchart",
-						"visualization": "svg"
-					});
-					var item2 = new assistance.HowtoItem({
-						"component_id": "http://mmt.inf.tu-dresden.de/VizBoard/Something",
-						"action": "display",
-						"capability": "cap02",
-						"elements": "rect:nth-child(odd)",
-						"component": "#barchart",
-						"visualization": "svg"
-					});
-					var items = new assistance.HowtoCollection();
-					items.add( item );
-					items.add( item2 );
-					var listbase = new assistance.BaseView({
-						"type": "howto",
-						"component": "#barchart"
-					});
-					var list = new assistance.HowtoListView({
-						"collection": items,
-						"itemView": assistance.HowtoItemView,
-						"model": assistance.HowtoItem
-					});
-					listbase.content.show( list );
+					app.showHowto( "#barchart" );
 				});
 			});
 		</script>
