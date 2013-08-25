@@ -47,7 +47,7 @@ var assistance = assistance || {};
 		},
 
 		_processRectangle: function( rect ) {
-
+			console.log( rect );
 		},
 
 		_processArrow: function( arrow ) {

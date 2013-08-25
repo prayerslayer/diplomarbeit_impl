@@ -16,6 +16,8 @@ var assistance = assistance || {};
 		template: "#addannotationViewTemplate",
 
 		capability: "selection",
+		offsetLeft: 0,
+		offsetTop: 0,
 
 		ui: {
 			"bg": ".assistance-annotations__bg"
@@ -68,7 +70,7 @@ var assistance = assistance || {};
 		_highlightOnHover: function( evt ) {
 			// break if selection tool is not active
 			if ( this.capability !== "selection" ) 
-				return false;
+				return; // if we would return false here, the drag behavior would not work
 			// manual hit test as this svg is over the actual visualization
 			var el = this._getElementAt( evt.pageX, evt.pageY );
 			// if we're not over an element, remove class from all unselected ones. this is necessary to properly handle mouseout case.
@@ -76,12 +78,12 @@ var assistance = assistance || {};
 				this._allElements().filter( ":not([data-vizboard-selected=true])" ).attr( "class", function( ) {
 					return d3.select( this ).attr( "data-vizboard-old-class" ) || d3.select( this ).attr( "class" );
 				}).attr( "data-vizboard-old-class", null );
-				return false;
+				return;
 			}
 			el = d3.select( el );
 			// break if this element is already selected
 			if ( el.attr( "data-vizboard-selected" ) )
-				return false;
+				return;
 			// save class of this element and apply highlight class
 			var clazz = el.attr( "class" );
 			if ( !el.attr( "data-vizboard-old-class" ) ) {
@@ -106,6 +108,58 @@ var assistance = assistance || {};
 		// triggers selection event
 		_triggerSelection: function() {
 			this.trigger( "selection", this._allElements().filter( "[data-vizboard-selected]" ).collect( "resource" ) );
+		},
+
+		// triggers rectangle event
+		_triggerRectangle: function() {
+			var rects = [],
+				that = this;
+			d3.select( this.el ).selectAll( "rect.assistance-annotations__rectangle_finished" ).each( function() {
+				// go through rects and collect x1,y1,x2,y2
+				var self = d3.select( this ),
+					rect = {},
+					q = parseInt( self.attr( "data-vizboard-quadrant" ) ),
+					x = parseFloat( self.attr( "x" ) ) - that.offsetLeft,
+					y = parseFloat( self.attr( "y" ) ) - that.offsetTop,
+					w = parseFloat( self.attr( "width" ) ),
+					h = parseFloat( self.attr( "height" ) );
+
+				// keeping coordinates absolute, because later they may be fed to component API
+				if ( q === 4 ) {
+					// normal
+					rect.x1 = x;
+					rect.y1 = y;
+					rect.x2 = x + w;
+					rect.y2 = y + h;
+				} else if ( q === 3 ) {
+					// rotated 180°, translated by negative height
+					// top left corner is now top right
+					// bottom right corner is bottom left
+					rect.x1 = x - w;
+					rect.y1 = y;
+					rect.x2 = x;
+					rect.y2 = y + h;
+				} else if ( q === 2 ) {
+					// inverted, just rotated 180°
+					// top left corner is now bottom right
+					// bottom right corner is top left
+					rect.x1 = x + w;
+					rect.y1 = y + h;
+					rect.x2 = x;
+					rect.y2 = y;
+				} else if ( q === 1 ) {
+					// rotated 180°, translated by negative width
+					// top left = bottom left
+					// bottom right = top right
+					rect.x1 = x;
+					rect.y1 = y - h;
+					rect.x2 = x + w;
+					rect.y2 = y;
+				}
+				
+				rects.push( rect );
+			});
+			this.trigger( "rectangle", rects );
 		},
 
 		// handles clicks O.O
@@ -139,8 +193,8 @@ var assistance = assistance || {};
 					var t = prompt( "Please enter text:" );
 					if ( t ) {
 						text.text( t );
-						text.attr( "data-vizboard-textinfo-x", evt.offsetX/this.$el.width() );
-						text.attr( "data-vizboard-textinfo-y", evt.offsetY/this.$el.height() );
+						text.attr( "data-vizboard-textinfo-x", ( evt.offsetX -this.offsetLeft ) / this.$el.width() );
+						text.attr( "data-vizboard-textinfo-y", ( evt.offsetY - this.offsetTop ) / this.$el.height() );
 						$( text.node() ).focus( );	
 						this._triggerText();
 					} else
@@ -194,10 +248,6 @@ var assistance = assistance || {};
 			maskBg.attr( "width", "100%" );
 			maskBg.attr( "height", "100%" );
 			var bg = mask.append( "rect" );
-			bg.attr( "x", 0 );
-			bg.attr( "y", 0 );
-			bg.attr( "width", 200 );
-			bg.attr( "height", 200 );
 			bg.attr( "class", "assistance-annotations__bg")
 			bg.style( "fill", "black" );
 
@@ -208,19 +258,94 @@ var assistance = assistance || {};
 			rect.attr( "height","100%" );
 			rect.style( "opacity", 0.5 );
 			rect.style( "fill", "black" );
-			rect.attr( "mask", "url(#annoMask)" );
+			rect.attr( "mask", "url(#annoMask)" ); //TODO static url problematic if there are multiple views of this opened
 
 			this.$el = $( this.el );
 			this.bindUIElements();
 		},
 
+		_dragStartHandler: function( ) {
+			if ( this.capability === "rectangle" ) {
+				var rect = d3.select( this.el ).append( "rect" );
+				rect.attr( "class", "assistance-annotations__rectangle_current" );
+
+				rect.attr( "x", d3.event.sourceEvent.offsetX );
+				rect.attr( "y", d3.event.sourceEvent.offsetY );
+			}
+		},
+
+		_dragHandler: function( ) {
+			if ( this.capability === "rectangle" ) {
+				var rect = d3.select( this.el ).select( "rect.assistance-annotations__rectangle_current" ),
+					width = d3.event.x - rect.attr( "x" ),
+					height= d3.event.y - rect.attr( "y" );
+				
+				if ( width > 0 && height > 0 ) {
+					rect.attr( "width",  width );
+					rect.attr( "height",  height );
+					rect.attr( "transform", null );
+					rect.attr( "data-vizboard-quadrant", 4 );
+				} else {
+					rect.attr( "width", Math.abs( width) );
+					rect.attr( "height", Math.abs( height ) );
+					var t = null,
+						x = parseFloat(rect.attr("x") ),
+						y = parseFloat(rect.attr("y") ),
+						w = parseFloat(rect.attr("width") ),
+						h = parseFloat(rect.attr("height") ),
+						q = 4;	// in which quadrant from starting point is the rect actually located?
+
+					// transform if necessary
+					if ( width < 0 && height < 0 ) {
+						t = "rotate(180, " + x + "," + y + ")" ;
+						q = 2;
+					}
+					else if ( width < 0 ) {
+						t = "rotate(180," + x + "," + y + ")translate(0,-" + height + ")";
+						q = 3;
+					}
+					else if ( height < 0 ) {
+						t = "rotate(180," + x + "," + y + ")translate(-" + width + ")";
+						q = 1;
+					}
+
+					rect.attr( "data-vizboard-quadrant", q );
+					rect.attr( "transform", t );
+				}
+			}
+		},
+
+		_dragEndHandler: function() {
+			if ( this.capability === "rectangle" ) {
+				var rect = d3.select( this.el ).select( "rect.assistance-annotations__rectangle_current" );
+				
+				rect.attr( "class", "assistance-annotations__rectangle_finished" );
+				this._triggerRectangle();
+			}
+		},
+
 		onShow: function() {
 			var $comp = $( this.options.component ).first(),
-				$vis = $comp.find( this.options.visualization ).first();
-			this.ui.bg.attr( "width", $vis.width() );
-			this.ui.bg.attr( "height", $vis.height() );
-			this.ui.bg.attr( "y", $vis[0].offsetTop );
-			this.ui.bg.attr( "x", $vis[0].offsetLeft );
+				$vis = $comp.find( this.options.visualization ).first(),
+				that = this;
+			
+			this.offsetLeft = $vis[0].offsetLeft;
+			this.offsetTop = $vis[0].offsetTop;
+			this.width = $vis.width();
+			this.height = $vis.height();
+
+			this.ui.bg.attr( "width", this.width );
+			this.ui.bg.attr( "height", this.height );
+			this.ui.bg.attr( "x", this.offsetLeft );
+			this.ui.bg.attr( "y", this.offsetTop );
+
+			var dragBehavior = d3.behavior.drag()
+						.on( "dragstart", this._dragStartHandler.bind( this ) )
+						.on( "drag", this._dragHandler.bind( this ) )
+						.on( "dragend", this._dragEndHandler.bind( this ));
+
+			d3.select( this.el )
+				.call( dragBehavior );
 		}
 
 	});

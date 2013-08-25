@@ -353,8 +353,22 @@ div.assistance-comment__write-comment-area {
 	cursor: crosshair;
 }
 
+rect.assistance-annotations__rectangle_current {
+	fill: orange;
+	opacity: .75;
+}
+
+rect.assistance-annotations__rectangle_finished {
+	fill: orange;
+	opacity: .5;
+}
+
 .assistance-annotations__text {
 	cursor: text;
+}
+
+.assistance-annotations__text_content {
+	cursor: move;
 }
 
 svg.assistance-comment__areaannotation,
