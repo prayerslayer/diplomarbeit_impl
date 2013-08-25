@@ -349,6 +349,17 @@ div.assistance-comment__write-comment-area {
 	cursor: crosshair;
 }
 
+line.assistance-annotations__arrow_current {
+	stroke: orange;
+	stroke-width: 2;
+}
+
+line.assistance-annotations__arrow_finished {
+	stroke: orange;
+	stroke-width: 2;
+	stroke-opacity: .5;
+}
+
 .assistance-annotations__rectangle {
 	cursor: crosshair;
 }

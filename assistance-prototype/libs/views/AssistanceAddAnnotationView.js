@@ -94,12 +94,14 @@ var assistance = assistance || {};
 
 		// triggers text event
 		_triggerText: function() {
-			var texts = [];
+			var texts = [],
+				that = this;
 			d3.select( this.el ).selectAll( "text.assistance-annotations__text_content" ).each( function() {
-				var text = {}; // x, y, text
-				text.x = d3.select( this ).attr( "data-vizboard-textinfo-x" ) * 100;
-				text.y = d3.select( this ).attr( "data-vizboard-textinfo-y" ) * 100;
-				text.text = d3.select( this ).text();
+				var text = {},
+					self = d3.select( this ); // x, y, text
+				text.x = parseFloat( self.attr( "x" ) ) - that.offsetLeft;
+				text.y = parseFloat( self.attr( "y" ) ) - that.offsetTop;
+				text.text = self.text();
 				texts.push( text );
 			});
 			this.trigger( "text", texts );
@@ -108,6 +110,23 @@ var assistance = assistance || {};
 		// triggers selection event
 		_triggerSelection: function() {
 			this.trigger( "selection", this._allElements().filter( "[data-vizboard-selected]" ).collect( "resource" ) );
+		},
+
+		// triggers arrow event
+		_triggerArrow: function() {
+			var arrows = [],
+				that = this;
+			d3.select( this.el ).selectAll( "line.assistance-annotations__arrow_finished" ).each( function() {
+				var arrow = {},
+					self = d3.select( this );
+				arrow.x1 = parseFloat( self.attr( "x1" ) ) - that.offsetLeft;
+				arrow.x2 = parseFloat( self.attr( "x2" ) ) - that.offsetLeft;
+				arrow.y1 = parseFloat( self.attr( "y1" ) ) - that.offsetTop;
+				arrow.y2 = parseFloat( self.attr( "y2" ) ) - that.offsetTop;
+
+				arrows.push( arrow );
+			});
+			this.trigger( "arrow", arrows );
 		},
 
 		// triggers rectangle event
@@ -156,7 +175,7 @@ var assistance = assistance || {};
 					rect.x2 = x + w;
 					rect.y2 = y;
 				}
-				
+
 				rects.push( rect );
 			});
 			this.trigger( "rectangle", rects );
@@ -193,8 +212,6 @@ var assistance = assistance || {};
 					var t = prompt( "Please enter text:" );
 					if ( t ) {
 						text.text( t );
-						text.attr( "data-vizboard-textinfo-x", ( evt.offsetX -this.offsetLeft ) / this.$el.width() );
-						text.attr( "data-vizboard-textinfo-y", ( evt.offsetY - this.offsetTop ) / this.$el.height() );
 						$( text.node() ).focus( );	
 						this._triggerText();
 					} else
@@ -260,6 +277,17 @@ var assistance = assistance || {};
 			rect.style( "fill", "black" );
 			rect.attr( "mask", "url(#annoMask)" ); //TODO static url problematic if there are multiple views of this opened
 
+			var marker = def.append( "marker" );
+			marker.attr( "id", "arrowhead" )
+					.attr("refX", 5) /*must be smarter way to calculate shift*/
+    				.attr("refY", 3)
+    				.attr( "fill", "orange" )
+				    .attr("markerWidth", 6)
+				    .attr("markerHeight", 6)
+				    .attr("orient", "auto")
+				    .append("path")
+        				.attr("d", "M 0,0 V 6 L6,3 Z");
+
 			this.$el = $( this.el );
 			this.bindUIElements();
 		},
@@ -271,6 +299,15 @@ var assistance = assistance || {};
 
 				rect.attr( "x", d3.event.sourceEvent.offsetX );
 				rect.attr( "y", d3.event.sourceEvent.offsetY );
+			} else if ( this.capability === "arrow" ) {
+				var arrow = d3.select( this.el ).append( "line" );
+				arrow.attr( "class", "assistance-annotations__arrow_current" );
+				arrow.attr( "marker-end", "url(#arrowhead)" );
+				arrow.attr( "x1", d3.event.sourceEvent.offsetX );
+				arrow.attr( "y1", d3.event.sourceEvent.offsetY );
+				// prevent glitch that line is connected to ursprung
+				arrow.attr( "x2", d3.event.sourceEvent.offsetX );
+				arrow.attr( "y2", d3.event.sourceEvent.offsetY );
 			}
 		},
 
@@ -312,6 +349,10 @@ var assistance = assistance || {};
 					rect.attr( "data-vizboard-quadrant", q );
 					rect.attr( "transform", t );
 				}
+			} else if ( this.capability === "arrow" ) {
+				var arrow = d3.select( this.el ).select( "line.assistance-annotations__arrow_current" );
+				arrow.attr( "x2", d3.event.x );
+				arrow.attr( "y2", d3.event.y );
 			}
 		},
 
@@ -321,6 +362,10 @@ var assistance = assistance || {};
 				
 				rect.attr( "class", "assistance-annotations__rectangle_finished" );
 				this._triggerRectangle();
+			} else if ( this.capability === "arrow" ) {
+				var arrow = d3.select( this.el ).select( "line.assistance-annotations__arrow_current" );
+				arrow.attr( "class", "assistance-annotations__arrow_finished" );
+				this._triggerArrow();
 			}
 		},
 
