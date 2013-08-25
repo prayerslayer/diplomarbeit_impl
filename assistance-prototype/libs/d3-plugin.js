@@ -21,4 +21,17 @@
 			return this.appendChild( element.node() );
 		});
 	};
+
+	/* 
+	*	Collects an attribute of a selection, possibly multiple elements.
+	*/
+	d3.selection.prototype.collect = function collect( attr ) {
+		if ( !attr )
+			return [];
+		var attrs = [];
+		this.each( function() {
+			attrs.push( d3.select( this ).attr( attr ) );
+		});
+		return attrs;
+	};
 })(); 

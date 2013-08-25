@@ -1,3 +1,12 @@
+/*
+*	Add Annotation View
+*	===================
+*
+*	Handles how a user may annotate the visualization through four tools:
+*	selection, text, arrow and rectangle.
+*
+*	@author npiccolotto
+*/
 var assistance = assistance || {};
 
 ( function( $ ) {
@@ -28,15 +37,18 @@ var assistance = assistance || {};
 			d3.select( this.el ).attr( "class", "assistance-annotations assistance-annotations__selection" );
 		},
 
+		// manual hit test. we can't use mousemove or anything like this directly on the elements, because the SVG of this view is above them.
 		_getElementAt: function( x, y ) {
 			var $comp = $( this.options.component ).first(),
 				$vis = $comp.find( this.options.visualization ).first(),
 				element = null;
+			// loop through each resource in the visualization
 			$vis.find( "[resource]" ).each( function( i, res ) {
-				var offset = $( res ).offset(),
+				// get position and dimensions
+				var offset = $( res ).offset(),	
 					width = $( res ).width() || parseFloat( $( res ).attr( "width" ) ),
 					height = $( res ).height() || parseFloat( $( res ).attr( "height" ) );
-				
+				// check if mouse is roughly in between
 				if ( ( offset.left < x && x < offset.left + width ) &&
 					 ( offset.top < y && y < offset.top + height ) )
 					 element = res;
@@ -44,6 +56,7 @@ var assistance = assistance || {};
 			return element;
 		},	
 
+		// get all elements (data points) of the visualization
 		_allElements: function() {
 			var $comp = $( this.options.component ).first(),
 				$vis = $comp.find( this.options.visualization ).first();
@@ -51,29 +64,52 @@ var assistance = assistance || {};
 			return d3.select( $vis[0] ).selectAll( "[resource]" );
 		},
 
+		// handles the highlighting of elements on hover
 		_highlightOnHover: function( evt ) {
+			// break if selection tool is not active
 			if ( this.capability !== "selection" ) 
 				return false;
 			// manual hit test as this svg is over the actual visualization
 			var el = this._getElementAt( evt.pageX, evt.pageY );
+			// if we're not over an element, remove class from all unselected ones. this is necessary to properly handle mouseout case.
 			if ( !el ) {
-				this._allElements().style( "opacity", 1 );
+				this._allElements().filter( ":not([data-vizboard-selected=true])" ).attr( "class", function( ) {
+					return d3.select( this ).attr( "data-vizboard-old-class" ) || d3.select( this ).attr( "class" );
+				}).attr( "data-vizboard-old-class", null );
 				return false;
 			}
 			el = d3.select( el );
-			//TODO kann ich nicht einfach so machen, aber für jetzt reichts
-			el.style( "opacity", .5 );
+			// break if this element is already selected
+			if ( el.attr( "data-vizboard-selected" ) )
+				return false;
+			// save class of this element and apply highlight class
+			var clazz = el.attr( "class" );
+			if ( !el.attr( "data-vizboard-old-class" ) ) {
+				el.attr( "data-vizboard-old-class", clazz );
+				el.attr( "class", "vizboard-highlight" ); // class="vizboardähighlight <old class>" in mockup not feasible, probably due to specifity of seleciton rules.
+			}
 		},
 
+		// handles clicks O.O
 		_clickHandler: function( evt ) {
 			if ( this.capability === "selection" ) {
+				// get element if selectino tool is active
 				var el = this._getElementAt( evt.pageX, evt.pageY );
 				if ( !el )
 					return false;
 				el = d3.select( el );
-				// hier muss die änderung permanent sein, d.h. ich kann auch eine kopie hier reinzeichnen ^_^ 
-				el.style( "opacity", .5 );
-				this.trigger( "selection", el.attr( "resource") );
+				// if it's not selected, select it
+				if ( !el.attr( "data-vizboard-selected" ) ) {
+					el.attr( "data-vizboard-selected", "true" );
+					el.attr( "class", "vizboard-highlight" );
+				} else {
+					// deselect if already selected
+					el.attr( "data-vizboard-selected", null );
+					el.attr( "class", el.attr( "data-vizboard-old-class" ) );
+					el.attr( "data-vizboard-old-class", null );
+				}
+				// trigger event with all current selections
+				this.trigger( "selection", this._allElements().filter( "[data-vizboard-selected]" ).collect( "resource" ) );
 			}
 		},
 
@@ -91,7 +127,7 @@ var assistance = assistance || {};
 
 		activateArrow: function() {
 			this._clear();
-			this.capability = "rectangle";
+			this.capability = "arrow";
 			d3.select( this.el ).attr( "class", "assistance-annotations assistance-annotations__arrow" );
 		},
 
