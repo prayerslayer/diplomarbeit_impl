@@ -55,7 +55,7 @@ var assistance = assistance || {};
 		},
 
 		_processText: function( text ) {
-
+			console.log( text );
 		},
 
 		_processSelection: function( selection ) {

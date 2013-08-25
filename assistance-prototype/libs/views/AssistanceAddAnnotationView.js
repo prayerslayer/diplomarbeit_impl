@@ -45,7 +45,7 @@ var assistance = assistance || {};
 			// loop through each resource in the visualization
 			$vis.find( "[resource]" ).each( function( i, res ) {
 				// get position and dimensions
-				var offset = $( res ).offset(),	
+				var offset = $( res ).offset();
 					width = $( res ).width() || parseFloat( $( res ).attr( "width" ) ),
 					height = $( res ).height() || parseFloat( $( res ).attr( "height" ) );
 				// check if mouse is roughly in between
@@ -86,13 +86,32 @@ var assistance = assistance || {};
 			var clazz = el.attr( "class" );
 			if ( !el.attr( "data-vizboard-old-class" ) ) {
 				el.attr( "data-vizboard-old-class", clazz );
-				el.attr( "class", "vizboard-highlight" ); // class="vizboardähighlight <old class>" in mockup not feasible, probably due to specifity of seleciton rules.
+				el.attr( "class", "vizboard-highlight" ); // class="vizboard-highlight <old class>" in mockup not feasible, probably due to specifity of seleciton rules.
 			}
+		},
+
+		// triggers text event
+		_triggerText: function() {
+			var texts = [];
+			d3.select( this.el ).selectAll( "text.assistance-annotations__text_content" ).each( function() {
+				var text = {}; // x, y, text
+				text.x = d3.select( this ).attr( "data-vizboard-textinfo-x" ) * 100;
+				text.y = d3.select( this ).attr( "data-vizboard-textinfo-y" ) * 100;
+				text.text = d3.select( this ).text();
+				texts.push( text );
+			});
+			this.trigger( "text", texts );
+		},
+
+		// triggers selection event
+		_triggerSelection: function() {
+			this.trigger( "selection", this._allElements().filter( "[data-vizboard-selected]" ).collect( "resource" ) );
 		},
 
 		// handles clicks O.O
 		_clickHandler: function( evt ) {
 			if ( this.capability === "selection" ) {
+
 				// get element if selectino tool is active
 				var el = this._getElementAt( evt.pageX, evt.pageY );
 				if ( !el )
@@ -109,7 +128,35 @@ var assistance = assistance || {};
 					el.attr( "data-vizboard-old-class", null );
 				}
 				// trigger event with all current selections
-				this.trigger( "selection", this._allElements().filter( "[data-vizboard-selected]" ).collect( "resource" ) );
+				this._triggerSelection();
+
+			} else if ( this.capability === "text" ) {
+				if ( evt.target.tagName !== "text" ) {
+					var text = d3.select( this.el ).append( "text" );
+					text.attr( "class", "assistance-annotations__text_content")
+					text.attr( "x", evt.offsetX );
+					text.attr( "y", evt.offsetY );
+					var t = prompt( "Please enter text:" );
+					if ( t ) {
+						text.text( t );
+						text.attr( "data-vizboard-textinfo-x", evt.offsetX/this.$el.width() );
+						text.attr( "data-vizboard-textinfo-y", evt.offsetY/this.$el.height() );
+						$( text.node() ).focus( );	
+						this._triggerText();
+					} else
+						text.remove(); 
+					
+				} else {
+					// edit text
+					var text = d3.select( evt.target ),
+						t = text.text(),
+						newText = prompt( "Please enter new text:", t );
+
+					if ( newText ) {
+						text.text( newText );
+					}
+					this._triggerText();
+				}
 			}
 		},
 
