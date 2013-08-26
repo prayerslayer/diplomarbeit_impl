@@ -29,6 +29,7 @@ var assistance = assistance || {};
 				"comment_data": {
 					"data_annotations_enabled": comp.data_annotations_enabled,
 					"dataset_id": this.options.dataset_id,
+					"component_id": comp.component_id,
 					"user_id": this.options.user_id,
 					"visualized_properties": comp.visualized_properties,
 					"reference": comp.reference
