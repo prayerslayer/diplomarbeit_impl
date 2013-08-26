@@ -168,17 +168,24 @@ var assistance = assistance || {};
 			versions.push( version );
 			comment.versions = versions;
 
+			// submit ajax request
+			setTimeout( function() {
+				// submit
+				$.ajax({
+					type: "POST",
+					url: this.options.comment_url,
+					data: "comment=" + JSON.stringify( comment ),
+					success: function( data, status, xhr ) {
+						// notification
+						console.log( "successfully created comment "+ data );
+					}
+				});	
+			}, 0 );
 
-			// submit
-			$.ajax({
-				type: "POST",
-				url: this.options.comment_url,
-				data: "comment=" + JSON.stringify( comment ),
-				success: function( data, status, xhr ) {
-					spinner.close();
-					that.close();
-				}
-			});		
+			// close things
+			spinner.close();
+			this.close();
+				
 		},
 
 		onBeforeClose: function() {
