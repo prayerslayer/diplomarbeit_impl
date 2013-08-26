@@ -96,7 +96,7 @@ var assistance = assistance || {};
 
 			// init comment
 			var comment = _.clone( this.options.comment_data );
-
+			comment.score = 0;
 			// memento
 			// comment.memento = comment.reference.getMemento();
 
@@ -112,8 +112,8 @@ var assistance = assistance || {};
 			// check if annotations are there
 			var area_annotations = {
 				"type": "area",
-				"visualization_width": this.width,
-				"visualization_height": this.height,
+				"visualization_width": this.annotationView.width,
+				"visualization_height": this.annotationView.height,
 				"elements": []
 			};
 
@@ -163,16 +163,17 @@ var assistance = assistance || {};
 			if ( area_annotations.elements.length )
 				version.annotations.push( area_annotations );
 			if ( datapoint_annotations.length )
-				version.annotations.push.apply( datapoint_annotations );
+				version.annotations.push.apply( version.annotations, datapoint_annotations );
 
 			versions.push( version );
 			comment.versions = versions;
+
 
 			// submit
 			$.ajax({
 				type: "POST",
 				url: this.options.comment_url,
-				data: JSON.stringify( comment ),
+				data: "comment=" + JSON.stringify( comment ),
 				success: function( data, status, xhr ) {
 					spinner.close();
 					that.close();

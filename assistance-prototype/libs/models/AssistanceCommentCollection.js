@@ -21,7 +21,6 @@ var assistance = assistance || {};
 		parse: function( data ) {
 			_.each( data, function( c ) {
 				var models = [];
-				c.text = _.escape( c.text ),
 				_.each( c.annotations, function( anno ) {
 					var model = null;
 					if ( anno.type === "area" ) {
