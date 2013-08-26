@@ -173,13 +173,17 @@ var assistance = assistance || {};
 				// submit
 				$.ajax({
 					type: "POST",
-					url: this.options.comment_url,
-					data: "comment=" + JSON.stringify( comment ),
-					success: function( data, status, xhr ) {
-						// notification
-						console.log( "successfully created comment "+ data );
-					}
-				});	
+					url: that.options.comment_url,
+					dataType: "json",
+					data: "comment=" + JSON.stringify( comment )
+				}).fail( function( xhr, status, error ) {
+					console.debug( xhr, status, error );
+				}).done( function( data, status, xhr ) {
+					// notification
+					console.log( "successfully created comment "+ data );
+				}).always( function( dataxhr, status, errorxhr ) {
+					console.log( dataxhr, status, errorxhr );
+				});
 			}, 0 );
 
 			// close things
@@ -190,6 +194,7 @@ var assistance = assistance || {};
 
 		onBeforeClose: function() {
 			this.annotationView.close();
+			this.annotations = {};
 		},
 
 		_selectText: function() {
