@@ -16,6 +16,14 @@ var assistance = assistance || {};
 		className: "assistance-comment__write-comment",
 		template: "#writecommentViewTemplate",
 
+		annotations: {
+			"selections": [],
+			"arrows": [],
+			"rectangles": [],
+			"text": []
+		},
+		placeholder: "Put your comment here.",
+
 		ui: {
 			"annos": ".assistance-comment__write-comment-anno-select, .assistance-comment__write-comment-anno-arrow, .assistance-comment__write-comment-anno-rect, .assistance-comment__write-comment-anno-text",
 			"annoSelect": ".assistance-comment__write-comment-anno-select",
@@ -23,7 +31,7 @@ var assistance = assistance || {};
 			"annoRect": ".assistance-comment__write-comment-anno-rect",
 			"annoText": ".assistance-comment__write-comment-anno-text",
 			"textArea": ".assistance-comment__write-comment-area",
-			"submit": ".assistance-base__submit"
+			"submit": ".assistance-comment__submit"
 		},
 
 		events: {
@@ -31,11 +39,23 @@ var assistance = assistance || {};
 			"click [data-action=select-rect]": "_selectRect",
 			"click [data-action=select-select]": "_selectSelect",
 			"click [data-action=select-arrow]": "_selectArrow",
-			"click [data-action=submit]": "_submit"
+			"click [data-action=submit]": "_submit",
+			"input .assistance-comment__write-comment-area": "_input"
 		},
 
 		initialize: function( opt ) {
 			this.bindUIElements();
+		},
+
+		_input: function() {
+			var text = this.ui.textArea.text();
+			if ( text && text !== this.placeholder ) {
+				this.ui.submit.addClass( "assistance-comment__submit_enabled" );
+				this.ui.submit.attr( "data-vizboard-enabled", "true" );
+			} else {
+				this.ui.submit.attr( "data-vizboard-enabled", null );
+				this.ui.submit.removeClass( "assistance-comment__submit_enabled" );
+			}
 		},
 
 		setAnnotationView: function( view ) {
@@ -47,23 +67,120 @@ var assistance = assistance || {};
 		},
 
 		_processRectangle: function( rect ) {
-			console.log( rect );
+			this.annotations.rectangles = rect;
 		},
 
 		_processArrow: function( arrow ) {
-			console.log( arrow );
+			this.annotations.arrows = arrow;
 		},
 
 		_processText: function( text ) {
-			console.log( text );
+			this.annotations.text = text;
 		},
 
 		_processSelection: function( selection ) {
-			console.log( selection );
+			this.annotations.selections = selection;
 		},
 
 		_submit: function() {
-			console.log( this.regions);
+			// check if comment is not empty
+			if ( !this.ui.submit.attr( "data-vizboard-enabled" ) )
+				return;
+			var spinner = new assistance.Spinner({
+				"caller": this.ui.submit
+			}),
+				that = this;
+
+			this.ui.submit.attr( "data-vizboard-enabled", null ); // prevent further clicks
+			this.ui.submit.removeClass( "assistance-comment__submit_enabled" ).addClass( "assistance-comment__submit_processing" );
+
+			// init comment
+			var comment = _.clone( this.options.comment_data );
+
+			// memento
+			// comment.memento = comment.reference.getMemento();
+
+			//versions 
+			var versions = [],
+				version = {
+					"number": 1,
+					"text": this.ui.textArea.html().trim() , // preserve paragraphs
+					"timestamp": Date.now(),
+					"annotations": []			
+				};
+
+			// check if annotations are there
+			var area_annotations = {
+				"visualization_width": this.width,
+				"visualization_height": this.height,
+				"elements": []
+			};
+
+			var datapoint_annotations = [];
+			
+			// check rectangles
+			if ( this.annotations.rectangles && this.options.dataAnnotationsEnabled ) {
+				// data annotations
+				//TODO
+			} else if ( this.annotations.rectangles ) {
+				// rect annotations
+				_.each( this.annotations.rectangles, function( rect ) {
+					var scaled = that.annotationView.scale( rect );
+					scaled.type = "rectangle";
+					area_annotations.elements.push( scaled );
+				});
+			}
+
+			if ( this.annotations.text ) {
+				_.each( this.annotations.text, function( t ) {
+					var scaled = that.annotationView.scale( t );
+					scaled.type = "text";
+					area_annotations.elements.push( scaled );
+				});
+			}
+
+			if ( this.annotations.arrows ) {
+				_.each( this.annotations.arrows, function( a ) {
+					var scaled = that.annotationView.scale( a );
+					scaled.type = "arrow";
+					area_annotations.elements.push( scaled );
+				});
+			}
+
+			if ( this.annotations.selections ) {
+				// explicit datapoint annotations
+				_.each( this.annotations.selections, function( s ) {
+					var point = {};
+					point.uri = s;
+					point.type = "point";
+					// point.values = this.options.reference.getValues( s );
+					datapoint_annotations.push( point );
+				});
+
+			}
+
+			if ( area_annotations.elements.length )
+				version.annotations.push( area_annotations );
+			if ( datapoint_annotations.length )
+				version.annotations.push.apply( datapoint_annotations );
+
+			versions.push( version );
+			comment.versions = versions;
+
+			// submit
+			$.ajax({
+				type: "POST",
+				url: this.options.comment_url,
+				data: JSON.stringify( comment ),
+				success: function( data, status, xhr ) {
+					spinner.close();
+					that.close();
+				}
+			});		
+		},
+
+		onBeforeClose: function() {
+			this.annotationView.close();
 		},
 
 		_selectText: function() {

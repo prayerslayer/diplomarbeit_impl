@@ -290,17 +290,26 @@ div.assistance-comment__comment-content {
 div.assistance-comment__submit {
 	border-top: 2px solid white;
 	text-align: center;
-	cursor: pointer;
 	height: 4rem;
 	width: 100%;
+	color: darkgray;
 	position:absolute;
 	bottom: 0px;
 	left: 0px;
 	-webkit-transition: color .2s;
 }
 
-div.assistance-comment__submit:hover {
+div.assistance-comment__submit_enabled {
 	color: green;
+	cursor: pointer;
+}
+
+div.assistance-comment__submit_processing {
+	color: orange;
+}
+
+div.assistance-comment__submit_enabled:hover {
+	color: orange;
 }
 
 div.assistance-comment__write-comment {
@@ -378,8 +387,8 @@ rect.assistance-annotations__rectangle_finished {
 	cursor: text;
 }
 
-.assistance-annotations__text_content {
-	cursor: move;
+text.assistance-annotations__text_content {
+	fill: orange;
 }
 
 svg.assistance-comment__areaannotation,

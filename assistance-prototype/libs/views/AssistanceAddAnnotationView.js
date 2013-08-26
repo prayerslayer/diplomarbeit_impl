@@ -18,6 +18,8 @@ var assistance = assistance || {};
 		capability: "selection",
 		offsetLeft: 0,
 		offsetTop: 0,
+		width: 0,
+		height: 0,
 
 		ui: {
 			"bg": ".assistance-annotations__bg"
@@ -26,6 +28,16 @@ var assistance = assistance || {};
 		events: {
 			"mousemove": "_highlightOnHover",
 			"click": "_clickHandler"
+		},
+
+		_unselect: function() {
+			this._allElements().filter( "[data-vizboard-selected]" ).attr( "class", function() {
+				return d3.select( this ).attr( "data-vizboard-old-class" );
+			}).attr( "data-vizboard-old-class", null );
+		},
+
+		onBeforeClose: function() {
+			this._unselect();
 		},
 
 		_clear: function() {
@@ -39,20 +51,65 @@ var assistance = assistance || {};
 			d3.select( this.el ).attr( "class", "assistance-annotations assistance-annotations__selection" );
 		},
 
+		// takes absolute values, scales them appropriately to relative ones
+		scale: function( obj ) {
+			var ret = {};
+			if ( obj.x )
+				ret.x = 100 * obj.x / this.width; // coordinates are already offset
+			if ( obj.y )
+				ret.y = 100 * obj.y / this.height;
+			if ( obj.x1 )
+				ret.x1 = 100 * obj.x1 / this.width;
+			if ( obj.x2 ) 
+				ret.x2 = 100 * obj.x2 / this.width;
+			if ( obj.y1 )
+				ret.y1 = 100 * obj.y1 / this.height;
+			if ( obj.y2 )
+				ret.y2 = 100 * obj.y2 / this.height;
+
+			// andre werte übernehmen
+			for ( key in obj ) {
+				if ( obj.hasOwnProperty( key ) ) {
+					if ( !ret.hasOwnProperty( key ) ) {
+						ret[ key ] = obj[ key ];
+					}
+				}
+			}
+
+			return ret;
+		},
+
 		// manual hit test. we can't use mousemove or anything like this directly on the elements, because the SVG of this view is above them.
 		_getElementAt: function( x, y ) {
 			var $comp = $( this.options.component ).first(),
 				$vis = $comp.find( this.options.visualization ).first(),
-				element = null;
+				element = null,
+				that = this;
 			// loop through each resource in the visualization
 			$vis.find( "[resource]" ).each( function( i, res ) {
 				// get position and dimensions
-				var offset = $( res ).offset();
-					width = $( res ).width() || parseFloat( $( res ).attr( "width" ) ),
-					height = $( res ).height() || parseFloat( $( res ).attr( "height" ) );
+				var width, height, offsetLeft, offsetTop;
+
+				if ( $( res ).width() ) {
+					// jquery works here
+					width = $( res ).width();
+					height= $( res ).height();
+					var offset = $( res ).offset();
+					offsetLeft = offset.left;
+					offsetTop = offset.top;
+				} else {
+					// this is a svg visualization, use bbox
+					var bbox = res.getBBox();
+					var offset = $( that.el ).offset(); 
+					width = bbox.width;
+					height= bbox.height;
+					offsetLeft = offset.left + that.offsetLeft + bbox.x; 
+					offsetTop = offset.top + that.offsetTop + bbox.y;
+				}
+
 				// check if mouse is roughly in between
-				if ( ( offset.left < x && x < offset.left + width ) &&
-					 ( offset.top < y && y < offset.top + height ) )
+				if ( ( offsetLeft < x && x < offsetLeft + width ) &&
+					 ( offsetTop < y && y < offsetTop + height ) )
 					 element = res;
 			});
 			return element;
@@ -206,13 +263,13 @@ var assistance = assistance || {};
 			} else if ( this.capability === "text" ) {
 				if ( evt.target.tagName !== "text" ) {
 					var text = d3.select( this.el ).append( "text" );
-					text.attr( "class", "assistance-annotations__text_content")
+					text.attr( "class", "assistance-annotations__text_content");
+					text.style( "fill", "orange" ); // class did not work?
 					text.attr( "x", evt.offsetX );
 					text.attr( "y", evt.offsetY );
 					var t = prompt( "Please enter text:" );
 					if ( t ) {
 						text.text( t );
-						$( text.node() ).focus( );	
 						this._triggerText();
 					} else
 						text.remove(); 

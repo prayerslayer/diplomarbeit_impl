@@ -14,7 +14,8 @@ var assistance = assistance || {};
 		},
 
 		writeComment: function( component ) {
-			var visualization = this._getComponent( component ).visualization;
+			var comp = this._getComponent( component ),
+				visualization = comp.visualization;
 
 			// write comment thingy
 			var writebase = new assistance.BaseView({
@@ -23,7 +24,15 @@ var assistance = assistance || {};
 			});
 			var writer = new assistance.WriteCommentView({
 				"component": component,
-				"visualization": visualization
+				"visualization": visualization,
+				"comment_url": this.options.comment_url,
+				"comment_data": {
+					"data_annotations_enabled": comp.data_annotations_enabled,
+					"dataset_id": this.options.dataset_id,
+					"user_id": this.options.user_id,
+					"visualized_properties": comp.visualized_properties,
+					"reference": comp.reference
+				}
 			});
 			writebase.content.show( writer );
 
@@ -82,7 +91,7 @@ var assistance = assistance || {};
 
 		showComments: function( component ) {
 			var comments = new assistance.CommentCollection([], {
-				"url": this.options.commentUrl
+				"url": this.options.comment_url
 			});
 			var spinner = new assistance.Spinner({
 					"caller": $( component )

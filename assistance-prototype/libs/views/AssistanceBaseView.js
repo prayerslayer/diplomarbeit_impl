@@ -53,6 +53,7 @@ var assistance = assistance || {};
 
 		onRender: function() {
 			// fill view with content
+			var that = this;
 			this.ui.headline.text( this.options.headline || this.default_content[ this.options.type ].headline );
 			this.ui.explanation.text( this.options.explanation || this.default_content[ this.options.type ].explanation );
 			// show base view
@@ -62,8 +63,8 @@ var assistance = assistance || {};
 			this.content.on( "show", function( view ) {
 				if ( typeof view.init === 'function' )
 					view.init();
+				view.on( "close", that.close, that );
 			});
-			
 			// width in css is for list view
 			if ( this.options.type !== "howto" )
 				this.$el.css( "width", "auto" ); // I KNOOOW decoupling css and js and so forth... would be more elegant w/ class
