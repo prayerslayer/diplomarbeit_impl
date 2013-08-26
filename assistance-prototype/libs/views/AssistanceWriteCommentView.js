@@ -111,6 +111,7 @@ var assistance = assistance || {};
 
 			// check if annotations are there
 			var area_annotations = {
+				"type": "area",
 				"visualization_width": this.width,
 				"visualization_height": this.height,
 				"elements": []
