@@ -34,7 +34,7 @@ var assistance = assistance || {};
 			var point_commies = {},
 				that = this;
 			this.collection.each( function( comment ) {
-				comment.get( "annotations" ).each( function( anno ) {
+				comment.get( "latest" ).annotations.each( function( anno ) {
 					if ( anno.get( "type" ) === "point" ) {
 						var uri = anno.get( "uri" );
 						if ( !point_commies[ uri ] )

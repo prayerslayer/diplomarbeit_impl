@@ -20,6 +20,12 @@ var assistance = assistance || {};
 			this.set( "elements", new Backbone.Collection([], {
 				"model": assistance.AnnotationElement
 			}) );
+		},
+
+		hasRects: function() {
+			return this.get( "elements" ).some( function( item ) {
+				return item.get( "type" ) === "rectangle";
+			}) || false;
 		}
 
 	});

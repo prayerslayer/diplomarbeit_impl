@@ -16,7 +16,7 @@ var assistance = assistance || {};
 		className: "assistance-comment__arrowannotation",
 		template: "#arrowannotationViewTemplate",
 
-		initialize: function( ) {
+		initialize: function( opts ) {
 			// see http://stackoverflow.com/questions/9651167/svg-not-rendering-properly-as-a-backbone-view
 			this.setElement( document.createElementNS( "http://www.w3.org/2000/svg", this.tagName ) );
 			// the line above also destroys the template ;_;
@@ -26,6 +26,10 @@ var assistance = assistance || {};
 			d3.select( this.el ).attr( "y2", this.model.get( "y2" ) + "%" );
 			d3.select( this.el ).attr( "class", "assistance-comment__arrowannotation" );
 			this.$el = $( this.el );
+		},
+
+		setParent: function( parentId ) {
+			d3.select( this.el ).attr( "marker-end", "url(#" + parentId + "arrowhead)");
 		}
 
 	});

@@ -22,6 +22,10 @@ var assistance = assistance || {};
 
 
 		initialize: function( data ) {
+			data.versions.sort( function( v1, v2 ) {
+				return v1.timestamp < v2.timestamp;
+			});
+			this.set( "latest", data.versions[ 0 ] );
 			this.set( "hr_timestamp", "on " + moment( data.versions[0].timestamp ).format( "MMMM Do YYYY" ) );
 			this.formatScore();
 			this.on( "change:score", this.formatScore );
@@ -38,8 +42,10 @@ var assistance = assistance || {};
 		},
 
 		tellChildren: function( key, value ) {
-			this.get( "annotations" ).each( function( anno ) {
-				anno.set( key, value );
+			_.each( this.get( "versions" ), function( v ) {
+				_.each( v.annotations.models, function( anno ) {
+					anno.set( key, value );
+				})
 			});
 		}
 	});

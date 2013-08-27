@@ -1,6 +1,6 @@
 # TODO
 
-* Kommentare mit visualized props werden nicht gefunden...
+* URLs von Collections und Models einfügen, sodass ich einfach sync()en kann
 * Annotationen mit SVG? Warum eigentlich nicht? --> weils die templates zerschiesst, aber die vorteile sind immens: clipPaths und masks!
 * Kann ich die ganzen show()s und hide()s Funktionen irgendwo zusammenfassen? Sieht nisch so dolle aus, nor.
 * Annotationen in Kommentaren
