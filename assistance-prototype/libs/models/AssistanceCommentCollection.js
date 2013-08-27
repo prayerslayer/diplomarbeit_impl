@@ -21,6 +21,8 @@ var assistance = assistance || {};
 		parse: function( data ) {
 			_.each( data, function( c ) {
 				var models = [];
+				c.avatar_url = "http://robohash.org/" + c.user_id;
+				c.user_name = /* TODO userservice abfragen */ c.user_id;
 				_.each( c.annotations, function( anno ) {
 					var model = null;
 					if ( anno.type === "area" ) {

@@ -1,7 +1,6 @@
 # TODO
 
-* Bounding Box für Hit Test nehmen, width und height sind nicht überall definiert!
-* Im WriteCommentView eine Liste bauen, die vorhandene Annotationen zeigt. Mit der kann dann auch gelöscht werden.
+* Kommentare mit visualized props werden nicht gefunden...
 * Annotationen mit SVG? Warum eigentlich nicht? --> weils die templates zerschiesst, aber die vorteile sind immens: clipPaths und masks!
 * Kann ich die ganzen show()s und hide()s Funktionen irgendwo zusammenfassen? Sieht nisch so dolle aus, nor.
 * Annotationen in Kommentaren

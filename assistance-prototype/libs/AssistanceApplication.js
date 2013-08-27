@@ -92,7 +92,7 @@ var assistance = assistance || {};
 
 		showComments: function( component ) {
 			var comments = new assistance.CommentCollection([], {
-				"url": this.options.comment_url
+				"url": this.options.comment_url + "/property?property=testproperty1"
 			});
 			var spinner = new assistance.Spinner({
 					"caller": $( component )
