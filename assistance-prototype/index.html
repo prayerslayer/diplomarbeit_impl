@@ -78,7 +78,7 @@
 				</div>
 			</div>
 			<div class="assistance-comment__comment-content">
-				<%= text %>
+				<%= versions[0].text %>
 			</div>
 		</script>
 
@@ -316,7 +316,7 @@
 		<script type="text/javascript">
 			$( document ).ready( function() {
 				$.support.cors = true;
-				
+
 				var app = new assistance.Application();
 				app.start( {
 					"comment_url": "http://141.76.68.74:8089/dare/comment",

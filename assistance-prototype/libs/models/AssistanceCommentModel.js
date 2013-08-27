@@ -22,7 +22,7 @@ var assistance = assistance || {};
 
 
 		initialize: function( data ) {
-			this.set( "hr_timestamp", "on " + moment( data.timestamp ).format( "MMMM Do YYYY" ) );
+			this.set( "hr_timestamp", "on " + moment( data.versions[0].timestamp ).format( "MMMM Do YYYY" ) );
 			this.formatScore();
 			this.on( "change:score", this.formatScore );
 			this.on( "change:component", this.updateComponent, this );

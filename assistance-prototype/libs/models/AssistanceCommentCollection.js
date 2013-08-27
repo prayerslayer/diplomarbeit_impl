@@ -21,8 +21,16 @@ var assistance = assistance || {};
 		parse: function( data ) {
 			_.each( data, function( c ) {
 				var models = [];
+				// user stuff
 				c.avatar_url = "http://robohash.org/" + c.user_id;
 				c.user_name = /* TODO userservice abfragen */ c.user_id;
+
+				// sort versions by date
+				c.versions.sort( function( v1, v2 ) {
+					return v1.timestamp > v2.timestamp;
+				});
+
+				// create annotations
 				_.each( c.annotations, function( anno ) {
 					var model = null;
 					if ( anno.type === "area" ) {
