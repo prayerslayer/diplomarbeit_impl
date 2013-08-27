@@ -42,7 +42,7 @@ var assistance = assistance || {};
 		},
 
 		events: {
-			"click [data-action=show-annotations]": "showAnnotations",
+			"click [data-action=show-annotations]": "toggleAnnotations",
 			"click [data-action=reply]": "reply",
 			"click [data-action=vote-up]": "voteUp",
 			"click [data-action=vote-down]": "voteDown"
@@ -68,22 +68,23 @@ var assistance = assistance || {};
 			this.$el.fadeOut( 200 );
 		},
 
+		hideAnnotations: function() {
+			this.ui.annos.text( "Show annotations" );
+			this.children.call( "hide" );
+			this.ui.annosicon.removeClass( "icon-eye-close" ).addClass( "icon-eye-open" );
+		},
+
 		showAnnotations: function() {
+			this.ui.annos.text( "Hide annotations" );
+			this.children.call( "show" );
+			this.ui.annosicon.removeClass( "icon-eye-open" ).addClass( "icon-eye-close" );
+		},
+
+		toggleAnnotations: function() {
 			var that = this;
-
-			// show/hide annotations
-			this.children.call( this.annotationsShown ? "hide" : "show" );
-			// update ui
-			if ( !this.annotationsShown ) {
-				this.ui.annos.text( "Hide annotations" );
-				this.ui.annosicon.removeClass( "icon-eye-open" ).addClass( "icon-eye-close" );
-				this.trigger( "showannotations" );
-			} else {
-				this.ui.annos.text( "Show annotations" );
-				this.ui.annosicon.removeClass( "icon-eye-close" ).addClass( "icon-eye-open" );
-				this.trigger( "hideannotations" );
-			}
-
+			
+			// UI will get updated from parent
+			this.trigger( !this.annotationsShown ? "showannotations" : "hideannotations", this.cid );
 			this.annotationsShown = !this.annotationsShown;
 		},
 

@@ -25,7 +25,22 @@ var assistance = assistance || {};
 			// render badges after annotations
 			this.on( "collection:rendered", this.renderBadges, this );
 			this.on( "itemview:showannotations", this.hideBadges, this );
+			this.on( "itemview:showannotations", this.showAnnos, this );
 			this.on( "itemview:hideannotations", this.showBadges, this );
+			this.on( "itemview:hideannotations", this.hideAnnos, this );
+		},
+
+		showAnnos: function( view ) {
+			// hide all
+			this.children.call( "hideAnnotations" );
+			// show only current
+			this.children.findByCid( view.cid ).showAnnotations();
+		},
+
+		hideAnnos: function( view ) {
+			// hide current
+			// this might as well be done in annotationview, but for sake of uniformness it's done here.
+			this.children.findByCid( view.cid ).hideAnnotations();
 		},
 
 		renderBadges: function() {
