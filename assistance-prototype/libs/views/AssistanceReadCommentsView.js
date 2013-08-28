@@ -15,7 +15,9 @@ var assistance = assistance || {};
 		tagName: "div",
 		className: "assistance-comment__read-comments",
 		itemView: assistance.CommentView,
-
+		emptyView: Backbone.Marionette.ItemView.extend({
+			template: "#nocommentViewTemplate"
+		}),
 		badges: new assistance.CommentBadgeCollection(),
 		badgesviews: new Backbone.ChildViewContainer(),	// we need to maintain these views ourselves because the actual collection are the comments
 
@@ -26,8 +28,6 @@ var assistance = assistance || {};
 			this.on( "itemview:showannotations", this.showAnnos, this );
 			this.on( "itemview:hideannotations", this.showBadges, this );
 			this.on( "itemview:hideannotations", this.hideAnnos, this );
-
-			this.on
 		},
 
 		showAnnos: function( view ) {
