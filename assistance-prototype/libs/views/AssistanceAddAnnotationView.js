@@ -271,30 +271,38 @@ var assistance = assistance || {};
 				this._triggerSelection();
 
 			} else if ( this.capability === "text" ) {
+				var that = this;
 				if ( evt.target.tagName !== "text" ) {
 					var text = d3.select( this.el ).append( "text" );
 					text.attr( "class", "assistance-annotations__text_content");
 					text.style( "fill", "orange" ); // class did not work?
 					text.attr( "x", evt.offsetX );
 					text.attr( "y", evt.offsetY );
-					var t = prompt( "Please enter text:" );
-					if ( t ) {
-						text.text( t );
-						this._createRemoveButton( text );
-						this._triggerText();
-					} else
-						text.remove();
+					smoke.prompt( "Please enter text:", function( t ) {
+						if ( t ) {
+							text.text( t );
+							that._createRemoveButton( text );
+							that._triggerText();
+						} else {
+							text.remove();
+						}
+					});
+					
 					
 				} else {
 					// edit text
 					var text = d3.select( evt.target ),
-						t = text.text(),
-						newText = prompt( "Please enter new text:", t );
+						t = text.text();
 
-					if ( newText ) {
-						text.text( newText );
-					}
-					this._triggerText();
+					smoke.prompt( "Please enter new text:", function( newText ) {
+						if ( newText ) {
+							text.text( newText );
+							that._triggerText();
+						}
+					}, {
+						"value": t
+					});
+						
 				}
 			}
 		},

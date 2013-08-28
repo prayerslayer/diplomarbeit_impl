@@ -168,23 +168,21 @@ var assistance = assistance || {};
 			versions.push( version );
 			comment.versions = versions;
 
-			// submit ajax request
-			setTimeout( function() {
-				// submit
-				$.ajax({
-					type: "POST",
-					url: that.options.comment_url,
-					dataType: "json",
-					data: "comment=" + JSON.stringify( comment )
-				}).fail( function( xhr, status, error ) {
-					console.debug( xhr, status, error );
-				}).done( function( data, status, xhr ) {
-					// notification
-					console.log( "successfully created comment "+ data );
-				}).always( function( dataxhr, status, errorxhr ) {
-					console.log( dataxhr, status, errorxhr );
-				});
-			}, 0 );
+			// submit
+			// to be deprecated in favor of Backbone.sync()
+			$.ajax({
+				type: "POST",
+				url: that.options.comment_url,
+				dataType: "json",
+				data: "comment=" + JSON.stringify( comment )
+			}).fail( function( xhr, status, error ) {
+				smoke.alert( "Failed to save comment: " + error );
+			}).done( function( data, status, xhr ) {
+				// notification
+				smoke.alert( "Comment created." );
+			}).always( function( dataxhr, status, errorxhr ) {
+				console.log( dataxhr, status, errorxhr );
+			});
 
 			// close things
 			spinner.close();
