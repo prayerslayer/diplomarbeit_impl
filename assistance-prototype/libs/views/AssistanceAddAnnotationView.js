@@ -41,9 +41,9 @@ var assistance = assistance || {};
 		},
 
 		_unselect: function() {
-			this._allDatapoints().filter( "[data-vizboard-selected]" ).attr( "class", function() {
-				return d3.select( this ).attr( "data-vizboard-old-class" );
-			}).attr( "data-vizboard-old-class", null );
+			this._allDatapoints()
+				.each( this._dehighlightElement )
+				.attr( "data-vizboard-selected", null);
 		},
 
 		onBeforeClose: function() {
@@ -161,7 +161,9 @@ var assistance = assistance || {};
 			var el = this._getElementAt( evt.pageX, evt.pageY );
 			// if we're not over an element, remove class from all unselected ones. this is necessary to properly handle mouseout case.
 			if ( !el ) {
-				this._allDatapoints().filter( ":not([data-vizboard-selected=true])" ).each( this._dehighlightElement );
+				this._allDatapoints()
+					.filter( ":not([data-vizboard-selected=true])" )
+					.each( this._dehighlightElement );
 				return;
 			}
 			el = d3.select( el );
@@ -209,49 +211,48 @@ var assistance = assistance || {};
 		},
 
 		_computeRectangle: function( svgrect ) {
-			// go through rects and collect x1,y1,x2,y2
-				var self = d3.select( svgrect ),
-					rect = {},
-					q = parseInt( self.attr( "data-vizboard-quadrant" ) ),
-					x = parseFloat( self.attr( "x" ) ) - this.offsetLeft,
-					y = parseFloat( self.attr( "y" ) ) - this.offsetTop,
-					w = parseFloat( self.attr( "width" ) ),
-					h = parseFloat( self.attr( "height" ) );
+			var self = d3.select( svgrect ),
+				rect = {},
+				q = parseInt( self.attr( "data-vizboard-quadrant" ) ),
+				x = parseFloat( self.attr( "x" ) ) - this.offsetLeft,
+				y = parseFloat( self.attr( "y" ) ) - this.offsetTop,
+				w = parseFloat( self.attr( "width" ) ),
+				h = parseFloat( self.attr( "height" ) );
 
-				// keeping coordinates absolute, because later they may be fed to component API
-				if ( q === 4 ) {
-					// normal
-					rect.x1 = x;
-					rect.y1 = y;
-					rect.x2 = x + w;
-					rect.y2 = y + h;
-				} else if ( q === 3 ) {
-					// rotated 180°, translated by negative height
-					// top left corner is now top right
-					// bottom right corner is bottom left
-					rect.x1 = x - w;
-					rect.y1 = y;
-					rect.x2 = x;
-					rect.y2 = y + h;
-				} else if ( q === 2 ) {
-					// inverted, just rotated 180°
-					// top left corner is now bottom right
-					// bottom right corner is top left
-					rect.x1 = x - w;
-					rect.y1 = y - h;
-					rect.x2 = x;
-					rect.y2 = y;
-				} else if ( q === 1 ) {
-					// rotated 180°, translated by negative width
-					// top left = bottom left
-					// bottom right = top right
-					rect.x1 = x;
-					rect.y1 = y - h;
-					rect.x2 = x + w;
-					rect.y2 = y;
-				}
+			// keeping coordinates absolute, because later they may be fed to component API
+			if ( q === 4 ) {
+				// normal
+				rect.x1 = x;
+				rect.y1 = y;
+				rect.x2 = x + w;
+				rect.y2 = y + h;
+			} else if ( q === 3 ) {
+				// rotated 180°, translated by negative height
+				// top left corner is now top right
+				// bottom right corner is bottom left
+				rect.x1 = x - w;
+				rect.y1 = y;
+				rect.x2 = x;
+				rect.y2 = y + h;
+			} else if ( q === 2 ) {
+				// inverted, just rotated 180°
+				// top left corner is now bottom right
+				// bottom right corner is top left
+				rect.x1 = x - w;
+				rect.y1 = y - h;
+				rect.x2 = x;
+				rect.y2 = y;
+			} else if ( q === 1 ) {
+				// rotated 180°, translated by negative width
+				// top left = bottom left
+				// bottom right = top right
+				rect.x1 = x;
+				rect.y1 = y - h;
+				rect.x2 = x + w;
+				rect.y2 = y;
+			}
 
-				return rect;
+			return rect;
 		},
 
 		// triggers rectangle event
@@ -299,7 +300,7 @@ var assistance = assistance || {};
 					smoke.prompt( "Please enter text:", function( t ) {
 						if ( t ) {
 							text.text( t );
-							that._createRemoveButton( text );
+							that._createRemoveButton( text.node() );
 							that._triggerText();
 						} else {
 							text.remove();
@@ -476,11 +477,56 @@ var assistance = assistance || {};
 			}
 		},
 
+		// see http://stackoverflow.com/questions/10623809/get-bounding-box-of-element-accounting-for-its-transform
+		// Calculate the bounding box of an element with respect to its parent element
+		_transformedBoundingBox: function( el ) {
+			var bb  = el.getBBox(),
+				svg = el.ownerSVGElement,
+				m   = el.getTransformToElement(el.parentNode);
+
+			// Create an array of all four points for the original bounding box
+			var pts = [
+				svg.createSVGPoint(), svg.createSVGPoint(),
+				svg.createSVGPoint(), svg.createSVGPoint()
+			];
+			pts[0].x=bb.x;          pts[0].y=bb.y;
+			pts[1].x=bb.x+bb.width; pts[1].y=bb.y;
+			pts[2].x=bb.x+bb.width; pts[2].y=bb.y+bb.height;
+			pts[3].x=bb.x;          pts[3].y=bb.y+bb.height;
+
+			// Transform each into the space of the parent,
+			// and calculate the min/max points from that.    
+			var xMin=Infinity,xMax=-Infinity,yMin=Infinity,yMax=-Infinity;
+			pts.forEach(function(pt){
+				pt = pt.matrixTransform(m);
+				xMin = Math.min(xMin,pt.x);
+				xMax = Math.max(xMax,pt.x);
+				yMin = Math.min(yMin,pt.y);
+				yMax = Math.max(yMax,pt.y);
+			});
+
+			// Update the bounding box with the new values
+			bb.x = xMin; bb.width  = xMax-xMin;
+			bb.y = yMin; bb.height = yMax-yMin;
+			return bb;
+		},
+
 		_createRemoveButton: function( element ) {
 			var g = d3.select( this.el ).append( "g" );
-			g.appendChild( element );
-			var x = parseFloat( element.attr( "x" ) || element.attr( "x1" )),
-				y = parseFloat( element.attr( "y" ) || element.attr( "y1" ))
+			var el = d3.select( element );
+			g.appendChild( el );
+
+			// case for text and rect
+			var bbox = this._transformedBoundingBox( element ),
+				x = bbox.x + bbox.width,
+				y = bbox.y;
+
+			// case for arrow
+			if ( element.tagName === "line" ) {
+				x = parseFloat( el.attr( "x1" ) );
+				y = parseFloat( el.attr( "y1" ) );
+			}
+
 			var circle = g.append( "circle" )
 							.attr( "r", 10 )
 							.attr( "cx", x)
@@ -523,14 +569,14 @@ var assistance = assistance || {};
 				var rect = d3.select( this.el ).select( "rect.assistance-annotations__rectangle_current" );
 				
 				rect.attr( "class", "assistance-annotations__rectangle_finished" );
-				this._createRemoveButton( rect );
+				this._createRemoveButton( rect.node() );
 				this._triggerRectangle();
 				// because we may have selected datapoints along the way
 				this._triggerSelection();
 			} else if ( this.capability === "arrow" ) {
 				var arrow = d3.select( this.el ).select( "line.assistance-annotations__arrow_current" );
 				arrow.attr( "class", "assistance-annotations__arrow_finished" );
-				this._createRemoveButton( arrow );
+				this._createRemoveButton( arrow.node() );
 				this._triggerArrow();
 			}
 		},
