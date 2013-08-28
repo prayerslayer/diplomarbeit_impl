@@ -106,10 +106,8 @@ var assistance = assistance || {};
 		},
 		// before closing this view, we must free the badge views to prevent zombie views and memory leaks
 		onBeforeClose: function() {
-			_.each( this.badgesviews, function( v ) {
-				v.stopListening();
-				v.close();
-			});
+			this.badgesviews.call( "stopListening" );
+			this.badgesviews.call( "close" );
 			this.badgesviews = null;
 		}
 	});
