@@ -14,6 +14,9 @@ var assistance = assistance || {};
 			
 		model: assistance.Comment,
 
+		url_regex: /http(s)?:\/\/\S+[^\.!,\?:\s\(\);-]/,
+
+
 		initialize: function( options ) {
 			
 		},
@@ -22,7 +25,7 @@ var assistance = assistance || {};
 			data.sort( function( c1, c2 ) {
 				return c1.versions[0].timestamp < c2.versions[0].timestamp;
 			});
-			
+
 			_.each( data, function( c ) {
 				var models = [];
 				// user stuff
@@ -36,7 +39,7 @@ var assistance = assistance || {};
 				});
 
 				var version = c.versions[ 0 ];
-
+				version.text = _.unescape( version.text );
 				// create annotations
 				_.each( version.annotations, function( anno ) {
 					var model = null;

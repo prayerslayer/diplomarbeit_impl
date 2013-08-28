@@ -104,7 +104,7 @@ var assistance = assistance || {};
 			var versions = [],
 				version = {
 					"number": 1,
-					"text": this.ui.textArea.html().trim() , // preserve paragraphs
+					"text": _.escape(this.ui.textArea.html().trim()) , // preserve paragraphs
 					"timestamp": Date.now(),
 					"annotations": []			
 				};
