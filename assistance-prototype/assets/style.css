@@ -409,6 +409,19 @@ rect.assistance-comment__areaannotation-bg {
 	stroke: black;
 }
 
+circle.assistance-annotations__remove {
+	fill: red;
+	stroke: white;
+	stroke-width: 2;
+	cursor: pointer;
+}
+
+line.assistance-annotations__remove_line {
+	stroke: white;
+	stroke-width: 2;
+	cursor: pointer;
+}
+
 /* SPINNER STUFF */
 
 div.assistance-spinner {

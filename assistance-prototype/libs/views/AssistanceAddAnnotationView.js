@@ -27,7 +27,17 @@ var assistance = assistance || {};
 
 		events: {
 			"mousemove": "_highlightOnHover",
-			"click": "_clickHandler"
+			"click": "_clickHandler",
+			"click g > .assistance-annotations__remove, g > .assistance-annotations__remove_line": "_removeHandler"
+		},
+
+		_removeHandler: function( evt ) {
+			evt.stopPropagation();
+			d3.select( evt.target.parentNode )
+				.transition()
+				.duration( 200 )
+				.style( "opacity", 0 )
+				.remove();
 		},
 
 		_unselect: function() {
@@ -270,9 +280,10 @@ var assistance = assistance || {};
 					var t = prompt( "Please enter text:" );
 					if ( t ) {
 						text.text( t );
+						this._createRemoveButton( text );
 						this._triggerText();
 					} else
-						text.remove(); 
+						text.remove();
 					
 				} else {
 					// edit text
@@ -315,7 +326,7 @@ var assistance = assistance || {};
 			// build a background with mask
 			var def = d3.select( this.el ).append( "defs" );
 			var mask = def.append( "mask" );
-			mask.attr( "id", "annoMask" );
+			mask.attr( "id", this.cid + "annoMask" );
 			var maskBg = mask.append( "rect" );
 			// see http://stackoverflow.com/questions/11404391/invert-svg-clip-show-only-outside-path?lq=1
 			maskBg.style( "fill", "white" );
@@ -332,10 +343,10 @@ var assistance = assistance || {};
 			rect.attr( "height","100%" );
 			rect.style( "opacity", 0.5 );
 			rect.style( "fill", "black" );
-			rect.attr( "mask", "url(#annoMask)" ); //TODO static url problematic if there are multiple views of this opened
+			rect.attr( "mask", "url(#" + this.cid + "annoMask)" ); //TODO static url problematic if there are multiple views of this opened
 
 			var marker = def.append( "marker" );
-			marker.attr( "id", "arrowhead" )
+			marker.attr( "id", this.cid + "arrowhead" )
 					.attr("refX", 5) /*must be smarter way to calculate shift*/
     				.attr("refY", 3)
     				.attr( "fill", "orange" )
@@ -349,7 +360,11 @@ var assistance = assistance || {};
 			this.bindUIElements();
 		},
 
-		_dragStartHandler: function( ) {
+		_dragStartHandler: function() {
+			if ( d3.event.sourceEvent.target.tagName !== "rect" ) {
+				// this is to prevent really short "drags" on the remove button
+				return false;
+			}
 			if ( this.capability === "rectangle" ) {
 				var rect = d3.select( this.el ).append( "rect" );
 				rect.attr( "class", "assistance-annotations__rectangle_current" );
@@ -359,7 +374,7 @@ var assistance = assistance || {};
 			} else if ( this.capability === "arrow" ) {
 				var arrow = d3.select( this.el ).append( "line" );
 				arrow.attr( "class", "assistance-annotations__arrow_current" );
-				arrow.attr( "marker-end", "url(#arrowhead)" );
+				arrow.attr( "marker-end", "url(#" + this.cid + "arrowhead)" );
 				arrow.attr( "x1", d3.event.sourceEvent.offsetX );
 				arrow.attr( "y1", d3.event.sourceEvent.offsetY );
 				// prevent glitch that line is connected to ursprung
@@ -369,6 +384,10 @@ var assistance = assistance || {};
 		},
 
 		_dragHandler: function( ) {
+			if ( d3.event.sourceEvent.target.tagName !== "rect" ) {
+				// this is to prevent really short "drags" on the remove button
+				return false;
+			}
 			if ( this.capability === "rectangle" ) {
 				var rect = d3.select( this.el ).select( "rect.assistance-annotations__rectangle_current" ),
 					width = d3.event.x - rect.attr( "x" ),
@@ -413,15 +432,56 @@ var assistance = assistance || {};
 			}
 		},
 
+		_createRemoveButton: function( element ) {
+			var g = d3.select( this.el ).append( "g" );
+			g.appendChild( element );
+			var x = parseFloat( element.attr( "x" ) || element.attr( "x1" )),
+				y = parseFloat( element.attr( "y" ) || element.attr( "y1" ))
+			var circle = g.append( "circle" )
+							.attr( "r", 10 )
+							.attr( "cx", x)
+							.attr( "cy", y)
+							.attr( "class", "assistance-annotations__remove" );
+			var line_tb = g.append( "line")
+							.attr("x1", x - 5 )
+							.attr("y1", y - 5 )
+							.attr("x2", x + 5 )
+							.attr("y2", y + 5 )
+							.attr("class", "assistance-annotations__remove_line" );
+			var line_bt = g.append( "line")
+							.attr("x1", x - 5 )
+							.attr("y1", y + 5 )
+							.attr("x2", x + 5 )
+							.attr("y2", y - 5 )
+							.attr("class", "assistance-annotations__remove_line" );
+
+			var button = g.selectAll( ".assistance-annotations__remove, .assistance-annotations__remove_line" );
+			button.style( "display", "none" );
+			$( g.node() ).hover( function() {
+				button.style( "display", "block" );
+			}, function() {
+				button.style( "display", "none" );
+			});
+		},
+
 		_dragEndHandler: function() {
+			var target = d3.select( d3.event.sourceEvent.target );
+			if ( target.attr( "class" ) && target.attr("class").indexOf( "assistance-annotations__remove" ) >= 0 ) {
+				// this is to prevent really short "drags" on the remove button
+				// it they would get executed, a new remove button will be created, resulting in faulty markup
+				return false;
+			}
+
 			if ( this.capability === "rectangle" ) {
 				var rect = d3.select( this.el ).select( "rect.assistance-annotations__rectangle_current" );
 				
 				rect.attr( "class", "assistance-annotations__rectangle_finished" );
+				this._createRemoveButton( rect );
 				this._triggerRectangle();
 			} else if ( this.capability === "arrow" ) {
 				var arrow = d3.select( this.el ).select( "line.assistance-annotations__arrow_current" );
 				arrow.attr( "class", "assistance-annotations__arrow_finished" );
+				this._createRemoveButton( arrow );
 				this._triggerArrow();
 			}
 		},
@@ -440,6 +500,8 @@ var assistance = assistance || {};
 			this.ui.bg.attr( "height", this.height );
 			this.ui.bg.attr( "x", this.offsetLeft );
 			this.ui.bg.attr( "y", this.offsetTop );
+
+			this.bindUIElements();
 
 			var dragBehavior = d3.behavior.drag()
 						.on( "dragstart", this._dragStartHandler.bind( this ) )
