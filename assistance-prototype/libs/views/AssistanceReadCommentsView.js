@@ -64,6 +64,7 @@ var assistance = assistance || {};
 			_.each( point_commies, function( comments , uri ) {
 				var badge = new assistance.CommentBadge({
 					"component": that.options.component,
+					"visualization": that.options.visualization,
 					"uri": uri,
 					"comments": comments
 				});

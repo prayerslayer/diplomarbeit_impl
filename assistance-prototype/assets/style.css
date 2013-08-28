@@ -97,6 +97,7 @@ body {
 	border-radius: 100%;
 	width: 48px;
 	height: 36px;
+	position:absolute;
 	background-color: #16161d;
 	-webkit-transition: all .2s;
 	-webkit-box-shadow: 1px 1px 10px #16161d;

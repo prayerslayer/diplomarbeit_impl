@@ -25,6 +25,10 @@ var assistance = assistance || {};
 			dings
 				.attr( "class", dings.attr( "data-vizboard-old-class" ) || dings.attr( "class" ) )
 				.attr( "data-vizboard-old-class", null );
+		},
+
+		onClose: function() {
+			this.hide();
 		}
 
 	});
