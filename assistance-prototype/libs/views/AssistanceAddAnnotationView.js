@@ -20,6 +20,7 @@ var assistance = assistance || {};
 		offsetTop: 0,
 		width: 0,
 		height: 0,
+		last_id: 0,
 
 		ui: {
 			"bg": ".assistance-annotations__bg"
@@ -300,6 +301,7 @@ var assistance = assistance || {};
 					smoke.prompt( "Please enter text:", function( t ) {
 						if ( t ) {
 							text.text( t );
+							that._setId( text.node() );
 							that._createRemoveButton( text.node() );
 							that._triggerText();
 						} else {
@@ -415,6 +417,7 @@ var assistance = assistance || {};
 
 				rect.attr( "x", d3.event.sourceEvent.offsetX );
 				rect.attr( "y", d3.event.sourceEvent.offsetY );
+				this._setId( rect.node() );
 			} else if ( this.capability === "arrow" ) {
 				var arrow = d3.select( this.el ).append( "line" );
 				arrow.attr( "class", "assistance-annotations__arrow_current" );
@@ -424,6 +427,7 @@ var assistance = assistance || {};
 				// prevent glitch that line is connected to ursprung
 				arrow.attr( "x2", d3.event.sourceEvent.offsetX );
 				arrow.attr( "y2", d3.event.sourceEvent.offsetY );
+				this._setId( arrow.node() );
 			}
 		},
 
@@ -466,8 +470,14 @@ var assistance = assistance || {};
 					rect.attr( "transform", t );
 				}
 				// try to find enclosed datapoints
+				var id = rect.attr( "data-vizboard-id" );
+				//TODO this sorta works, but other rects may steal selections
+				this._allDatapoints()
+					.filter( "[data-vizboard-enclosed=" + id + "]" )
+					.each( this._dehighlightElement );
 				var points = this._findEnclosing( rect.node() );
-				this._allDatapoints().each( this._dehighlightElement );
+				points.attr( "data-vizboard-enclosed", id );
+				
 				points.each( this._highlightElement ).attr( "data-vizboard-selected", "true" );
 
 			} else if ( this.capability === "arrow" ) {
@@ -475,6 +485,11 @@ var assistance = assistance || {};
 				arrow.attr( "x2", d3.event.x );
 				arrow.attr( "y2", d3.event.y );
 			}
+		},
+
+		_setId: function( el ) {
+			d3.select( el ).attr( "data-vizboard-id", "element" + this.last_id );
+			this.last_id++;
 		},
 
 		_createRemoveButton: function( element ) {
