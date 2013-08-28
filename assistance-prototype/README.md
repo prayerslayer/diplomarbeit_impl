@@ -13,5 +13,4 @@
 	* ReadCommentsView muss auf event von Kommentaren hören, sodass er koordinieren/Badges verstecken kann
 * (Reply)
 * Kommunikationsview
-* Kommentar Badges sind immer links oben in der Bounding Box des Elements (weil position() nicht gut klappt). Das ist besonders bei Rotationen oder so blöd.
 * Show annotations ausgrauen wenn keine annotationen vorhanden (gibts ja auch)
