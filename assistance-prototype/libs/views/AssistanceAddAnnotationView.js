@@ -62,6 +62,7 @@ var assistance = assistance || {};
 		},
 
 		// takes absolute values, scales them appropriately to relative ones
+		// returns a scaled copy of the original opbject
 		scale: function( obj ) {
 			var ret = {};
 			if ( obj.x )
@@ -133,6 +134,24 @@ var assistance = assistance || {};
 			return d3.select( $vis[0] ).selectAll( "[resource]" );
 		},
 
+		_highlightElement: function( ) {
+			// save class of this element and apply highlight class
+			var el = d3.select( this );
+			var clazz = el.attr( "class" );
+			if ( !el.attr( "data-vizboard-old-class" ) ) {
+				el.attr( "data-vizboard-old-class", clazz );
+				el.attr( "class", "vizboard-highlight" ); // class="vizboard-highlight <old class>" in mockup not feasible, probably due to specifity of seleciton rules.
+			}
+		},
+
+		_dehighlightElement: function(  ) {
+			var el = d3.select( this );
+			// set old class
+			el.attr( "class", el.attr( "data-vizboard-old-class" ) || el.attr( "class" ) );
+			// delete copy
+			el.attr( "data-vizboard-old-class", null );
+		},
+
 		// handles the highlighting of elements on hover
 		_highlightOnHover: function( evt ) {
 			// break if selection tool is not active
@@ -142,21 +161,14 @@ var assistance = assistance || {};
 			var el = this._getElementAt( evt.pageX, evt.pageY );
 			// if we're not over an element, remove class from all unselected ones. this is necessary to properly handle mouseout case.
 			if ( !el ) {
-				this._allDatapoints().filter( ":not([data-vizboard-selected=true])" ).attr( "class", function( ) {
-					return d3.select( this ).attr( "data-vizboard-old-class" ) || d3.select( this ).attr( "class" );
-				}).attr( "data-vizboard-old-class", null );
+				this._allDatapoints().filter( ":not([data-vizboard-selected=true])" ).each( this._dehighlightElement );
 				return;
 			}
 			el = d3.select( el );
 			// break if this element is already selected
 			if ( el.attr( "data-vizboard-selected" ) )
 				return;
-			// save class of this element and apply highlight class
-			var clazz = el.attr( "class" );
-			if ( !el.attr( "data-vizboard-old-class" ) ) {
-				el.attr( "data-vizboard-old-class", clazz );
-				el.attr( "class", "vizboard-highlight" ); // class="vizboard-highlight <old class>" in mockup not feasible, probably due to specifity of seleciton rules.
-			}
+			el.each( this._highlightElement );
 		},
 
 		// triggers text event
@@ -196,17 +208,13 @@ var assistance = assistance || {};
 			this.trigger( "arrow", arrows );
 		},
 
-		// triggers rectangle event
-		_triggerRectangle: function() {
-			var rects = [],
-				that = this;
-			d3.select( this.el ).selectAll( "rect.assistance-annotations__rectangle_finished" ).each( function() {
-				// go through rects and collect x1,y1,x2,y2
-				var self = d3.select( this ),
+		_computeRectangle: function( svgrect ) {
+			// go through rects and collect x1,y1,x2,y2
+				var self = d3.select( svgrect ),
 					rect = {},
 					q = parseInt( self.attr( "data-vizboard-quadrant" ) ),
-					x = parseFloat( self.attr( "x" ) ) - that.offsetLeft,
-					y = parseFloat( self.attr( "y" ) ) - that.offsetTop,
+					x = parseFloat( self.attr( "x" ) ) - this.offsetLeft,
+					y = parseFloat( self.attr( "y" ) ) - this.offsetTop,
 					w = parseFloat( self.attr( "width" ) ),
 					h = parseFloat( self.attr( "height" ) );
 
@@ -243,6 +251,16 @@ var assistance = assistance || {};
 					rect.y2 = y;
 				}
 
+				return rect;
+		},
+
+		// triggers rectangle event
+		_triggerRectangle: function() {
+			var rects = [],
+				that = this;
+			d3.select( this.el ).selectAll( "rect.assistance-annotations__rectangle_finished" ).each( function() {
+		
+				var rect = that._computeRectangle( this );
 				rects.push( rect );
 			});
 			this.trigger( "rectangle", rects );
@@ -305,6 +323,23 @@ var assistance = assistance || {};
 						
 				}
 			}
+		},
+
+		// takes a rect, finds enclosed datapoints
+		_findEnclosing: function( svgrect ) {
+			// svgrect is an svg node, possibly transformed
+			var rect = this._computeRectangle( svgrect ),
+				that = this;
+
+			// rect contains the visible coordinates
+			return this._allDatapoints().filter( function( ) {
+				var bbox = this.getBBox(),
+					centerX = bbox.x + bbox.width / 2,
+					centerY = bbox.y + bbox.height / 2;
+
+				return  rect.x1 < centerX && centerX < rect.x2 &&
+						rect.y1 < centerY && centerY < rect.y2;
+			});
 		},
 
 		activateText: function() {
@@ -392,10 +427,6 @@ var assistance = assistance || {};
 		},
 
 		_dragHandler: function( ) {
-			if ( d3.event.sourceEvent.target.tagName !== "rect" ) {
-				// this is to prevent really short "drags" on the remove button
-				return false;
-			}
 			if ( this.capability === "rectangle" ) {
 				var rect = d3.select( this.el ).select( "rect.assistance-annotations__rectangle_current" ),
 					width = d3.event.x - rect.attr( "x" ),
@@ -433,6 +464,11 @@ var assistance = assistance || {};
 					rect.attr( "data-vizboard-quadrant", q );
 					rect.attr( "transform", t );
 				}
+				// try to find enclosed datapoints
+				var points = this._findEnclosing( rect.node() );
+				this._allDatapoints().each( this._dehighlightElement );
+				points.each( this._highlightElement ).attr( "data-vizboard-selected", "true" );
+
 			} else if ( this.capability === "arrow" ) {
 				var arrow = d3.select( this.el ).select( "line.assistance-annotations__arrow_current" );
 				arrow.attr( "x2", d3.event.x );
@@ -465,9 +501,12 @@ var assistance = assistance || {};
 
 			var button = g.selectAll( ".assistance-annotations__remove, .assistance-annotations__remove_line" );
 			button.style( "display", "none" );
-			$( g.node() ).hover( function() {
+
+			g.on( "mouseover", function() {
 				button.style( "display", "block" );
-			}, function() {
+			})
+			.on( "mouseout" , function() {
+				// cannot call this on the group, because then the element would disappear too
 				button.style( "display", "none" );
 			});
 		},
@@ -486,6 +525,8 @@ var assistance = assistance || {};
 				rect.attr( "class", "assistance-annotations__rectangle_finished" );
 				this._createRemoveButton( rect );
 				this._triggerRectangle();
+				// because we may have selected datapoints along the way
+				this._triggerSelection();
 			} else if ( this.capability === "arrow" ) {
 				var arrow = d3.select( this.el ).select( "line.assistance-annotations__arrow_current" );
 				arrow.attr( "class", "assistance-annotations__arrow_finished" );

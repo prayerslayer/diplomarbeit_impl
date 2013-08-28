@@ -130,6 +130,7 @@ var assistance = assistance || {};
 					scaled.type = "rectangle";
 					area_annotations.elements.push( scaled );
 				});
+
 			}
 
 			if ( this.annotations.text ) {

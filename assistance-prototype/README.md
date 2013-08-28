@@ -1,6 +1,5 @@
 # TODO
 
-* Annotationen entfernen
 * URLs von Collections und Models einfügen, sodass ich einfach sync()en kann
 * aufpassen mit PanelCollection, die muss nämlich SOAP nachrichten rumschicken.
 
