@@ -31,7 +31,7 @@ var assistance = assistance || {};
 		},
 
 		_unselect: function() {
-			this._allElements().filter( "[data-vizboard-selected]" ).attr( "class", function() {
+			this._allDatapoints().filter( "[data-vizboard-selected]" ).attr( "class", function() {
 				return d3.select( this ).attr( "data-vizboard-old-class" );
 			}).attr( "data-vizboard-old-class", null );
 		},
@@ -116,7 +116,7 @@ var assistance = assistance || {};
 		},	
 
 		// get all elements (data points) of the visualization
-		_allElements: function() {
+		_allDatapoints: function() {
 			var $comp = $( this.options.component ).first(),
 				$vis = $comp.find( this.options.visualization ).first();
 
@@ -132,7 +132,7 @@ var assistance = assistance || {};
 			var el = this._getElementAt( evt.pageX, evt.pageY );
 			// if we're not over an element, remove class from all unselected ones. this is necessary to properly handle mouseout case.
 			if ( !el ) {
-				this._allElements().filter( ":not([data-vizboard-selected=true])" ).attr( "class", function( ) {
+				this._allDatapoints().filter( ":not([data-vizboard-selected=true])" ).attr( "class", function( ) {
 					return d3.select( this ).attr( "data-vizboard-old-class" ) || d3.select( this ).attr( "class" );
 				}).attr( "data-vizboard-old-class", null );
 				return;
@@ -166,7 +166,7 @@ var assistance = assistance || {};
 
 		// triggers selection event
 		_triggerSelection: function() {
-			this.trigger( "selection", this._allElements().filter( "[data-vizboard-selected]" ).collect( "resource" ) );
+			this.trigger( "selection", this._allDatapoints().filter( "[data-vizboard-selected]" ).collect( "resource" ) );
 		},
 
 		// triggers arrow event
@@ -219,8 +219,8 @@ var assistance = assistance || {};
 					// inverted, just rotated 180°
 					// top left corner is now bottom right
 					// bottom right corner is top left
-					rect.x1 = x + w;
-					rect.y1 = y + h;
+					rect.x1 = x - w;
+					rect.y1 = y - h;
 					rect.x2 = x;
 					rect.y2 = y;
 				} else if ( q === 1 ) {

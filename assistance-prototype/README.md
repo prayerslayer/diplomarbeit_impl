@@ -1,7 +1,6 @@
 # TODO
 
 * Annotationen entfernen
-* Umschalten mit Badges?
 * URLs von Collections und Models einfügen, sodass ich einfach sync()en kann
 * aufpassen mit PanelCollection, die muss nämlich SOAP nachrichten rumschicken.
 
@@ -14,8 +13,6 @@
 	* Dann bei Bedarf die Collection rendern
 	* ReadCommentsView muss auf event von Kommentaren hören, sodass er koordinieren/Badges verstecken kann
 * (Reply)
-* Kommentar schreiben
-	* --> Kommentar ändern in Backend!
 * Kommunikationsview
 * Kommentar Badges sind immer links oben in der Bounding Box des Elements (weil position() nicht gut klappt). Das ist besonders bei Rotationen oder so blöd.
 * Show annotations ausgrauen wenn keine annotationen vorhanden (gibts ja auch)
