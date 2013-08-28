@@ -17,17 +17,17 @@ var assistance = assistance || {};
 		itemView: assistance.CommentView,
 
 		badges: new assistance.CommentBadgeCollection(),
-		badgesviews: [],	// we need to maintain these views ourselves because the actual collection are the comments
+		badgesviews: new Backbone.ChildViewContainer(),	// we need to maintain these views ourselves because the actual collection are the comments
 
 		initialize: function() {
-			// this event tells that a badge was clicked, its comments shall therefore be shown
-			this.listenTo( this.badges, "showcomments", this.showComments, this );
 			// render badges after annotations
 			this.on( "collection:rendered", this.renderBadges, this );
 			this.on( "itemview:showannotations", this.hideBadges, this );
 			this.on( "itemview:showannotations", this.showAnnos, this );
 			this.on( "itemview:hideannotations", this.showBadges, this );
 			this.on( "itemview:hideannotations", this.hideAnnos, this );
+
+			this.on
 		},
 
 		showAnnos: function( view ) {
@@ -70,39 +70,39 @@ var assistance = assistance || {};
 				var badgeview = new assistance.CommentBadgeView({
 					"model": badge	
 				});
-				that.badgesviews.push( badgeview );
-				that.badges.add( badge );						
+				that.badgesviews.add( badgeview );
+				that.badges.add( badge );
+				// as backbone.babysitter does not listen to childview events, we have to attach an event listener to each view ourselves
+				badgeview.on( "selectcomments", that.showComments, that );
+				badgeview.on( "unselectcomments", that.hideComments, that );					
 			});
 		},
 
 		hideBadges: function() {
-			_.each( this.badgesviews, function( v ) {
-				v.hide( 200 );
-			});
+			this.badgesviews.call( "hide" );
 		},
 
 		showBadges: function() {
-			_.each( this.badgesviews, function( v ) {
-				v.show( 200 );
-			});
+			this.badgesviews.call( "show" );
+		},
+
+		hideComments: function( view ) {
+			this.children.call( "hide" );	// to make a change visible
+			this.children.call( "show" );
 		},
 
 		// hides all the comments, then shows those that should be visible
-		showComments: function( comments ) {
+		showComments: function( view ) {
 			var that = this;
-			if ( comments.length > 0 ) {
-				this.children.call( "hide" );
-				_.each( this.collection.models, function( c ) {
-					if ( _.contains( comments, c ) ) {
-						that.children.findByModel( c ).show();
-					}
-				});	
-			} else {
-				// there are no comments to be shown, so show all.
-				this.children.call( "hide" );	// to make a change visible
-				this.children.call( "show" );
-			}
-			
+			this.badgesviews.call( "unselect" );
+			view.select();
+			var comments = view.model.get( "comments" );
+			this.children.call( "hide" );
+			_.each( this.collection.models, function( c ) {
+				if ( _.contains( comments, c ) ) {
+					that.children.findByModel( c ).show();
+				}
+			});				
 		},
 		// before closing this view, we must free the badge views to prevent zombie views and memory leaks
 		onBeforeClose: function() {

@@ -22,7 +22,7 @@ var assistance = assistance || {};
 		},
 
 		events: {
-			"click": "toggleComments",
+			"click": "selectComments",
 		},
 
 		show: function() {
@@ -43,16 +43,25 @@ var assistance = assistance || {};
 			});
 		},
 
-		toggleComments: function() {
+		unselect: function() {
+			this.$el.removeClass( "vizboard-badge-selected" );
+			this.toggled = false;
+		},
+
+		select: function() {
+			this.$el.addClass( "vizboard-badge-selected" );
+			this.toggled = true;
+		},
+
+		selectComments: function() {
 			if ( this.toggled ) {
 				// now untoggle
-				this.$el.removeClass( "vizboard-badge-selected" );
-				this.model.set( "visible", false );
+				this.unselect()
+				this.trigger( "unselectcomments", this );
 			} else {
-				this.$el.addClass( "vizboard-badge-selected" );
-				this.model.set( "visible", true );
+				this.select();
+				this.trigger( "selectcomments", this );
 			}
-			this.toggled = !this.toggled;
 		}
 	});
 })( jQuery );
