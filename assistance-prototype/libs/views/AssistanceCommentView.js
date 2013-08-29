@@ -114,6 +114,7 @@ var assistance = assistance || {};
 				this.ui.voteup.removeClass( "assistance-comment__comment-metadata-voting_voted" );
 				this.ui.score.removeClass( "assistance-comment__comment-metadata-voting_voted" );
 			}
+			this.model.save();
 		},
 
 		voteDown: function() {
@@ -137,6 +138,7 @@ var assistance = assistance || {};
 				this.ui.votedown.removeClass( "assistance-comment__comment-metadata-voting_voted" );
 				this.ui.score.removeClass( "assistance-comment__comment-metadata-voting_voted" );
 			}
+			this.model.save();
 		}
 		
 	});

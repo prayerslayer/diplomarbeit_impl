@@ -104,10 +104,12 @@ var assistance = assistance || {};
 			var versions = [],
 				version = {
 					"number": 1,
-					"text": _.escape(this.ui.textArea.html().trim()) , // preserve paragraphs
+					"text": this.ui.textArea.html().trim(), // preserve paragraphs
 					"timestamp": Date.now(),
 					"annotations": []			
 				};
+
+			console.log( version );
 
 			// check if annotations are there
 			var area_annotations = {
@@ -175,7 +177,8 @@ var assistance = assistance || {};
 				type: "POST",
 				url: that.options.comment_url,
 				dataType: "json",
-				data: "comment=" + JSON.stringify( comment )
+				contentType: "application/json; charset=UTF-8",
+				data: JSON.stringify( comment )
 			}).fail( function( xhr, status, error ) {
 				smoke.alert( "Failed to save comment: " + error );
 			}).done( function( data, status, xhr ) {

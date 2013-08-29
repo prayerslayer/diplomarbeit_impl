@@ -1,5 +1,6 @@
 # TODO
 
+* Checken ob Server escapte kommentre nimmt
 * Links in Kommentaren erkennen: Regex mit (http(s)?://)\S+[^\.!,\?:\s\(\);-]
 * Referenzieren von Kommentaren: 
 * URLs von Collections und Models einfügen, sodass ich einfach sync()en kann

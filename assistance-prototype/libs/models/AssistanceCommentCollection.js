@@ -22,6 +22,9 @@ var assistance = assistance || {};
 		},
 
 		parse: function( data ) {
+
+			var that = this;
+
 			data.sort( function( c1, c2 ) {
 				return c1.versions[0].timestamp < c2.versions[0].timestamp;
 			});
@@ -29,7 +32,7 @@ var assistance = assistance || {};
 			_.each( data, function( c ) {
 				var models = [];
 				// user stuff
-				c.url = c.comment_id;
+				c.id = c.comment_id;
 				c.avatar_url = "http://robohash.org/" + c.user_id;
 				c.user_name = /* TODO userservice abfragen */ c.user_id;
 
@@ -39,7 +42,6 @@ var assistance = assistance || {};
 				});
 
 				var version = c.versions[ 0 ];
-				version.text = _.unescape( version.text );
 				// create annotations
 				_.each( version.annotations, function( anno ) {
 					var model = null;
