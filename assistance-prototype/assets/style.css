@@ -214,6 +214,17 @@ div.assistance-comment__read-comments {
 
 }
 
+div.assistance-comment__back {
+	font-size: 1.5rem;
+	margin-bottom: 1rem;
+	cursor: pointer;
+	-webkit-transition: color .2s;
+}
+
+div.assistance-comment__back:hover {
+	color: orange;
+}
+
 div.assistance-comment__comment {
 	display: -webkit-flex;
 	min-width: 32rem;
@@ -268,6 +279,24 @@ div.assistance-comment__comment-metadata-show-annos:hover {
 	color: orange;
 	cursor: pointer;
 	-webkit-transition: color .2s;
+}
+
+div.assistance-comment__comment-response {
+	font-style: italic;
+	margin-bottom: 1rem;
+}
+
+span.assistance-comment__comment-response-id {
+	font-family: "Source Code Pro", monospace;
+	color:lightgray;
+	cursor: pointer;
+	-webkit-transition: all .2s;
+	text-decoration: underline;
+}
+
+span.assistance-comment__comment-response-id:hover {
+	color: orange;
+	
 }
 
 img.assistance-comment__comment-metadata-avatar {

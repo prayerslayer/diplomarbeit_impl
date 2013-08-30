@@ -13,15 +13,17 @@ var assistance = assistance || {};
 			this.options = op;	// why not keeping an options hash as in every view? ITSA NICE-AH!
 		},
 
-		writeComment: function( component ) {
+		writeComment: function( component, responseto ) {
 			var comp = this._getComponent( component ),
 				visualization = comp.visualization;
 
 			// write comment thingy
 			var writebase = new assistance.BaseView({
 				"type": "writecomment",
-				"component": component
+				"component": component,
+				"headline": responseto ? "Write response to " + responseto.get( "user_name" ) : null,
 			});
+			
 			var writer = new assistance.WriteCommentView({
 				"component": component,
 				"visualization": visualization,
@@ -32,7 +34,8 @@ var assistance = assistance || {};
 					"component_id": comp.component_id,
 					"user_id": this.options.user_id,
 					"visualized_properties": comp.visualized_properties,
-					"reference": comp.reference
+					"reference": comp.reference,
+					"response_to": responseto ? responseto.get("comment_id" ) : null
 				}
 			});
 			writebase.content.show( writer );
@@ -115,6 +118,9 @@ var assistance = assistance || {};
 						"collection": comments,
 						"component": component,
 						"visualization": visualization
+					});
+					comment_view.on( "reply", function( comment ) {
+						that.writeComment( component, comment );
 					});
 					var commentbase = new assistance.BaseView({
 						"type": "readcomment",

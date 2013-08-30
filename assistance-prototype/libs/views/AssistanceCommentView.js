@@ -38,14 +38,15 @@ var assistance = assistance || {};
 			"score": ".assistance-comment__comment-metadata-score",
 			"annos": ".assistance-comment__comment-metadata-show-annos_text",
 			"annosicon": ".assistance-comment__comment-metadata-show-annos_icon",
-			"reply": ".assistance-comment__comment-metadata-reply"
+			"reply": ".assistance-comment__comment-metadata-reply",
 		},
 
 		events: {
 			"click [data-action=show-annotations]": "toggleAnnotations",
 			"click [data-action=reply]": "reply",
 			"click [data-action=vote-up]": "voteUp",
-			"click [data-action=vote-down]": "voteDown"
+			"click [data-action=vote-down]": "voteDown",
+			"click [data-action=view-response]": "viewResponse"
 		},
 
 		initialize: function( opts ) {
@@ -66,6 +67,10 @@ var assistance = assistance || {};
 		// hide comment - this and show are used by the comment badges, essentially
 		hide: function() {
 			this.$el.fadeOut( 200 );
+		},
+
+		viewResponse: function() {
+			this.trigger( "viewresponse", this.model.get( "response_to" ) );
 		},
 
 		hideAnnotations: function() {
@@ -89,8 +94,7 @@ var assistance = assistance || {};
 		},
 
 		reply: function() {
-			console.log( "triggered reply" );
-
+			this.trigger( "reply", this.model );
 		},
 
 		voteUp: function() {

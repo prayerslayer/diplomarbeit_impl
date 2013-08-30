@@ -19,9 +19,12 @@ var assistance = assistance || {};
 			"click [data-action='close']": "close"
 		},
 
+		scrollPosition: 0,
+
 		ui: {
 			"headline": "h2:first-child",
-			"explanation": ".assistance-base__explanation"
+			"explanation": ".assistance-base__explanation",
+			"content": "div.assistance-base__content"
 		},
 
 		regions: {
@@ -30,6 +33,16 @@ var assistance = assistance || {};
 
 		initialize: function() {
 			this.render();
+		},
+
+		rememberScroll: function( ) {
+			this.scrollPosition = this.ui.content.scrollTop();
+			this.ui.content.scrollTop( 0 );
+		},
+
+		resetScroll: function() {
+			this.ui.content.scrollTop( this.scrollPosition );
+			this.scrollPosition = 0;
 		},
 
 		default_content: {
@@ -63,6 +76,8 @@ var assistance = assistance || {};
 			this.content.on( "show", function( view ) {
 				if ( typeof view.init === 'function' )
 					view.init();
+				view.on( "rememberscroll", that.rememberScroll, that );
+				view.on( "resetscroll", that.resetScroll, that );
 				view.on( "close", that.close, that );
 			});
 			// width in css is for list view

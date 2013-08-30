@@ -11,9 +11,10 @@
 var assistance = assistance || {};
 
 ( function( $ ) {
-	assistance.ReadCommentsView = Backbone.Marionette.CollectionView.extend({
+	assistance.ReadCommentsView = Backbone.Marionette.CompositeView.extend({
 		tagName: "div",
 		className: "assistance-comment__read-comments",
+		template: "#readcommentsViewTemplate",
 		itemView: assistance.CommentView,
 		emptyView: Backbone.Marionette.ItemView.extend({
 			template: "#nocommentViewTemplate"
@@ -24,10 +25,59 @@ var assistance = assistance || {};
 		initialize: function() {
 			// render badges after annotations
 			this.on( "collection:rendered", this.renderBadges, this );
+			this.on( "itemview:reply", this.reply, this );
+			this.on( "itemview:viewresponse", this.showResponse, this );
 			this.on( "itemview:showannotations", this.hideBadges, this );
 			this.on( "itemview:showannotations", this.showAnnos, this );
 			this.on( "itemview:hideannotations", this.showBadges, this );
 			this.on( "itemview:hideannotations", this.hideAnnos, this );
+		},
+
+		ui: {
+			"back": "div.assistance-comment__back"
+		},
+
+		events: {
+			"click div.assistance-comment__back": "back"
+		},
+
+		appendHtml: function( cView, iView, index ) {
+			cView.$el.find( "div.assistance-comment__comments" ).append( iView.el );
+		},
+
+		onRender: function() {
+			this.ui.back.hide();
+		},
+
+		reply: function( view, comment ) {
+			this.trigger( "reply", comment );
+		},
+
+		showResponse: function( view, response_id ) {
+			this.trigger( "rememberscroll" );
+			// hide other comments
+			this.children.call( "hide" );
+			// get response comment
+			var response = this.collection.get( response_id );
+			if ( !response ) {
+				// not in collection
+				// should not happen
+				console.error( "comment", response_id, "not in collection" );
+			}
+			// show
+			this.children.findByModel( response ).show();
+			this.ui.back.show();
+			
+		},
+
+		back: function( ) {
+			this.ui.back.hide();
+			this.children.call( "show" );
+			var that = this;
+			setTimeout( function() {
+				that.trigger( "resetscroll" );
+			}, 200 );
+			
 		},
 
 		showAnnos: function( view ) {
