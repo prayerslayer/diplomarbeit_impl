@@ -1,8 +1,7 @@
 # TODO
 
-* Checken ob Server escapte kommentre nimmt
-* Links in Kommentaren erkennen: Regex mit (http(s)?://)\S+[^\.!,\?:\s\(\);-]
-* Referenzieren von Kommentaren: 
+* Referenzieren von Kommentaren:
+* Voten nur 1x: 
 * URLs von Collections und Models einfügen, sodass ich einfach sync()en kann
 * aufpassen mit PanelCollection, die muss nämlich SOAP nachrichten rumschicken.
 

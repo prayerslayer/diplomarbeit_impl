@@ -14,12 +14,14 @@ var assistance = assistance || {};
 			
 		model: assistance.Comment,
 
-		url_regex: /http(s)?:\/\/\S+[^\.!,\?:\s\(\);-]/,
-
-
 		initialize: function( options ) {
 			
 		},
+
+		// see http://stackoverflow.com/questions/1500260/detect-urls-in-text-with-javascript
+		linkify: function( text ) {  
+            return text.replace( /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig, '<a href="$1">$1</a>' );
+        },
 
 		parse: function( data ) {
 
@@ -36,12 +38,15 @@ var assistance = assistance || {};
 				c.avatar_url = "http://robohash.org/" + c.user_id;
 				c.user_name = /* TODO userservice abfragen */ c.user_id;
 
+
 				// sort versions by date
 				c.versions.sort( function( v1, v2 ) {
 					return v1.timestamp < v2.timestamp;
 				});
 
 				var version = c.versions[ 0 ];
+				// make links clickable
+				version.text = that.linkify( version.text );
 				// create annotations
 				_.each( version.annotations, function( anno ) {
 					var model = null;
