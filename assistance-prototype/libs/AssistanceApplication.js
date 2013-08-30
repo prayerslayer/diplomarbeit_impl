@@ -1,33 +1,52 @@
+/*	Assistance Application
+ *	======================
+ *
+ *	Coordinates and initializes the different views.
+ *
+ *	@author npiccolotto
+ */
+
+
 var assistance = assistance || {};
 
 ( function( $ ) {
 	assistance.Application = Backbone.Marionette.Application.extend({
 
+		// find additional component information by its DOM id
 		_getComponent: function( comp ) {
 			return _.findWhere( this.options.components, {
 						"component": comp
 					});
 		},
 
+		// start the application
 		start: function( op ) {
 			this.options = op;	// why not keeping an options hash as in every view? ITSA NICE-AH!
+			//TODO we would probably listen here for clicks on titlebars?
 		},
 
+		// construct a new write comment view
+		// component = DOM id
+		// responseto = comment that the new comment should respond to (may be null obviously)
 		writeComment: function( component, responseto ) {
 			var comp = this._getComponent( component ),
 				visualization = comp.visualization;
 
-			// write comment thingy
+			// create base view
 			var writebase = new assistance.BaseView({
 				"type": "writecomment",
 				"component": component,
-				"headline": responseto ? "Write response to " + responseto.get( "user_name" ) : null,
+				"headline": responseto ? "Write response to " + responseto.get( "user_name" ) : null,	// headline depending on whether this is a response or not
 			});
 			
+			// actual write view
 			var writer = new assistance.WriteCommentView({
 				"component": component,
 				"visualization": visualization,
 				"comment_url": this.options.comment_url,
+				// this comment data will be transferred to the new comment
+				// yes, there are some fields that are not supposed to be in a comment, e.g. the reference to the component
+				// however they are ignored on server-side, so that's fine
 				"comment_data": {
 					"data_annotations_enabled": comp.data_annotations_enabled,
 					"dataset_id": this.options.dataset_id,
@@ -40,11 +59,15 @@ var assistance = assistance || {};
 			});
 			writebase.content.show( writer );
 			
+			// create the annotation view
 			var anno = new assistance.AddAnnotationView({
 				"component": component,
-				"visualization": visualization
+				"visualization": visualization	// because the annotation view must know the size
 			});
+			// register annotation view at writer
 			writer.setAnnotationView( anno );
+			// create a new annotation region and show annotation view inside.
+			// an annotation region is a regular region, except it doesn't delete existing content
 			if ( !this[ "region" + component ] ) {
 				this[ "region" + component ] = new assistance.AnnotationRegion({
 					"el": component,
@@ -55,6 +78,7 @@ var assistance = assistance || {};
 			}
 			this[ "region" + component ].show( anno );
 		},
+
 
 		showHowto: function( component ) {
 			//TODO wird sich erst noch zeigen, wie das wirklich aussehen soll.
@@ -91,13 +115,14 @@ var assistance = assistance || {};
 			listbase.content.show( list );
 		},
 
+		// create a view to read comments
 		showComments: function( component ) {
-			var compData = this._getComponent( component ),
+			var compData = this._getComponent( component ),	// get additional info about component
 				spinner = new assistance.Spinner({
 					"caller": $( component )
 				}),
 				that = this;
-			// construct appropriate url
+			// construct appropriate url to fetch appropriate comments
 			var new_url = this.options.comment_url + "?";
     		new_url += "component=" + encodeURIComponent( compData.component_id );
     		for (var i = compData.visualized_properties.length - 1; i >= 0; i--) {
@@ -114,21 +139,23 @@ var assistance = assistance || {};
 					var visualization = compData.visualization;
 					
 					spinner.close();
-					// now set other url for models
 					collection.each( function( comment ) {
-						comment.urlRoot = that.options.comment_url;
-						comment.set( "component", component ); //komponente durchreichen
+						comment.urlRoot = that.options.comment_url;	// set other url for comments ( model.save() requests go there )
+						comment.set( "component", component );			// comments must know component and visualization to display annotations
 						comment.set( "visualization", visualization );
 					});
 
+					// create actual comment view
 					var comment_view = new assistance.ReadCommentsView({
 						"collection": comments,
 						"component": component,
 						"visualization": visualization
 					});
+					// if someone hits reply, open up write view
 					comment_view.on( "reply", function( comment ) {
 						that.writeComment( component, comment );
 					});
+					// create base
 					var commentbase = new assistance.BaseView({
 						"type": "readcomment",
 						"component": component
@@ -136,10 +163,8 @@ var assistance = assistance || {};
 					commentbase.content.show( comment_view );
 				},
 				"error": function( col, res) {
-					console.debug( col, res );
+					console.error( "could not fetch comment collection", col, res );
 				}
-			}, {
-				"url": new_url
 			});
 		}
 	});

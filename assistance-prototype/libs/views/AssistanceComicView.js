@@ -14,7 +14,7 @@ var assistance = assistance || {};
 		className: "assistance-comic__content",
 		template: "#comicViewTemplate",
 
-		count: 0,
+		count: 0,	// used to wait for all the panels to load
 		spinner: null,
 
 		initialize: function() {
@@ -22,7 +22,7 @@ var assistance = assistance || {};
 		},
 
 		onBeforeClose: function() {
-			this.options.creator.collection.unlock();
+			this.options.creator.collection.unlock();	// causes the itemview to reset
 		},
 
 		getItemView: function( item ) {
@@ -57,7 +57,6 @@ var assistance = assistance || {};
 					v.zoom();
 				}, i * 1500 + 500 ); 
 				// show caption after zoom finished
-				// this block does not work properly inside event handler?
 				setTimeout( function() {
 					v.showCaption();
 				}, i*1500 + 500 );

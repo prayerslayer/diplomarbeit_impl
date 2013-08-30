@@ -23,17 +23,18 @@ var assistance = assistance || {};
 			"mouseout": "unhighlightElements"
 		},
 
-		comic: null,
+		comic: null,	// the comic view
 
 		initialize: function() {
-			this.model.collection.bind( "unlocked", this.clear, this );
-			this.listenTo( this.model, "showassistance", this.showAssistance );
+			this.model.collection.bind( "unlocked", this.clear, this );	// this is triggered by onCLose of ComicView
+			this.listenTo( this.model, "showassistance", this.showAssistance );	// this might get triggered by elements of the visualization
 			this.listenTo( this.model, "highlight", this.highlightSelf );
 			this.listenTo( this.model, "unhighlight", this.unhighlightSelf );
 		},
 
+		// reset presentation state
 		clear: function() {
-			if ( this.model.get( "displayed" ) ) {
+			if ( this.model.get( "displayed" ) ) {	// i know it's bad that the model knows about presentation state, but don't want to change it anymore either.
 				this.unhighlightElements();
 				this.model.set( "displayed", false );
 				if ( this.comic ) {
@@ -59,7 +60,7 @@ var assistance = assistance || {};
 			});
 
 			var panelCollection = new assistance.PanelCollection([], {
-				"url": "componentCapability"
+				"url": this.options.core_url
 			});
 			panelCollection.task = task;
 			panelCollection.fetch({
@@ -68,7 +69,7 @@ var assistance = assistance || {};
 
 					// create a normal base view if images do not fit inside component
 					var component = that.model.get( "component" );
-					if ( $( component ).width() < collection.size() * 170 ) {
+					if ( $( component ).width() < collection.size() * 170 ) {	// magic number alert
 						that.comic = new assistance.BaseView({
 							"type": "comic",
 							"headline": task,
@@ -94,7 +95,7 @@ var assistance = assistance || {};
 					that.comic.content.show( comic_view );
 					},
 					"error": function( col, res, opt ) {
-						console.debug( col, res, opt );
+						console.error("error fetching panel collection", col, res, opt );
 					}
 			});			
 		},

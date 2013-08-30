@@ -1,3 +1,12 @@
+/*
+ *	Annotation Region
+ *	=====================
+ *
+ *	An Annotation Region is practically the same as a default Marionette Region, but it doesn't delete existing elements.
+ *
+ *	@author npiccolotto
+*/
+
 var assistance = assistance || {};
 
 ( function( $ ) {
@@ -9,6 +18,7 @@ var assistance = assistance || {};
 			var $el = view.$el,
 				$v = this.$el.find( this.options.visualization );
 
+			// make it the same size as component
 			$el.css( "width", "100%");
 			$el.css( "height",  "100%" );
 			$el.css( "top", 0 );

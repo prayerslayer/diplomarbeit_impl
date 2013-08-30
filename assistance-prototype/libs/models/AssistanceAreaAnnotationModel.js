@@ -22,6 +22,7 @@ var assistance = assistance || {};
 			}) );
 		},
 
+		// check if this areaannotation has rectangles inside
 		hasRects: function() {
 			return this.get( "elements" ).some( function( item ) {
 				return item.get( "type" ) === "rectangle";

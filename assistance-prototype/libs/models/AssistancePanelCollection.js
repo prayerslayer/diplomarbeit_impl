@@ -8,8 +8,6 @@
 *	@author npiccolotto
 */
 
-//TODO in echt ist alles kein JSON sondern SOAP/XML mit JSON content
-
 var assistance = assistance || {};
 
 ( function( $ ) {
@@ -21,6 +19,7 @@ var assistance = assistance || {};
 		},
 
 		parse: function( data, response ) {
+			//TODO in echt ist alles kein JSON sondern SOAP/XML mit JSON content
 			var that = this;
 			var collection = [];
 			_.each( data.operations, function( op, i ) {

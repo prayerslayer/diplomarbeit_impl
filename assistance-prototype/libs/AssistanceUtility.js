@@ -1,3 +1,11 @@
+/*
+ *	Utility
+ *	===================
+ *	
+ *	Utility functions go here.
+ *
+ *	@author npiccolotto
+*/
 var assistance = assistance || {};
 
 ( function( $ ) {
@@ -34,6 +42,10 @@ var assistance = assistance || {};
 			bb.x = xMin; bb.width  = xMax-xMin;
 			bb.y = yMin; bb.height = yMax-yMin;
 			return bb;
+		},
+
+		isSvgElement: function( node ) {
+			return node.namespaceURI === "http://www.w3.org/2000/svg";
 		}
 	}
 })( jQuery );

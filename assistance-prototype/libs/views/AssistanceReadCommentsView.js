@@ -46,56 +46,58 @@ var assistance = assistance || {};
 		},
 
 		onRender: function() {
-			this.ui.back.hide();
+			this.ui.back.hide();	// we don't need the back button most of the time
 		},
 
 		reply: function( view, comment ) {
-			this.trigger( "reply", comment );
+			this.trigger( "reply", comment );	// tell the application to open a write view
 		},
 
 		showResponse: function( view, response_id ) {
-			this.trigger( "rememberscroll" );
-			// hide other comments
+			this.trigger( "rememberscroll" );	// base view shall remember this scroll position
+			// hide all comments
 			this.children.call( "hide" );
 			// get response comment
 			var response = this.collection.get( response_id );
 			if ( !response ) {
 				// not in collection
-				// should not happen
+				// should not happen as it's practically impossible to reply on a comment that's not inside this view
 				console.error( "comment", response_id, "not in collection" );
 			}
-			// show
+			// show response
 			this.children.findByModel( response ).show();
+			// show the back button to return to previous state
 			this.ui.back.show();
-			
 		},
 
+		// back function
 		back: function( ) {
+			// hide the button again
 			this.ui.back.hide();
+			// show all comments again
 			this.children.call( "show" );
 			var that = this;
 			setTimeout( function() {
+				// set scroll position to previous one
 				that.trigger( "resetscroll" );
-			}, 200 );
+			}, 200 );	// it takes 200ms to show all comments
 			
 		},
 
 		showAnnos: function( view ) {
-			// hide all
+			// hide all annotations
 			this.children.call( "hideAnnotations" );
 			// show only current
 			this.children.findByCid( view.cid ).showAnnotations();
 		},
 
 		hideAnnos: function( view ) {
-			// hide current
-			// this might as well be done in annotationview, but for sake of uniformness it's done here.
+			// this might as well get done in annotationview, but for sake of uniformness it's done here.
 			this.children.findByCid( view.cid ).hideAnnotations();
 		},
 
 		renderBadges: function() {
 			// collect point annotations
-			console.log( "rendering badges" );
 			var point_commies = {},
 				that = this;
 			this.collection.each( function( comment ) {
@@ -109,7 +111,6 @@ var assistance = assistance || {};
 					}
 				});
 			});
-			
 			// now create and render badges
 			_.each( point_commies, function( comments , uri ) {
 				var badge = new assistance.CommentBadge({

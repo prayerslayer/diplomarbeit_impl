@@ -104,7 +104,7 @@
 
 		<script type="text/template" id="panelViewTemplate">
 			<div class="assistance-comic__panel-wrapper">
-				<img class="assistance-comic__panel-image" src="<%= image_url %>" alt="picture"/>
+				<img class="assistance-comic__panel-image" src="<%= image_url %>" alt="picture of <%= user_name %>"/>
 			</div>
 			<div class="assistance-comic__panel-caption">
 				<div class="assistance-comic__panel-caption-content"><%= caption %>
@@ -331,7 +331,7 @@
 		<!-- do actual things -->
 		<script type="text/javascript">
 			$( document ).ready( function() {
-				$.support.cors = true;
+				$.support.cors = true;	// important for development
 
 				var app = new assistance.Application();
 				app.start( {

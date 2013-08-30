@@ -32,6 +32,7 @@ var assistance = assistance || {};
 			"click g > .assistance-annotations__remove, g > .assistance-annotations__remove_line": "_removeHandler"
 		},
 
+		// removes an annotation
 		_removeHandler: function( evt ) {
 			evt.stopPropagation();
 			d3.select( evt.target.parentNode )
@@ -41,16 +42,19 @@ var assistance = assistance || {};
 				.remove();
 		},
 
+		// unselects all datapoints
 		_unselect: function() {
 			this._allDatapoints()
 				.each( this._dehighlightElement )
 				.attr( "data-vizboard-selected", null);
 		},
 
+		// unselect all datapoints before close
 		onBeforeClose: function() {
 			this._unselect();
 		},
 
+		// reset capability
 		_clear: function() {
 			this.capability = "";
 			d3.select( this.el ).attr( "class", "assistance-annotations" );
@@ -62,7 +66,7 @@ var assistance = assistance || {};
 			d3.select( this.el ).attr( "class", "assistance-annotations assistance-annotations__selection" );
 		},
 
-		// takes absolute values, scales them appropriately to relative ones
+		// takes absolute values, scales them appropriately to relative ones and
 		// returns a scaled copy of the original opbject
 		scale: function( obj ) {
 			var ret = {};
@@ -79,7 +83,7 @@ var assistance = assistance || {};
 			if ( obj.y2 )
 				ret.y2 = 100 * obj.y2 / this.height;
 
-			// andre werte übernehmen
+			// apply other values as well
 			for ( key in obj ) {
 				if ( obj.hasOwnProperty( key ) ) {
 					if ( !ret.hasOwnProperty( key ) ) {
@@ -91,27 +95,26 @@ var assistance = assistance || {};
 			return ret;
 		},
 
-		// manual hit test. we can't use mousemove or anything like this directly on the elements, because the SVG of this view is above them.
+		// manual hit test for datapoints. we can't use mousemove or anything like this directly on the elements, because the SVG of this view is above them.
+		// if datapoints overlap, the first one wins
 		_getElementAt: function( x, y ) {
-			var $comp = $( this.options.component ).first(),
-				$vis = $comp.find( this.options.visualization ).first(),
-				element = null,
+			var element = null,
 				that = this;
 			// loop through each resource in the visualization
-			$vis.find( "[resource]" ).each( function( i, res ) {
+			this._allDatapoints().each( function( i ) {
 				// get position and dimensions
 				var width, height, offsetLeft, offsetTop;
 
-				if ( $( res ).width() ) {
-					// jquery works here
-					width = $( res ).width();
-					height= $( res ).height();
-					var offset = $( res ).offset();
+				if ( $( this ).width() ) {
+					// jquery works here, it's a html visualization
+					width = $( this ).width();
+					height= $( this ).height();
+					var offset = $( this ).offset();
 					offsetLeft = offset.left;
 					offsetTop = offset.top;
 				} else {
 					// this is a svg visualization, use bbox
-					var bbox = res.getBBox();
+					var bbox = assistance.Utility.transformedBoundingBox( this );
 					var offset = $( that.el ).offset(); 
 					width = bbox.width;
 					height= bbox.height;
@@ -120,9 +123,9 @@ var assistance = assistance || {};
 				}
 
 				// check if mouse is roughly in between
-				if ( ( offsetLeft < x && x < offsetLeft + width ) &&
+				if ( !element && ( offsetLeft < x && x < offsetLeft + width ) &&
 					 ( offsetTop < y && y < offsetTop + height ) )
-					 element = res;
+					 element = this;
 			});
 			return element;
 		},	
@@ -160,7 +163,7 @@ var assistance = assistance || {};
 				return; // if we would return false here, the drag behavior would not work
 			// manual hit test as this svg is over the actual visualization
 			var el = this._getElementAt( evt.pageX, evt.pageY );
-			// if we're not over an element, remove class from all unselected ones. this is necessary to properly handle mouseout case.
+			// if we're not over an element, dehighlight all unselected ones. this is necessary to properly handle mouseout case.
 			if ( !el ) {
 				this._allDatapoints()
 					.filter( ":not([data-vizboard-selected=true])" )
@@ -211,6 +214,7 @@ var assistance = assistance || {};
 			this.trigger( "arrow", arrows );
 		},
 
+		// gets actual coordinates from the rectangle
 		_computeRectangle: function( svgrect ) {
 			var self = d3.select( svgrect ),
 				rect = {},
@@ -293,11 +297,13 @@ var assistance = assistance || {};
 			} else if ( this.capability === "text" ) {
 				var that = this;
 				if ( evt.target.tagName !== "text" ) {
+					// create text element
 					var text = d3.select( this.el ).append( "text" );
 					text.attr( "class", "assistance-annotations__text_content");
 					text.style( "fill", "orange" ); // class did not work?
 					text.attr( "x", evt.offsetX );
 					text.attr( "y", evt.offsetY );
+					// set text
 					smoke.prompt( "Please enter text:", function( t ) {
 						if ( t ) {
 							text.text( t );
@@ -389,11 +395,11 @@ var assistance = assistance || {};
 			rect.attr( "height","100%" );
 			rect.style( "opacity", 0.5 );
 			rect.style( "fill", "black" );
-			rect.attr( "mask", "url(#" + this.cid + "annoMask)" ); //TODO static url problematic if there are multiple views of this opened
+			rect.attr( "mask", "url(#" + this.cid + "annoMask)" );
 
 			var marker = def.append( "marker" );
 			marker.attr( "id", this.cid + "arrowhead" )
-					.attr("refX", 5) /*must be smarter way to calculate shift*/
+					.attr("refX", 5) 
     				.attr("refY", 3)
     				.attr( "fill", "orange" )
 				    .attr("markerWidth", 6)
@@ -403,7 +409,7 @@ var assistance = assistance || {};
         				.attr("d", "M 0,0 V 6 L6,3 Z");
 
 			this.$el = $( this.el );
-			this.bindUIElements();
+			this.bindUIElements();	// re-bind elements
 		},
 
 		_dragStartHandler: function() {
@@ -412,6 +418,7 @@ var assistance = assistance || {};
 				return false;
 			}
 			if ( this.capability === "rectangle" ) {
+				// create rectangle
 				var rect = d3.select( this.el ).append( "rect" );
 				rect.attr( "class", "assistance-annotations__rectangle_current" );
 
@@ -419,6 +426,7 @@ var assistance = assistance || {};
 				rect.attr( "y", d3.event.sourceEvent.offsetY );
 				this._setId( rect.node() );
 			} else if ( this.capability === "arrow" ) {
+				// create arrow
 				var arrow = d3.select( this.el ).append( "line" );
 				arrow.attr( "class", "assistance-annotations__arrow_current" );
 				arrow.attr( "marker-end", "url(#" + this.cid + "arrowhead)" );
@@ -433,6 +441,7 @@ var assistance = assistance || {};
 
 		_dragHandler: function( ) {
 			if ( this.capability === "rectangle" ) {
+				// update rectangle
 				var rect = d3.select( this.el ).select( "rect.assistance-annotations__rectangle_current" ),
 					width = d3.event.x - rect.attr( "x" ),
 					height= d3.event.y - rect.attr( "y" );
@@ -471,16 +480,17 @@ var assistance = assistance || {};
 				}
 				// try to find enclosed datapoints
 				var id = rect.attr( "data-vizboard-id" );
-				//TODO this sorta works, but other rects may steal selections
+				
 				this._allDatapoints()
 					.filter( "[data-vizboard-enclosed=" + id + "]" )
 					.each( this._dehighlightElement );
 				var points = this._findEnclosing( rect.node() );
 				points.attr( "data-vizboard-enclosed", id );
-				
+				// highlight them
 				points.each( this._highlightElement ).attr( "data-vizboard-selected", "true" );
 
 			} else if ( this.capability === "arrow" ) {
+				// update arrow
 				var arrow = d3.select( this.el ).select( "line.assistance-annotations__arrow_current" );
 				arrow.attr( "x2", d3.event.x );
 				arrow.attr( "y2", d3.event.y );
@@ -492,22 +502,27 @@ var assistance = assistance || {};
 			this.last_id++;
 		},
 
+		// create a button to remove an annotation
 		_createRemoveButton: function( element ) {
+			// put everything in a group for better hovering
 			var g = d3.select( this.el ).append( "g" );
 			var el = d3.select( element );
 			g.appendChild( el );
 
 			// case for text and rect
+			// button is top right
 			var bbox = assistance.Utility.transformedBoundingBox( element ),
 				x = bbox.x + bbox.width,
 				y = bbox.y;
 
 			// case for arrow
+			// button is at start of arrow
 			if ( element.tagName === "line" ) {
 				x = parseFloat( el.attr( "x1" ) );
 				y = parseFloat( el.attr( "y1" ) );
 			}
 
+			// add button elements
 			var circle = g.append( "circle" )
 							.attr( "r", 10 )
 							.attr( "cx", x)
@@ -527,12 +542,14 @@ var assistance = assistance || {};
 							.attr("class", "assistance-annotations__remove_line" );
 
 			var button = g.selectAll( ".assistance-annotations__remove, .assistance-annotations__remove_line" );
+			// hide button
 			button.style( "display", "none" );
-
+			// on mouseover show button
 			g.on( "mouseover", function() {
 				button.style( "display", "block" );
 			})
 			.on( "mouseout" , function() {
+				// on mouseout hide again
 				// cannot call this on the group, because then the element would disappear too
 				button.style( "display", "none" );
 			});
@@ -542,19 +559,21 @@ var assistance = assistance || {};
 			var target = d3.select( d3.event.sourceEvent.target );
 			if ( target.attr( "class" ) && target.attr("class").indexOf( "assistance-annotations__remove" ) >= 0 ) {
 				// this is to prevent really short "drags" on the remove button
-				// it they would get executed, a new remove button will be created, resulting in faulty markup
+				// it they would get executed, a new remove button would be created, resulting in faulty markup
 				return false;
 			}
 
 			if ( this.capability === "rectangle" ) {
+				// finish rectangle
 				var rect = d3.select( this.el ).select( "rect.assistance-annotations__rectangle_current" );
 				
 				rect.attr( "class", "assistance-annotations__rectangle_finished" );
 				this._createRemoveButton( rect.node() );
 				this._triggerRectangle();
-				// because we may have selected datapoints along the way
+				// because we may have selected datapoints along the way:
 				this._triggerSelection();
 			} else if ( this.capability === "arrow" ) {
+				// finish arrow
 				var arrow = d3.select( this.el ).select( "line.assistance-annotations__arrow_current" );
 				arrow.attr( "class", "assistance-annotations__arrow_finished" );
 				this._createRemoveButton( arrow.node() );
@@ -567,6 +586,7 @@ var assistance = assistance || {};
 				$vis = $comp.find( this.options.visualization ).first(),
 				that = this;
 			
+			// set size of annotation view
 			this.offsetLeft = $vis[0].offsetLeft;
 			this.offsetTop = $vis[0].offsetTop;
 			this.width = $vis.width();
@@ -578,7 +598,7 @@ var assistance = assistance || {};
 			this.ui.bg.attr( "y", this.offsetTop );
 
 			this.bindUIElements();
-
+			// register drag behavior for drawing rectangles and arrows
 			var dragBehavior = d3.behavior.drag()
 						.on( "dragstart", this._dragStartHandler.bind( this ) )
 						.on( "drag", this._dragHandler.bind( this ) )

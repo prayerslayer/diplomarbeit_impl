@@ -1,3 +1,11 @@
+/*
+ *	Spinner
+ *	=======
+ *
+ *	A simple spinner. Create it and tell it where to render, close when appropriate.
+ *
+ *	@author npiccolotto
+*/
 var assistance = assistance || {};
 
 ( function( $ ) {

@@ -2,7 +2,7 @@
 *	Area Annotation View
 *	===================
 *
-*	Does what you would expect...
+*	The parent view of all area annotations (an svg element). It defines masks and marker.
 *
 *	@author npiccolotto
 */

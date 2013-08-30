@@ -34,6 +34,7 @@ var assistance = assistance || {};
 			this.ui.image.imagesLoaded().done( callback );
 		},
 
+		// makes the bounding box big enough to fill the panel viewport
 		applyBBox: function( box_type, animate ) {
 			var img = this.ui.image,
 				that = this,

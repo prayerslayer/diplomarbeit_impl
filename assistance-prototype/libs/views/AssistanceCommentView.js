@@ -2,7 +2,7 @@
 *	Comment View
 *	===================
 *
-*	Does what you would expect...
+*	Shows a single comment and its annotations (AnnotationView)
 *
 *	@author npiccolotto
 */
@@ -69,6 +69,7 @@ var assistance = assistance || {};
 			this.$el.fadeOut( 200 );
 		},
 
+		// trigger to parent view that it must show this response
 		viewResponse: function() {
 			this.trigger( "viewresponse", this.model.get( "response_to" ) );
 		},
@@ -86,8 +87,6 @@ var assistance = assistance || {};
 		},
 
 		toggleAnnotations: function() {
-			var that = this;
-			
 			// UI will get updated from parent
 			this.trigger( !this.annotationsShown ? "showannotations" : "hideannotations", this.cid );
 			this.annotationsShown = !this.annotationsShown;

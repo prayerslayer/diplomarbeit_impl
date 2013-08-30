@@ -1,8 +1,9 @@
 /*
-	Comic Base View
-=======================	
- 	Comics are preferrably displayed inside the component itself and some patterns don't apply (round borders).
-	@author npiccolotto
+ *	Comic Base View
+ *	====================	
+ *	Comics are preferrably displayed inside the component itself and some patterns don't apply (round borders).
+ *
+ *	@author npiccolotto
 */
 
 var assistance = assistance || {};

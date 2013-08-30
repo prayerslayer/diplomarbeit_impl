@@ -109,11 +109,11 @@ var assistance = assistance || {};
 			});
 		},
 
-		// animate removal
-		remove: function(){
-		  this.$el.fadeOut(function(){
-		    $(this).remove();
-		  }); 
-		}
+		// animate removal - only goodlooking when implmented in every view and mi scherts net
+		// remove: function(){
+		//   this.$el.fadeOut(function(){
+		//     $(this).remove();
+		//   }); 
+		// }
 	});
 })( jQuery );

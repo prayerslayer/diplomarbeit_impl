@@ -2,6 +2,7 @@
 *	Datapoint View
 *	===================
 *
+*	This is actually not a view. It just sets a highlight class on a datapoint.
 *
 *	@author npiccolotto
 */

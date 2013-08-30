@@ -2,7 +2,7 @@
 *	Write Comments View
 *	===================
 *
-*
+*	The view where a user writes his comment and chooses annotation tools.
 *
 *	@author npiccolotto
 */
@@ -22,6 +22,7 @@ var assistance = assistance || {};
 			"rectangles": [],
 			"text": []
 		},
+
 		placeholder: "Put your comment here.",
 
 		ui: {
@@ -43,10 +44,8 @@ var assistance = assistance || {};
 			"input .assistance-comment__write-comment-area": "_input"
 		},
 
-		initialize: function( opt ) {
-			this.bindUIElements();
-		},
-
+		// checks whether the content of the text area is something different than the placeholder
+		// enables submit button, if true
 		_input: function() {
 			var text = this.ui.textArea.text();
 			if ( text && text !== this.placeholder ) {
@@ -58,6 +57,18 @@ var assistance = assistance || {};
 			}
 		},
 
+		// reset annotations
+		// important because annotations would be preserved for subsequent comments
+		resetAnnotations: function() {
+			this.annotations = {
+				"selections": [],
+				"arrows": [],
+				"rectangles": [],
+				"text": []
+			};
+		},
+
+		// sets the annotation view for this write comment view
 		setAnnotationView: function( view ) {
 			this.annotationView = view;
 			this.annotationView.on( "selection", this._processSelection, this );
@@ -66,6 +77,8 @@ var assistance = assistance || {};
 			this.annotationView.on( "rectangle", this._processRectangle, this );
 		},
 
+		// process functions: just save the object into annotations
+		// annotation view publishes always ALL the annotations
 		_processRectangle: function( rect ) {
 			this.annotations.rectangles = rect;
 		},
@@ -82,20 +95,21 @@ var assistance = assistance || {};
 			this.annotations.selections = selection;
 		},
 
+		// submit a new comment
 		_submit: function() {
 			// check if comment is not empty
 			if ( !this.ui.submit.attr( "data-vizboard-enabled" ) )
 				return;
 			var spinner = new assistance.Spinner({
-				"caller": this.ui.submit
-			}),
+					"caller": this.ui.submit
+				}),
 				that = this;
 
 			this.ui.submit.attr( "data-vizboard-enabled", null ); // prevent further clicks
 			this.ui.submit.removeClass( "assistance-comment__submit_enabled" ).addClass( "assistance-comment__submit_processing" );
 
 			// init comment
-			var comment = _.clone( this.options.comment_data );
+			var comment = _.clone( this.options.comment_data );	// i don't know, a clone just looked right. defensive programming!
 			comment.score = 0;
 			// memento
 			// comment.memento = comment.reference.getMemento();
@@ -104,14 +118,12 @@ var assistance = assistance || {};
 			var versions = [],
 				version = {
 					"number": 1,
-					"text": this.ui.textArea.html().trim(), // preserve paragraphs
+					"text": this.ui.textArea.html().trim(), // preserve paragraphs with html content
 					"timestamp": Date.now(),
-					"annotations": []			
+					"annotations": []	// these are set later
 				};
 
-			console.log( version );
-
-			// check if annotations are there
+			
 			var area_annotations = {
 				"type": "area",
 				"visualization_width": this.annotationView.width,
@@ -124,17 +136,19 @@ var assistance = assistance || {};
 			// check rectangles
 			if ( this.annotations.rectangles && this.options.dataAnnotationsEnabled ) {
 				// data annotations
-				//TODO
+				//TODO call component api
+				//TODO also check whether visualized properties are nominal, quantitative or ordinal
+				// in case they are nominal, create a datagroup annotation (because there is no inherent order on a nominal axis).
 			} else if ( this.annotations.rectangles ) {
 				// rect annotations
 				_.each( this.annotations.rectangles, function( rect ) {
-					var scaled = that.annotationView.scale( rect );
+					var scaled = that.annotationView.scale( rect );	// coordinates are relative, this makes visualization_width/_height useless...
 					scaled.type = "rectangle";
 					area_annotations.elements.push( scaled );
 				});
-
 			}
 
+			// check if text annotations are present
 			if ( this.annotations.text ) {
 				_.each( this.annotations.text, function( t ) {
 					var scaled = that.annotationView.scale( t );
@@ -143,6 +157,7 @@ var assistance = assistance || {};
 				});
 			}
 
+			// check if arrow annotations are present
 			if ( this.annotations.arrows ) {
 				_.each( this.annotations.arrows, function( a ) {
 					var scaled = that.annotationView.scale( a );
@@ -151,6 +166,7 @@ var assistance = assistance || {};
 				});
 			}
 
+			// check if the user made any selections
 			if ( this.annotations.selections ) {
 				// explicit datapoint annotations
 				_.each( this.annotations.selections, function( s ) {
@@ -160,9 +176,9 @@ var assistance = assistance || {};
 					// point.values = this.options.reference.getValues( s );
 					datapoint_annotations.push( point );
 				});
-
 			}
 
+			// add these annotations if there are any
 			if ( area_annotations.elements.length )
 				version.annotations.push( area_annotations );
 			if ( datapoint_annotations.length )
@@ -172,7 +188,7 @@ var assistance = assistance || {};
 			comment.versions = versions;
 
 			// submit
-			// to be deprecated in favor of Backbone.sync()
+			// alternative: create a new CommentModel( comment ) and call .save() on it. does the same under the hood.
 			$.ajax({
 				type: "POST",
 				url: that.options.comment_url,
@@ -181,16 +197,17 @@ var assistance = assistance || {};
 				data: JSON.stringify( comment )
 			}).fail( function( xhr, status, error ) {
 				smoke.alert( "Failed to save comment: " + error );
+				console.error( "failed to save comment", xhr, status, error );
 			}).done( function( data, status, xhr ) {
 				// notification
 				smoke.alert( "Comment created." );
-				// delete annotations
-				that.annotations = {};
 				// get new comment (inkl id!)
 				var newCmt = new assistance.CommentModel( data );
+				// handle it at the application level
 				that.trigger( "newcomment", newCmt );
 			}).always( function( dataxhr, status, errorxhr ) {
-				console.log( dataxhr, status, errorxhr );
+				// delete annotations
+				that.resetAnnotations();
 			});
 
 			// close things
@@ -199,10 +216,13 @@ var assistance = assistance || {};
 				
 		},
 
+		// close annotation view too!
 		onBeforeClose: function() {
 			this.annotationView.close();
-			this.annotations = {};
+			this.resetAnnotations();
 		},
+
+		// activation functions
 
 		_selectText: function() {
 			this.ui.annos.removeClass( "assistance-comment__write-comment-anno_selected" );

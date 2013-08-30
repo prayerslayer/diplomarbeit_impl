@@ -86,7 +86,7 @@ var assistance = assistance || {};
 				original.attr( "data-vizboard-copy", "copy" + i );
 				cpy.attr( "data-vizboard-copy", "copy" + i );
 				// put svg elements in svg
-				if ( that.isSvgElement( cpy.node() ) )
+				if ( assistance.Utility.isSvgElement( cpy.node() ) )
 					svg.appendChild( cpy );
 				else
 					div.appendChild( cpy );
@@ -98,7 +98,7 @@ var assistance = assistance || {};
 					});
 
 				// I argue that svg elements already have their position set in form of transform or x,y attributes
-				if ( !that.isSvgElement( cpy.node() ) ) {
+				if ( !assistance.Utility.isSvgElement( cpy.node() ) ) {
 					// so only html elements need positioning
 					$cpy.css( "position", "absolute" );
 					that.samePosition( $( original.node() ), $cpy );
@@ -115,10 +115,6 @@ var assistance = assistance || {};
 					m.trigger( "unhighlight" );
 				});
 			});
-		},
-
-		isSvgElement: function( node ) {
-			return node.namespaceURI === "http://www.w3.org/2000/svg";
 		},
 
 		samePosition: function( $source, $target ) {

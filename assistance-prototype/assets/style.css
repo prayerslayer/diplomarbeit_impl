@@ -431,7 +431,7 @@ rect.assistance-annotations__rectangle_finished {
 	cursor: text;
 }
 
-text.assistance-annotations__text_content {
+.assistance-annotations__text_content {
 	fill: orange;
 }
 
