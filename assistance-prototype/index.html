@@ -87,7 +87,7 @@
 				</div>
 			</div>
 			<div class="assistance-comment__comment-content">
-				<% if ( typeof response_to !== 'undefined' ) { %>
+				<% if ( response_to ) { %>
 				<div class="assistance-comment__comment-response">(in response to comment <span class="assistance-comment__comment-response-id" data-action="view-response">#<%= response_to.substring(0,8) %></span>)</div>
 				<% } %>
 				<%= versions[0].text %>

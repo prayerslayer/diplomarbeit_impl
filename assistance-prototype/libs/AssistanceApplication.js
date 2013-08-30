@@ -39,8 +39,6 @@ var assistance = assistance || {};
 				}
 			});
 			writebase.content.show( writer );
-
-			// wie annotationen hinzufügen view bauen?
 			
 			var anno = new assistance.AddAnnotationView({
 				"component": component,
@@ -94,22 +92,31 @@ var assistance = assistance || {};
 		},
 
 		showComments: function( component ) {
-			var comments = new assistance.CommentCollection([], {
-				"url": this.options.comment_url
-			});
-			var spinner = new assistance.Spinner({
+			var compData = this._getComponent( component ),
+				spinner = new assistance.Spinner({
 					"caller": $( component )
 				}),
 				that = this;
+			// construct appropriate url
+			var new_url = this.options.comment_url + "?";
+    		new_url += "component=" + encodeURIComponent( compData.component_id );
+    		for (var i = compData.visualized_properties.length - 1; i >= 0; i--) {
+    			var prop = compData.visualized_properties[i];
+    			new_url += "&property=" + encodeURIComponent( prop );
+    		};
+    		var comments = new assistance.CommentCollection([], {
+				"url": new_url
+			});
 			// load data
 			comments.fetch({
 				"success": function( collection, response ) {
 
-					var visualization = that._getComponent( component ).visualization;
+					var visualization = compData.visualization;
 					
 					spinner.close();
-
+					// now set other url for models
 					collection.each( function( comment ) {
+						comment.urlRoot = that.options.comment_url;
 						comment.set( "component", component ); //komponente durchreichen
 						comment.set( "visualization", visualization );
 					});
@@ -131,6 +138,8 @@ var assistance = assistance || {};
 				"error": function( col, res) {
 					console.debug( col, res );
 				}
+			}, {
+				"url": new_url
 			});
 		}
 	});

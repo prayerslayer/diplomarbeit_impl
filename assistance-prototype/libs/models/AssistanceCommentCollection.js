@@ -14,10 +14,6 @@ var assistance = assistance || {};
 			
 		model: assistance.Comment,
 
-		initialize: function( options ) {
-			
-		},
-
 		// see http://stackoverflow.com/questions/1500260/detect-urls-in-text-with-javascript
 		linkify: function( text ) {  
             return text.replace( /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig, '<a href="$1">$1</a>' );
@@ -37,7 +33,6 @@ var assistance = assistance || {};
 				c.id = c.comment_id;
 				c.avatar_url = "http://robohash.org/" + c.user_id;
 				c.user_name = /* TODO userservice abfragen */ c.user_id;
-
 
 				// sort versions by date
 				c.versions.sort( function( v1, v2 ) {

@@ -1,5 +1,7 @@
 # TODO
 
+* neuen kommentar gleich in readcommentsview einbauen
+	--> d.h. aber gleich application umbauen, sodass keine zombies entstehen
 * Voten nur 1x: 
 * aufpassen mit PanelCollection, die muss nämlich SOAP nachrichten rumschicken.
 

@@ -184,7 +184,11 @@ var assistance = assistance || {};
 			}).done( function( data, status, xhr ) {
 				// notification
 				smoke.alert( "Comment created." );
-				this.annotations = {};
+				// delete annotations
+				that.annotations = {};
+				// get new comment (inkl id!)
+				var newCmt = new assistance.CommentModel( data );
+				that.trigger( "newcomment", newCmt );
 			}).always( function( dataxhr, status, errorxhr ) {
 				console.log( dataxhr, status, errorxhr );
 			});
