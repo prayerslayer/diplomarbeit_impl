@@ -315,6 +315,21 @@ div.assistance-comment__comment-content {
 	line-height: 24px;
 }
 
+div.assistance-comment__comment-content a {
+	-webkit-transition: color .2s;
+	color: lightsalmon;
+}
+
+div.assistance-comment__comment-content a:visited {
+	color: lightgray;
+}
+
+div.assistance-comment__comment-content a:hover {
+	color: orange;
+}
+
+
+
 /* WRITE COMMENT STUFF */
 
 div.assistance-comment__submit {
@@ -343,7 +358,6 @@ div.assistance-comment__submit_enabled:hover {
 }
 
 div.assistance-comment__write-comment {
-	
 }
 
 div.assistance-comment__write-comment-anno-select, 
@@ -370,7 +384,7 @@ div.assistance-comment__write-comment-area {
 	border: 1px dashed white;
 	padding: .5rem;
 	overflow-y: scroll;
-	width: 20rem;
+	width: 24rem;
 	height: 15rem;
 }
 
