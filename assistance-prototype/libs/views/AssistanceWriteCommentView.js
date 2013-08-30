@@ -184,6 +184,7 @@ var assistance = assistance || {};
 			}).done( function( data, status, xhr ) {
 				// notification
 				smoke.alert( "Comment created." );
+				this.annotations = {};
 			}).always( function( dataxhr, status, errorxhr ) {
 				console.log( dataxhr, status, errorxhr );
 			});
