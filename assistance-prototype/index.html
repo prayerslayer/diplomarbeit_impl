@@ -179,8 +179,8 @@
 		<script src="libs/views/AssistanceArrowAnnotationView.js"></script>
 		<script src="libs/views/AssistanceAreaAnnotationView.js"></script>
 		<script src="libs/views/AssistanceCommentView.js"></script>
-		<script src="libs/views/AssistanceReadCommentsView.js"></script>
 		<script src="libs/views/AssistanceCommentBadgeView.js"></script>
+		<script src="libs/views/AssistanceReadCommentsView.js"></script>
 		<script src="libs/views/AssistanceWriteCommentView.js"></script>
 		<!-- app -->
 		<script src="libs/AssistanceApplication.js"></script>
@@ -332,7 +332,7 @@
 		<script type="text/javascript">
 			$( document ).ready( function() {
 				$.support.cors = true;	// important for development
-
+				console.debug( assistance );
 				var app = new assistance.Application();
 				app.start( {
 					"comment_url": "http://141.76.68.74:8089/dare/comment",

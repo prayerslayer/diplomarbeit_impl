@@ -40,7 +40,7 @@ var assistance = assistance || {};
 			$comp.append( this.$el );
 			var $point = $( "[resource=" + this.model.get("uri" ) + "]" );
 			// check if svg visualization
-			if ( assistance.Utility.isSvgElement( $point[0] ) {
+			if ( assistance.Utility.isSvgElement( $point[0] ) ) {
 				// use bounding box to position badge at top right
 				var bbox = assistance.Utility.transformedBoundingBox( $point[0] );
 				var offsetLeft = $vis[0].offsetLeft,
