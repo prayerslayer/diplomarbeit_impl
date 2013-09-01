@@ -47,7 +47,6 @@ var assistance = assistance || {};
 					offsetTop = $vis[ 0 ].offsetTop;
 				this.$el.css( "left", offsetLeft + bbox.x + bbox.width - this.$el.width()/2 );
 				this.$el.css( "top", offsetTop + bbox.y - this.$el.height()/2);
-				console.log( bbox );
 			} else {
 				// if html, just use jquery ui -.-
 				this.$el.position({

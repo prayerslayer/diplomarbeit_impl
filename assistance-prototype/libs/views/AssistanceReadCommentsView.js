@@ -25,6 +25,7 @@ var assistance = assistance || {};
 		initialize: function() {
 			// render badges after annotations
 			this.on( "collection:rendered", this.renderBadges, this );
+			this.on( "collection:add", this.addComment, this );
 			this.on( "itemview:reply", this.reply, this );
 			this.on( "itemview:viewresponse", this.showResponse, this );
 			this.on( "itemview:showannotations", this.hideBadges, this );
@@ -42,7 +43,8 @@ var assistance = assistance || {};
 		},
 
 		appendHtml: function( cView, iView, index ) {
-			cView.$el.find( "div.assistance-comment__comments" ).append( iView.el );
+			var root = cView.$el.find( "div.assistance-comment__comments" );
+			root.insertAt( index, iView.el );
 		},
 
 		onRender: function() {
@@ -51,6 +53,11 @@ var assistance = assistance || {};
 
 		reply: function( view, comment ) {
 			this.trigger( "reply", comment );	// tell the application to open a write view
+		},
+
+		addComment: function() {
+			this._closeBadges();
+			this.renderBadges();
 		},
 
 		showResponse: function( view, response_id ) {
@@ -156,11 +163,15 @@ var assistance = assistance || {};
 				}
 			});				
 		},
-		// before closing this view, we must free the badge views to prevent zombie views and memory leaks
-		onBeforeClose: function() {
+
+		_closeBadges: function() {
 			this.badgesviews.call( "stopListening" );
 			this.badgesviews.call( "close" );
 			this.badgesviews = null;
+		},
+		// before closing this view, we must free the badge views to prevent zombie views and memory leaks
+		onBeforeClose: function() {
+			this._closeBadges();
 		}
 	});
 })( jQuery );

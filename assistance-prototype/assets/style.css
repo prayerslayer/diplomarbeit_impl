@@ -43,6 +43,7 @@ body {
 	position: absolute;
 	right: 1rem;
 	top: 1rem;
+	-webkit-transition: color .2s;
 }
 
 .assistance-base__close:hover {

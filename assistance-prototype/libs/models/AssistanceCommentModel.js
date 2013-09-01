@@ -22,11 +22,10 @@ var assistance = assistance || {};
 
 
 		initialize: function( data ) {
-			data.versions.sort( function( v1, v2 ) {
-				return v1.timestamp < v2.timestamp;
-			});
 			this.set( "latest", data.versions[ 0 ] );
-			this.set( "hr_timestamp", "on " + moment( data.versions[0].timestamp ).format( "MMMM Do YYYY" ) );
+			var day = moment( data.versions[0].timestamp ).format( "MMMM Do YYYY" );
+			var time = moment( data.versions[ 0 ].timestamp).format("HH:mm" );
+			this.set( "hr_timestamp", "on " + day + " at " + time );
 			this.formatScore();
 			this.on( "change:score", this.formatScore );
 			this.on( "change:component", this.updateComponent, this );

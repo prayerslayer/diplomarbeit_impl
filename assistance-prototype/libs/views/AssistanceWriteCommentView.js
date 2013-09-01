@@ -202,7 +202,7 @@ var assistance = assistance || {};
 				// notification
 				smoke.alert( "Comment created." );
 				// get new comment (inkl id!)
-				var newCmt = new assistance.CommentModel( data );
+				var newCmt = new assistance.Comment( data );
 				// handle it at the application level
 				that.trigger( "newcomment", newCmt );
 			}).always( function( dataxhr, status, errorxhr ) {

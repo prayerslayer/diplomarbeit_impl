@@ -12,6 +12,12 @@ var assistance = assistance || {};
 ( function( $ ) {
 	assistance.Application = Backbone.Marionette.Application.extend({
 
+		// here we store all the views
+		// views[ component ].write
+		// views[ component ].read
+		// views[ component ].howto
+		views: {},
+
 		// find additional component information by its DOM id
 		_getComponent: function( comp ) {
 			return _.findWhere( this.options.components, {
@@ -19,10 +25,26 @@ var assistance = assistance || {};
 					});
 		},
 
+
+
 		// start the application
 		start: function( op ) {
 			this.options = op;	// why not keeping an options hash as in every view? ITSA NICE-AH!
-			//TODO we would probably listen here for clicks on titlebars?
+		},
+
+		_registerView: function( component, type, view ) {
+			// close old view
+			if ( this.views[ component ] && this.views[ component ][ type ] )
+				this.views[ component ][ type ].close();
+			else if ( !this.views[ component ] )
+				this.views[ component ] = {};
+			// register this view
+			this.views[ component ][ type ] = view;
+			// prevent memory leaks
+			var that = this;
+			view.on( "close", function() {
+				delete that.views[component][type];
+			});
 		},
 
 		// construct a new write comment view
@@ -77,11 +99,26 @@ var assistance = assistance || {};
 				this[ "region" + component ].close();	
 			}
 			this[ "region" + component ].show( anno );
+
+			// register view
+			this._registerView( component, "write", writer );
+
+			var that = this;
+			// if there is a new comment in writer and also a read comments view open, put it there
+			writer.on( "newcomment", function( comment ) {
+				if ( that.views[ component ][ "read" ] ) {
+					var read = that.views[ component ][ "read" ];
+					read.collection.fetch();
+					//read.collection.add( comment );
+				}
+			});
 		},
 
 
 		showHowto: function( component ) {
 			//TODO wird sich erst noch zeigen, wie das wirklich aussehen soll.
+
+			this._closeAll( component );
 
 			var item = new assistance.HowtoItem({
 				"component_id": "http://mmt.inf.tu-dresden.de/VizBoard/Something",
@@ -113,6 +150,9 @@ var assistance = assistance || {};
 				"model": assistance.HowtoItem
 			});
 			listbase.content.show( list );
+
+			// register view
+			this._registerView( component, "howto", list );
 		},
 
 		// create a view to read comments
@@ -124,10 +164,9 @@ var assistance = assistance || {};
 				that = this;
 			// construct appropriate url to fetch appropriate comments
 			var new_url = this.options.comment_url + "?";
-    		new_url += "component=" + encodeURIComponent( compData.component_id );
-    		for (var i = compData.visualized_properties.length - 1; i >= 0; i--) {
+    		for (var len = compData.visualized_properties.length - 1, i=len; i >= 0; i--) {
     			var prop = compData.visualized_properties[i];
-    			new_url += "&property=" + encodeURIComponent( prop );
+    			new_url +=  ( i < len ? "&" : "" ) + "property=" + encodeURIComponent( prop );
     		};
     		var comments = new assistance.CommentCollection([], {
 				"url": new_url
@@ -161,6 +200,8 @@ var assistance = assistance || {};
 						"component": component
 					});
 					commentbase.content.show( comment_view );
+
+					that._registerView( component, "read", comment_view );
 				},
 				"error": function( col, res) {
 					console.error( "could not fetch comment collection", col, res );
