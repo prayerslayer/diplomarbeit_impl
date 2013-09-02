@@ -1,8 +1,6 @@
 # TODO
 
-* neuen kommentar gleich in readcommentsview einbauen
-	--> d.h. aber gleich application umbauen, sodass keine zombies entstehen
-* Voten nur 1x: 
+* Voten nur 1x: Was muss wo gespeichert werden?
 * aufpassen mit PanelCollection, die muss nämlich SOAP nachrichten rumschicken.
 
 * Annotationen mit SVG? Warum eigentlich nicht? --> weils die templates zerschiesst, aber die vorteile sind immens: clipPaths und masks!

@@ -57,6 +57,7 @@ var assistance = assistance || {};
 
 		addComment: function() {
 			this._closeBadges();
+			this.badgesviews = new Backbone.ChildViewContainer();
 			this.renderBadges();
 		},
 

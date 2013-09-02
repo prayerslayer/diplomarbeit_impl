@@ -30,13 +30,17 @@ var assistance = assistance || {};
 			this.on( "change:score", this.formatScore );
 			this.on( "change:component", this.updateComponent, this );
 			this.on( "change:visualization", this.updateVisualization, this );
+
+			this.urlRoot = data.urlRoot;
+			this.updateComponent( data.component );
+			this.updateVisualization( data.visualization );
 		},
 
-		updateComponent: function( m, value ) {
+		updateComponent: function( value ) {
 			this.tellChildren( "component", value );
 		},
 
-		updateVisualization: function( m, value ) {
+		updateVisualization: function( value ) {
 			this.tellChildren( "visualization", value );
 		},
 

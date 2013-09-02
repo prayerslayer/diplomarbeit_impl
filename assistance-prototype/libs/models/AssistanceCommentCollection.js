@@ -28,11 +28,15 @@ var assistance = assistance || {};
         	return 0;
         },
 
+        initialize: function( size, opts ) {
+        	this.options = opts;
+        },
+
         // parses a response from the backend
 		parse: function( data ) {
 
 			var that = this;
-
+			
 			// now we have to create a lot of models
 			_.each( data, function( c ) {
 				var models = [];
@@ -40,6 +44,10 @@ var assistance = assistance || {};
 				c.id = c.comment_id;	// this is for model.save()
 				c.avatar_url = "http://robohash.org/" + c.user_id;	// yep, we could get it from the user service as well
 				c.user_name = /* TODO call user service */ c.user_id;
+
+				c.urlRoot = that.options.comment_url;
+				c.component = that.options.component;
+				c.visualization = that.options.visualization;
 
 				var version = c.versions[ 0 ];	// this is the version we're going to display
 				// make links clickable

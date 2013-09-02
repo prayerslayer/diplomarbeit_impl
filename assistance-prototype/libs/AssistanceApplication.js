@@ -169,7 +169,10 @@ var assistance = assistance || {};
     			new_url +=  ( i < len ? "&" : "" ) + "property=" + encodeURIComponent( prop );
     		};
     		var comments = new assistance.CommentCollection([], {
-				"url": new_url
+				"url": new_url,
+				"component": component,
+				"comment_url": this.options.comment_url,
+				"visualization": compData.visualization
 			});
 			// load data
 			comments.fetch({
@@ -178,11 +181,6 @@ var assistance = assistance || {};
 					var visualization = compData.visualization;
 					
 					spinner.close();
-					collection.each( function( comment ) {
-						comment.urlRoot = that.options.comment_url;	// set other url for comments ( model.save() requests go there )
-						comment.set( "component", component );			// comments must know component and visualization to display annotations
-						comment.set( "visualization", visualization );
-					});
 
 					// create actual comment view
 					var comment_view = new assistance.ReadCommentsView({
