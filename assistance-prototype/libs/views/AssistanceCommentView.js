@@ -30,13 +30,15 @@ var assistance = assistance || {};
 			$( collectionview.model.get( "component" ) ).append( itemview.el );
 		},
 
+		annos_enabled: false,
 		voted: null,
 
 		ui: {
 			"voteup": ".assistance-comment__comment-metadata-voting_up",
 			"votedown": ".assistance-comment__comment-metadata-voting_down",
 			"score": ".assistance-comment__comment-metadata-score",
-			"annos": ".assistance-comment__comment-metadata-show-annos_text",
+			"annos": ".assistance-comment__comment-metadata-show-annos",
+			"annostext": ".assistance-comment__comment-metadata-show-annos_text",
 			"annosicon": ".assistance-comment__comment-metadata-show-annos_icon",
 			"reply": ".assistance-comment__comment-metadata-reply",
 		},
@@ -51,7 +53,16 @@ var assistance = assistance || {};
 
 		initialize: function( opts ) {
 			this.collection = opts.model.get( "latest" ).annotations;
+			if ( this.collection.length ) {
+				this.annos_enabled = true;
+			}
     		this.model.bind( 'change:score', this.renderScore, this);
+		},
+
+		onRender: function() {
+			if ( !this.annos_enabled ) {
+				this.ui.annos.removeClass( "assistance-comment__comment-metadata-show-annos").addClass( "assistance-comment__comment-metadata-show-annos_disabled" );
+			}
 		},
 
 		// update score
@@ -75,21 +86,25 @@ var assistance = assistance || {};
 		},
 
 		hideAnnotations: function() {
-			this.ui.annos.text( "Show annotations" );
+			this.ui.annostext.text( "Show annotations" );
 			this.children.call( "hide" );
 			this.ui.annosicon.removeClass( "icon-eye-close" ).addClass( "icon-eye-open" );
 		},
 
 		showAnnotations: function() {
-			this.ui.annos.text( "Hide annotations" );
-			this.children.call( "show" );
-			this.ui.annosicon.removeClass( "icon-eye-open" ).addClass( "icon-eye-close" );
+			if ( this.annos_enabled ) {
+				this.ui.annostext.text( "Hide annotations" );
+				this.children.call( "show" );
+				this.ui.annosicon.removeClass( "icon-eye-open" ).addClass( "icon-eye-close" );
+			}
 		},
 
 		toggleAnnotations: function() {
-			// UI will get updated from parent
-			this.trigger( !this.annotationsShown ? "showannotations" : "hideannotations", this.cid );
-			this.annotationsShown = !this.annotationsShown;
+			if ( this.annos_enabled ) {
+				// UI will get updated from parent
+				this.trigger( !this.annotationsShown ? "showannotations" : "hideannotations", this.cid );
+				this.annotationsShown = !this.annotationsShown;
+			}
 		},
 
 		reply: function() {

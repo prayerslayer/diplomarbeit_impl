@@ -243,6 +243,12 @@ div.assistance-comment__comment-metadata{
 	margin: 0 1rem;
 }
 
+div.assistance-comment__comment-metadata-show-annos_disabled {
+	color: gray;
+	margin-top: 1rem;
+	cursor: default;
+}
+
 div.assistance-comment__comment-metadata-reply {
 	margin: 1rem 0;
 }
