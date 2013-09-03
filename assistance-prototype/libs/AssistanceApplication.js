@@ -116,43 +116,32 @@ var assistance = assistance || {};
 
 
 		showHowto: function( component ) {
-			//TODO wird sich erst noch zeigen, wie das wirklich aussehen soll.
-
-			this._closeAll( component );
-
-			var item = new assistance.HowtoItem({
+			var that = this;
+			var items = new assistance.HowtoCollection([], {
+				"url": this.options.core_url,
 				"component_id": "http://mmt.inf.tu-dresden.de/VizBoard/Something",
-				"action": "sort",
-				"variable": "player",
-				"capability": "cap01",
-				"elements": "button",
-				"component": "#barchart",
-				"visualization": "svg"
+				"capability_id": "cap01"
 			});
-			var item2 = new assistance.HowtoItem({
-				"component_id": "http://mmt.inf.tu-dresden.de/VizBoard/Something",
-				"action": "display",
-				"capability": "cap02",
-				"elements": "rect:nth-child(odd)",
-				"component": "#barchart",
-				"visualization": "svg"
+			items.fetch({
+				"success": function() {
+					console.log( "yay" );
+					var listbase = new assistance.BaseView({
+						"type": "howto",
+						"component": "#barchart"
+					});
+					var list = new assistance.HowtoListView({
+						"collection": items,
+						"itemView": assistance.HowtoItemView,
+						"model": assistance.HowtoItem
+					});
+					listbase.content.show( list );
+					// register view
+					that._registerView( component, "howto", list );
+				},
+				"error": function() {
+					console.error( ";_;" );
+				}
 			});
-			var items = new assistance.HowtoCollection();
-			items.add( item );
-			items.add( item2 );
-			var listbase = new assistance.BaseView({
-				"type": "howto",
-				"component": "#barchart"
-			});
-			var list = new assistance.HowtoListView({
-				"collection": items,
-				"itemView": assistance.HowtoItemView,
-				"model": assistance.HowtoItem
-			});
-			listbase.content.show( list );
-
-			// register view
-			this._registerView( component, "howto", list );
 		},
 
 		// create a view to read comments
