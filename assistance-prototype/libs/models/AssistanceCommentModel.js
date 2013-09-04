@@ -48,7 +48,25 @@ var assistance = assistance || {};
 			_.each( this.get( "versions" ), function( v ) {
 				_.each( v.annotations.models, function( anno ) {
 					anno.set( key, value );
-				})
+				});
+			});
+		},
+
+		// construct request for voting
+		vote: function( vote ) {
+			var that = this;
+			var data = { "amount": vote };
+			return $.ajax({
+				"url": this.urlRoot + "/vote/" + this.get("comment_id" ),
+				"type": "PUT",
+				"contentType": "application/json;charset=UTF-8",
+				"data": JSON.stringify( data ),
+				"success": function( data, text, xhr ) {
+					console.debug( "voting succeeded" );
+				},
+				"error": function( xhr, text, error ) {
+					console.error( "voting failed", error );
+				}
 			});
 		}
 	});

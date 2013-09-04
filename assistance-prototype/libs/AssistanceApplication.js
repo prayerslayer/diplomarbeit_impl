@@ -30,6 +30,14 @@ var assistance = assistance || {};
 		// start the application
 		start: function( op ) {
 			this.options = op;	// why not keeping an options hash as in every view? ITSA NICE-AH!
+
+			// enable auth for all ajax requests
+			$.ajaxSetup({
+				"beforeSend": function( xhr, settings ) {
+					var auth = btoa( op.user_id );
+					xhr.setRequestHeader( "Authorization", "Basic " + auth );
+				}
+			});
 		},
 
 		_registerView: function( component, type, view ) {

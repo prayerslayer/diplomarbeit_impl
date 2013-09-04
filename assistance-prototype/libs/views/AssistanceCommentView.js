@@ -63,6 +63,13 @@ var assistance = assistance || {};
 			if ( !this.annos_enabled ) {
 				this.ui.annos.removeClass( "assistance-comment__comment-metadata-show-annos").addClass( "assistance-comment__comment-metadata-show-annos_disabled" );
 			}
+			if ( this.model.get( "voted" ) > 0 ) {
+				this._toggleVoteUpUI( true );
+				this.voted = "up";
+			} else if ( this.model.get( "voted" ) < 0 ) {
+				this._toggleVoteDownUI( true );
+				this.voted = "down";
+			}
 		},
 
 		// update score
@@ -111,52 +118,73 @@ var assistance = assistance || {};
 			this.trigger( "reply", this.model );
 		},
 
-		voteUp: function() {
+		voteUp: function( ) {
+			var amount = 0,
+				old_score = this.model.get( "score" ),
+				old_voted = this.voted,
+				that = this;
 			if ( !this.voted ) {
 				// not yet voted
 				this.voted = "up";
-				this.model.set( "score", this.model.get( "score" ) + 1);
-				this.ui.voteup.addClass( "assistance-comment__comment-metadata-voting_voted" );
-				this.ui.score.addClass( "assistance-comment__comment-metadata-voting_voted" );
+				this.model.set( "score", old_score + 1);
+				this._toggleVoteUpUI( true );
+				amount = 1;
 			} else if ( this.voted === "down" ) {
 				// downvoted
 				this.voted = "up";
-				this.model.set( "score", this.model.get( "score" ) + 2);
-				this.ui.voteup.addClass( "assistance-comment__comment-metadata-voting_voted" );
-				this.ui.votedown.removeClass( "assistance-comment__comment-metadata-voting_voted" );
-				
+				this.model.set( "score", old_score + 2);
+				this._toggleVoteUpUI( true );
+				amount = 1;
 			} else if ( this.voted === "up" ) {
 				//undo
 				this.voted = null;
-				this.model.set( "score", this.model.get( "score" ) - 1 );
+				this.model.set( "score", old_score - 1 );
+				this._toggleVoteUpUI( false );
+			}
+			this.model.vote( amount );
+		},
+
+		_toggleVoteDownUI: function( enable ) {
+			if ( enable ) {
+				this.ui.votedown.addClass( "assistance-comment__comment-metadata-voting_voted" );
+				this.ui.score.addClass( "assistance-comment__comment-metadata-voting_voted" );
+			} else {
+				this.ui.votedown.removeClass( "assistance-comment__comment-metadata-voting_voted" );
+				this.ui.score.removeClass( "assistance-comment__comment-metadata-voting_voted" );
+			}
+		},
+
+		_toggleVoteUpUI: function( enable ) {
+			if ( enable ) {
+				this.ui.voteup.addClass( "assistance-comment__comment-metadata-voting_voted" );
+				this.ui.score.addClass( "assistance-comment__comment-metadata-voting_voted" );
+			} else {
 				this.ui.voteup.removeClass( "assistance-comment__comment-metadata-voting_voted" );
 				this.ui.score.removeClass( "assistance-comment__comment-metadata-voting_voted" );
 			}
-			this.model.save();
 		},
 
-		voteDown: function() {
+		voteDown: function( ) {
+			var amount = 0;
 			if ( !this.voted ) {
 				// not yet voted
 				this.voted = "down";
 				this.model.set( "score", this.model.get( "score" ) - 1);
-				this.ui.votedown.addClass( "assistance-comment__comment-metadata-voting_voted" );
-				this.ui.score.addClass( "assistance-comment__comment-metadata-voting_voted" );
+				this._toggleVoteDownUI( true );
+				amount = -1;
 			} else if ( this.voted === "up" ) {
 				// upvoted
 				this.voted = "down";
 				this.model.set( "score", this.model.get( "score" ) - 2);
-				this.ui.votedown.addClass( "assistance-comment__comment-metadata-voting_voted" );
-				this.ui.voteup.removeClass( "assistance-comment__comment-metadata-voting_voted" );
-				
+				this._toggleVoteDownUI( true );
+				amount = -1;
 			} else if ( this.voted === "down" ) {
 				//undo
 				this.voted = null;
 				this.model.set( "score", this.model.get( "score" ) + 1 );
-				this.ui.votedown.removeClass( "assistance-comment__comment-metadata-voting_voted" );
-				this.ui.score.removeClass( "assistance-comment__comment-metadata-voting_voted" );
+				this._toggleVoteDownUI( false );
 			}
-			this.model.save();
+			this.model.vote( amount );
 		}
 		
 	});
