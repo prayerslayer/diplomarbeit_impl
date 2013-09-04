@@ -312,6 +312,7 @@ img.assistance-comment__comment-metadata-avatar {
 	border: 1px solid white;
 	border-radius: 15px;
 	margin: 1rem 0;
+	background-color: gray;
 }
 
 div.assistance-comment__comment-content {
