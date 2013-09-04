@@ -30,10 +30,12 @@ var assistance = assistance || {};
 			$( collectionview.model.get( "component" ) ).append( itemview.el );
 		},
 
-		annos_enabled: false,
+		votes_enabled: true,	// false if this is own comment
+		annos_enabled: false,	// true if there are annotations
 		voted: null,
 
 		ui: {
+			"votes": ".assistance-comment__comment-metadata-voting",
 			"voteup": ".assistance-comment__comment-metadata-voting_up",
 			"votedown": ".assistance-comment__comment-metadata-voting_down",
 			"score": ".assistance-comment__comment-metadata-score",
@@ -56,12 +58,18 @@ var assistance = assistance || {};
 			if ( this.collection.length ) {
 				this.annos_enabled = true;
 			}
+			if ( this.model.get( "user_id" ) === this.model.get( "current_user" ) ) {
+				this.votes_enabled = false;
+			}
     		this.model.bind( 'change:score', this.renderScore, this);
 		},
 
 		onRender: function() {
 			if ( !this.annos_enabled ) {
 				this.ui.annos.removeClass( "assistance-comment__comment-metadata-show-annos").addClass( "assistance-comment__comment-metadata-show-annos_disabled" );
+			}
+			if ( !this.votes_enabled ) {
+				this.ui.votes.removeClass( "assistance-comment__comment-metadata-voting" ).addClass( "assistance-comment__comment-metadata-voting_disabled" );
 			}
 			if ( this.model.get( "voted" ) > 0 ) {
 				this._toggleVoteUpUI( true );
@@ -99,19 +107,20 @@ var assistance = assistance || {};
 		},
 
 		showAnnotations: function() {
-			if ( this.annos_enabled ) {
-				this.ui.annostext.text( "Hide annotations" );
-				this.children.call( "show" );
-				this.ui.annosicon.removeClass( "icon-eye-open" ).addClass( "icon-eye-close" );
-			}
+			if ( !this.annos_enabled )
+				return;
+
+			this.ui.annostext.text( "Hide annotations" );
+			this.children.call( "show" );
+			this.ui.annosicon.removeClass( "icon-eye-open" ).addClass( "icon-eye-close" );
 		},
 
 		toggleAnnotations: function() {
-			if ( this.annos_enabled ) {
-				// UI will get updated from parent
-				this.trigger( !this.annotationsShown ? "showannotations" : "hideannotations", this.cid );
-				this.annotationsShown = !this.annotationsShown;
-			}
+			if ( !this.annos_enabled ) 
+				return;
+			// UI will get updated from parent
+			this.trigger( !this.annotationsShown ? "showannotations" : "hideannotations", this.cid );
+			this.annotationsShown = !this.annotationsShown;
 		},
 
 		reply: function() {
@@ -119,6 +128,9 @@ var assistance = assistance || {};
 		},
 
 		voteUp: function( ) {
+			if ( !this.votes_enabled )
+				return;
+
 			var amount = 0,
 				old_score = this.model.get( "score" ),
 				old_voted = this.voted,
@@ -165,6 +177,9 @@ var assistance = assistance || {};
 		},
 
 		voteDown: function( ) {
+			if ( !this.votes_enabled )
+				return;
+
 			var amount = 0;
 			if ( !this.voted ) {
 				// not yet voted

@@ -262,6 +262,13 @@ div.assistance-comment__comment-metadata-voting {
 	-webkit-align-items: center;
 }
 
+div.assistance-comment__comment-metadata-voting_disabled {
+	display: -webkit-flex;
+	-webkit-flex-direction: column;
+	-webkit-align-items: center;
+	color: gray;
+}
+
 div.assistance-comment__comment-metadata-voting_voted {
 	color: orange;
 }
@@ -270,7 +277,7 @@ div.assistance-comment__comment-metadata-name {
 	font-weight: 700;
 }
 
-div.assistance-comment__comment-metadata-score {
+div.assistance-comment__comment-metadata-voting > div.assistance-comment__comment-metadata-score {
 	font-family: "Source Code Pro", monospace;
 	-webkit-transition: color .2s;
 }
@@ -279,10 +286,10 @@ div.assistance-comment__comment-metadata-voting_up, div.assistance-comment__comm
 	-webkit-flex: 1;
 }
 
-div.assistance-comment__comment-metadata-voting_up:hover, 
-div.assistance-comment__comment-metadata-voting_down:hover,
-div.assistance-comment__comment-metadata-reply:hover,
-div.assistance-comment__comment-metadata-show-annos:hover {
+div.assistance-comment__comment-metadata-voting > div.assistance-comment__comment-metadata-voting_up:hover, 
+div.assistance-comment__comment-metadata-voting > div.assistance-comment__comment-metadata-voting_down:hover,
+div.assistance-comment__comment-metadata-voting > div.assistance-comment__comment-metadata-reply:hover,
+div.assistance-comment__comment-metadata-voting > div.assistance-comment__comment-metadata-show-annos:hover {
 	color: orange;
 	cursor: pointer;
 	-webkit-transition: color .2s;

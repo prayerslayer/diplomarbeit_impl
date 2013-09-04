@@ -30,14 +30,6 @@ var assistance = assistance || {};
 		// start the application
 		start: function( op ) {
 			this.options = op;	// why not keeping an options hash as in every view? ITSA NICE-AH!
-
-			// enable auth for all ajax requests
-			$.ajaxSetup({
-				"beforeSend": function( xhr, settings ) {
-					var auth = btoa( op.user_id );
-					xhr.setRequestHeader( "Authorization", "Basic " + auth );
-				}
-			});
 		},
 
 		_registerView: function( component, type, view ) {
@@ -169,6 +161,7 @@ var assistance = assistance || {};
 				"url": new_url,
 				"component": component,
 				"comment_url": this.options.comment_url,
+				"current_user": this.options.user_id,
 				"visualization": compData.visualization
 			});
 			// load data
@@ -200,6 +193,12 @@ var assistance = assistance || {};
 				},
 				"error": function( col, res) {
 					console.error( "could not fetch comment collection", col, res );
+				},
+				// set authorization header to receive information about which comments we already voted on
+				// would love to set this globally via $.ajaxSetup, but it's not feasible since components aren't sandboxed. 
+				"beforeSend": function( xhr, settings ) {
+					var auth = btoa( that.options.user_id  );
+					xhr.setRequestHeader( "Authorization", "Basic " + auth );
 				}
 			});
 		}

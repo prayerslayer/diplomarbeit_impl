@@ -31,7 +31,7 @@ var assistance = assistance || {};
         initialize: function( size, opts ) {
         	this.options = opts;
         },
-
+        
         // parses a response from the backend
 		parse: function( data ) {
 
@@ -45,6 +45,7 @@ var assistance = assistance || {};
 				c.avatar_url = "http://robohash.org/" + c.user_id;	// yep, we could get it from the user service as well
 				c.user_name = /* TODO call user service */ c.user_id;
 
+				c.current_user = that.options.current_user;
 				c.urlRoot = that.options.comment_url;
 				c.component = that.options.component;
 				c.visualization = that.options.visualization;

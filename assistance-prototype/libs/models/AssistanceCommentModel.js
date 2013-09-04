@@ -59,6 +59,10 @@ var assistance = assistance || {};
 			return $.ajax({
 				"url": this.urlRoot + "/vote/" + this.get("comment_id" ),
 				"type": "PUT",
+				"beforeSend": function( xhr, settings ) {
+					var auth = btoa( that.get( "current_user" ) );
+					xhr.setRequestHeader( "Authorization", "Basic " + auth );
+				},
 				"contentType": "application/json;charset=UTF-8",
 				"data": JSON.stringify( data ),
 				"success": function( data, text, xhr ) {
