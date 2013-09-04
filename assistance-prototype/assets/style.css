@@ -288,8 +288,8 @@ div.assistance-comment__comment-metadata-voting_up, div.assistance-comment__comm
 
 div.assistance-comment__comment-metadata-voting > div.assistance-comment__comment-metadata-voting_up:hover, 
 div.assistance-comment__comment-metadata-voting > div.assistance-comment__comment-metadata-voting_down:hover,
-div.assistance-comment__comment-metadata-voting > div.assistance-comment__comment-metadata-reply:hover,
-div.assistance-comment__comment-metadata-voting > div.assistance-comment__comment-metadata-show-annos:hover {
+div.assistance-comment__comment-metadata-reply:hover,
+div.assistance-comment__comment-metadata-show-annos:hover {
 	color: orange;
 	cursor: pointer;
 	-webkit-transition: color .2s;
