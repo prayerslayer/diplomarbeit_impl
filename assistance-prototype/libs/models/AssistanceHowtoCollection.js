@@ -42,6 +42,10 @@ var assistance = assistance || {};
   			return env;
 		},
 
+		parse: function( data , lol ) {
+			console.debug( "parse", data, lol );
+		},
+
 		_buildXMLBody: function( comp, cap ) {
 			var body = '<soapenv:Body>' + 
 							'<q0:getImagesByComponentAndCapability>' + 
@@ -71,6 +75,7 @@ var assistance = assistance || {};
 					"type": "POST",
 					"success": function( data, status ) {
 						console.debug( "success fetching howto", data, status );
+						return data;
 						//TODO now we would need to unpack the SOAP message, parse the json... PROFIT!?
 					},
 					"error": function( xhr, status ) {
