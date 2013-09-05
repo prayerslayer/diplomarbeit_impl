@@ -64,9 +64,7 @@ var assistance = assistance || {};
 			this.samePosition( $visualization, $svg );
 			$div.append( $svg );
 
-			// make a global selector to preserve at least SOME markup order
-			// don't know if it works in all cases, it did when dealing with nth-child(even) and nth-child(odd) selectors.
-
+			// create a map between selectors and models
 			var modelselektor = {},
 				selectorAll = "";
 			_.each( this.collection.models, function( m, i ) {

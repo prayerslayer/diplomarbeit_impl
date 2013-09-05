@@ -342,7 +342,7 @@ var assistance = assistance || {};
 
 			// rect contains the visible coordinates
 			return this._allDatapoints().filter( function( ) {
-				var bbox = this.getBBox(),
+				var bbox = this.getBBox(),	//TODO this is only helpful if it's an svg visualization - in case of html we would probably use offsetLeft and offsetTop here
 					centerX = bbox.x + bbox.width / 2,
 					centerY = bbox.y + bbox.height / 2;
 
@@ -511,6 +511,7 @@ var assistance = assistance || {};
 
 			// case for text and rect
 			// button is top right
+			// bbox is okay here because we're regarding only our own svg annotation elements
 			var bbox = assistance.Utility.transformedBoundingBox( element ),
 				x = bbox.x + bbox.width,
 				y = bbox.y;
