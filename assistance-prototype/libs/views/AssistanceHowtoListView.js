@@ -61,7 +61,7 @@ var assistance = assistance || {};
 			svg.attr( "height", $visualization.height() );
 			$svg.css( "position", "absolute" );
 			// jquery.position does not work well with svg, so we do it ourselves
-			this.samePosition( $visualization, $svg );
+			this._samePosition( $visualization, $svg );
 			$div.append( $svg );
 
 			// create a map between selectors and models
@@ -103,7 +103,7 @@ var assistance = assistance || {};
 					// set width and height because in the original that might be some position:relative;width:80%; stuff that wouldn't work here anymore
 					$cpy.css( "width", $original.width() );
 					$cpy.css( "height", $original.height() );
-					that.samePosition( $original, $cpy );
+					that._samePosition( $original, $cpy );
 				}
 
 				//attach event handler
@@ -119,7 +119,7 @@ var assistance = assistance || {};
 			});
 		},
 
-		samePosition: function( $source, $target ) {
+		_samePosition: function( $source, $target ) {
 			// this works because source and target have equally sized and positioned parents
 			// also: offsetTop uses top as well as margin-top
 			$target.css( "top", $source[0].offsetTop );

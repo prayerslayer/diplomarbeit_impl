@@ -19,7 +19,7 @@ var assistance = assistance || {};
 			"click [data-action='close']": "close"
 		},
 
-		scrollPosition: 0,
+		scrollPosition: 0,	// this is for comments where someone might view the response and then get back to the previous comment -> save scroll position
 
 		ui: {
 			"headline": "h2:first-child",
@@ -35,16 +35,20 @@ var assistance = assistance || {};
 			this.render();
 		},
 
+		// save current scroll position and reset it afterwards
 		rememberScroll: function( ) {
 			this.scrollPosition = this.ui.content.scrollTop();
 			this.ui.content.scrollTop( 0 );
 		},
 
+		// recall saved scroll position and set it
 		resetScroll: function() {
 			this.ui.content.scrollTop( this.scrollPosition );
 			this.scrollPosition = 0;
 		},
 
+		// default titles and explanations
+		// might be overwritten in constructors
 		default_content: {
 			"howto": {
 				"headline": "How to",
@@ -74,10 +78,13 @@ var assistance = assistance || {};
 			this.position( this.options.component );
 			// init view when it's to be shown
 			this.content.on( "show", function( view ) {
+				// check whether it has an init function and call it
 				if ( typeof view.init === 'function' )
 					view.init();
+				// set listeners for scroll things (apply only to ReadCommentsView)
 				view.on( "rememberscroll", that.rememberScroll, that );
 				view.on( "resetscroll", that.resetScroll, that );
+				// if the view inside this closes, close self as well
 				view.on( "close", that.close, that );
 			});
 			// width in css is for list view

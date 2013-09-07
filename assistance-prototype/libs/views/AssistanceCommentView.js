@@ -46,30 +46,36 @@ var assistance = assistance || {};
 		},
 
 		events: {
-			"click [data-action=show-annotations]": "toggleAnnotations",
-			"click [data-action=reply]": "reply",
-			"click [data-action=vote-up]": "voteUp",
-			"click [data-action=vote-down]": "voteDown",
-			"click [data-action=view-response]": "viewResponse"
+			"click [data-action=show-annotations]": "_toggleAnnotations",
+			"click [data-action=reply]": "_reply",
+			"click [data-action=vote-up]": "_voteUp",
+			"click [data-action=vote-down]": "_voteDown",
+			"click [data-action=view-response]": "_viewResponse"
 		},
 
 		initialize: function( opts ) {
 			this.collection = opts.model.get( "latest" ).annotations;
+			// disable show annotations button if there aren't any
 			if ( this.collection.length ) {
 				this.annos_enabled = true;
 			}
+			// disable voting if this is own comment
 			if ( this.model.get( "user_id" ) === this.model.get( "current_user" ) ) {
 				this.votes_enabled = false;
 			}
-    		this.model.bind( 'change:score', this.renderScore, this);
+    		this.model.bind( 'change:score', this._renderScore, this);
 		},
 
 		onRender: function() {
 			if ( !this.annos_enabled ) {
-				this.ui.annos.removeClass( "assistance-comment__comment-metadata-show-annos").addClass( "assistance-comment__comment-metadata-show-annos_disabled" );
+				this.ui.annos
+						.removeClass( "assistance-comment__comment-metadata-show-annos")
+						.addClass( "assistance-comment__comment-metadata-show-annos_disabled" );
 			}
 			if ( !this.votes_enabled ) {
-				this.ui.votes.removeClass( "assistance-comment__comment-metadata-voting" ).addClass( "assistance-comment__comment-metadata-voting_disabled" );
+				this.ui.votes
+						.removeClass( "assistance-comment__comment-metadata-voting" )
+						.addClass( "assistance-comment__comment-metadata-voting_disabled" );
 			}
 			if ( this.model.get( "voted" ) > 0 ) {
 				this._toggleVoteUpUI( true );
@@ -81,7 +87,7 @@ var assistance = assistance || {};
 		},
 
 		// update score
-		renderScore: function() {
+		_renderScore: function() {
 			this.ui.score.text( this.model.get( "hr_score" ) );
 		},
 
@@ -96,7 +102,7 @@ var assistance = assistance || {};
 		},
 
 		// trigger to parent view that it must show this response
-		viewResponse: function() {
+		_viewResponse: function() {
 			this.trigger( "viewresponse", this.model.get( "response_to" ) );
 		},
 
@@ -115,7 +121,7 @@ var assistance = assistance || {};
 			this.ui.annosicon.removeClass( "icon-eye-open" ).addClass( "icon-eye-close" );
 		},
 
-		toggleAnnotations: function() {
+		_toggleAnnotations: function() {
 			if ( !this.annos_enabled ) 
 				return;
 			// UI will get updated from parent
@@ -123,11 +129,11 @@ var assistance = assistance || {};
 			this.annotationsShown = !this.annotationsShown;
 		},
 
-		reply: function() {
+		_reply: function() {
 			this.trigger( "reply", this.model );
 		},
 
-		voteUp: function( ) {
+		_voteUp: function( ) {
 			if ( !this.votes_enabled )
 				return;
 
@@ -176,7 +182,7 @@ var assistance = assistance || {};
 			}
 		},
 
-		voteDown: function( ) {
+		_voteDown: function( ) {
 			if ( !this.votes_enabled )
 				return;
 

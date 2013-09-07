@@ -16,7 +16,7 @@ var assistance = assistance || {};
 
 		// wraps links with link tags (<a>)
 		// see http://stackoverflow.com/questions/1500260/detect-urls-in-text-with-javascript
-		linkify: function( text ) {  
+		_linkify: function( text ) {  
             return text.replace( /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig, '<a href="$1" target="_blank">$1</a>' );
         },
 
@@ -31,7 +31,7 @@ var assistance = assistance || {};
         initialize: function( size, opts ) {
         	this.options = opts;
         },
-        
+
         // parses a response from the backend
 		parse: function( data ) {
 
@@ -52,7 +52,7 @@ var assistance = assistance || {};
 
 				var version = c.versions[ 0 ];	// this is the version we're going to display
 				// make links clickable
-				version.text = that.linkify( version.text );
+				version.text = that._linkify( version.text );
 				// create annotation models
 				_.each( version.annotations, function( anno ) {
 					var model = null;

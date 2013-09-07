@@ -29,13 +29,13 @@ var assistance = assistance || {};
 					that.bindUIElements();
 				}
 				that.trigger( "imgloaded" );
-				that.applyBBox( "source_bbox", true );
+				that._applyBBox( "source_bbox", true );
 			};
 			this.ui.image.imagesLoaded().done( callback );
 		},
 
 		// makes the bounding box big enough to fill the panel viewport
-		applyBBox: function( box_type, animate ) {
+		_applyBBox: function( box_type, animate ) {
 			var img = this.ui.image,
 				that = this,
 				duration = that.ui.image.css( "-webkit-transition-duration" );
@@ -81,7 +81,7 @@ var assistance = assistance || {};
 		// animates "viewport" to target bounding box of model
 		zoom: function() {
 			if ( this.model.get( "animate" ) )
-				this.applyBBox( "target_bbox", true );
+				this._applyBBox( "target_bbox", true );
 		},
 
 		showCaption: function() {

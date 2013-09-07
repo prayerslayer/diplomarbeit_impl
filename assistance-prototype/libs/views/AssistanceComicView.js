@@ -18,7 +18,7 @@ var assistance = assistance || {};
 		spinner: null,
 
 		initialize: function() {
-			this.once( "itemview:imgloaded", this.animate, this );
+			this.once( "itemview:imgloaded", this._animate, this );
 		},
 
 		onBeforeClose: function() {
@@ -33,12 +33,12 @@ var assistance = assistance || {};
 		},
 
 		// animate the panels
-		animate: function() {
+		_animate: function() {
 			// wait until every image is there
 			this.count--;
 			if ( this.count > 0 ) {
 				// ensure that this function is only called once after count is 0
-				this.once( "itemview:imgloaded", this.animate, this );
+				this.once( "itemview:imgloaded", this._animate, this );
 				return;
 			}
 

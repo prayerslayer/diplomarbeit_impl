@@ -57,12 +57,12 @@ var assistance = assistance || {};
 			}
 		},
 
-		unselect: function() {
+		_unselect: function() {
 			this.$el.removeClass( "vizboard-badge-selected" );
 			this.toggled = false;
 		},
 
-		select: function() {
+		_select: function() {
 			this.$el.addClass( "vizboard-badge-selected" );
 			this.toggled = true;
 		},
@@ -70,10 +70,10 @@ var assistance = assistance || {};
 		selectComments: function() {
 			if ( this.toggled ) {
 				// now untoggle
-				this.unselect()
+				this._unselect()
 				this.trigger( "unselectcomments", this );
 			} else {
-				this.select();
+				this._select();
 				this.trigger( "selectcomments", this );
 			}
 		}

@@ -39,7 +39,7 @@ var assistance = assistance || {};
 		},
 
 		events: {
-			"click div.assistance-comment__back": "back"
+			"click div.assistance-comment__back": "_back"
 		},
 
 		appendHtml: function( cView, iView, index ) {
@@ -79,7 +79,7 @@ var assistance = assistance || {};
 		},
 
 		// back function
-		back: function( ) {
+		_back: function( ) {
 			// hide the button again
 			this.ui.back.hide();
 			// show all comments again

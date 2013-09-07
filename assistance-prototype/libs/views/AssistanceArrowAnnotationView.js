@@ -28,6 +28,7 @@ var assistance = assistance || {};
 			this.$el = $( this.el );
 		},
 
+		// this is necessary to reference the proper arrow head.
 		setParent: function( parentId ) {
 			d3.select( this.el ).attr( "marker-end", "url(#" + parentId + "arrowhead)");
 		}

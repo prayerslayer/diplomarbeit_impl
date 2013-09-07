@@ -14,10 +14,6 @@ var assistance = assistance || {};
 		className: "assistance-spinner",
 		template: "#spinnerTemplate",
 
-		initialize: function() {
-			this.render();
-		},
-
 		onRender: function() {
 			$( "body" ).append( this.$el );
 			this.$el.position({

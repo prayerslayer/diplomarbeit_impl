@@ -18,22 +18,22 @@ var assistance = assistance || {};
 		template: "#howtoItemTemplate",
 
 		events: {
-			"click": "showAssistance",
-			"mouseover": "highlightElements",
-			"mouseout": "unhighlightElements"
+			"click": "_showAssistance",
+			"mouseover": "_highlightElements",
+			"mouseout": "_unhighlightElements"
 		},
 
 		comic: null,	// the comic view
 
 		initialize: function() {
-			this.model.collection.bind( "unlocked", this.clear, this );	// this is triggered by onCLose of ComicView
-			this.listenTo( this.model, "showassistance", this.showAssistance );	// this might get triggered by elements of the visualization
-			this.listenTo( this.model, "highlight", this.highlightSelf );
-			this.listenTo( this.model, "unhighlight", this.unhighlightSelf );
+			this.model.collection.bind( "unlocked", this._clear, this );	// this is triggered by onCLose of ComicView
+			this.listenTo( this.model, "showassistance", this._showAssistance );	// this might get triggered by elements of the visualization
+			this.listenTo( this.model, "highlight", this._highlightSelf );
+			this.listenTo( this.model, "unhighlight", this._unhighlightSelf );
 		},
 
 		// reset presentation state
-		clear: function() {
+		_clear: function() {
 			if ( this.model.get( "displayed" ) ) {	// i know it's bad that the model knows about presentation state, but don't want to change it anymore either.
 				this.unhighlightElements();
 				this.model.set( "displayed", false );
@@ -42,17 +42,17 @@ var assistance = assistance || {};
 					this.comic = null;	// prevent zombie view
 				}
 			}
-			this.unhighlightSelf();
+			this._unhighlightSelf();
 		},
 
 		// creates a comic view and displays it
-		showAssistance: function() {
+		_showAssistance: function() {
 			var that = this;
 			if ( this.model.get( "lock" ) )
 				return;
 			this.model.collection.lock();
 			this.model.set( "displayed", true );
-			this.highlightSelf();
+			this._highlightSelf();
 			var task = _.template( $( this.template ).html(), this.model.attributes );
 			// fake http request
 			var spinner = new assistance.Spinner({
@@ -100,11 +100,11 @@ var assistance = assistance || {};
 			});			
 		},
 
-		highlightSelf: function() {
+		_highlightSelf: function() {
 			this.$el.addClass( "assistance-howto__item_selected" );
 		},
 
-		unhighlightSelf: function() {
+		_unhighlightSelf: function() {
 			this.$el.removeClass( "assistance-howto__item_selected" );
 		},
 
@@ -128,7 +128,7 @@ var assistance = assistance || {};
 			if ( this.model.get( "lock" ) )
 				return;
 			var that = this;
-			this.unhighlightSelf();
+			this._unhighlightSelf();
 			var eels = d3.selectAll( this.model.get( "component" ) + " " + this.model.get( "elements") );
 			eels.each( function( ) {
 				var el = d3.select( this ),

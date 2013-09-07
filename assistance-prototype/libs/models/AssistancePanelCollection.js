@@ -14,10 +14,6 @@ var assistance = assistance || {};
 	assistance.PanelCollection = Backbone.Collection.extend({
 		model: assistance.Panel,
 
-		initialize: function( opts ) {
-			
-		},
-
 		parse: function( data, response ) {
 			//TODO in echt ist alles kein JSON sondern SOAP/XML mit JSON content
 			var that = this;
