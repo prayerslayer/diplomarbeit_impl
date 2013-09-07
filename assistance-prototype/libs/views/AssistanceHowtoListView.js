@@ -97,9 +97,13 @@ var assistance = assistance || {};
 
 				// I argue that svg elements already have their position set in form of transform or x,y attributes
 				if ( !assistance.Utility.isSvgElement( cpy.node() ) ) {
+					var $original = $( original.node() );
 					// so only html elements need positioning
 					$cpy.css( "position", "absolute" );
-					that.samePosition( $( original.node() ), $cpy );
+					// set width and height because in the original that might be some position:relative;width:80%; stuff that wouldn't work here anymore
+					$cpy.css( "width", $original.width() );
+					$cpy.css( "height", $original.height() );
+					that.samePosition( $original, $cpy );
 				}
 
 				//attach event handler
