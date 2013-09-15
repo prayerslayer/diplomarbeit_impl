@@ -105,7 +105,7 @@ var assistance = assistance || {};
 				// get position and dimensions
 				var width, height, offsetLeft, offsetTop;
 
-				if ( $( this ).width() ) {
+				if ( !assistance.Utility.isSvgElement( this ) ) {
 					// jquery works here, it's a html visualization
 					width = $( this ).width();
 					height= $( this ).height();
@@ -141,28 +141,39 @@ var assistance = assistance || {};
 		_highlightElement: function( ) {
 			// save class of this element and apply highlight class
 			var el = d3.select( this );
-			var clazz = el.attr( "class" );
-			if ( !el.attr( "data-vizboard-old-class" ) ) {
-				el.attr( "data-vizboard-old-class", clazz );
-				el.attr( "class", "vizboard-highlight" ); // class="vizboard-highlight <old class>" in mockup not feasible, probably due to specifity of seleciton rules.
+			if ( !el.attr( "data-vizboard-old-fill" ) ) {
+
+				// cannot set this via css class due to rule specifity
+				el.attr( "data-vizboard-old-fill", el.style( "fill" ) );
+				el.attr( "data-vizboard-old-bgcolor", el.style( "background-color" ) );
+				el.attr( "data-vizboard-old-cursor", el.style( "cursor" ) );
+
+				el.style( "fill", "orange" );
+				el.style( "background-color", "orange" );
+				el.style( "cursor", "pointer" );
 			}
 		},
 
 		_dehighlightElement: function(  ) {
 			var el = d3.select( this );
 			// set old class
-			el.attr( "class", el.attr( "data-vizboard-old-class" ) || el.attr( "class" ) );
+			el.style( "fill", el.attr( "data-vizboard-old-fill" ) || el.style( "fill" ) );
+			el.style( "background-color", el.attr( "data-vizboard-old-bgcolor" ) || el.style( "background-color" ) );
+			el.style( "cursor", el.attr( "data-vizboard-old-cursor" ) || el.style( "cursor" ) );
 			// delete copy
-			el.attr( "data-vizboard-old-class", null );
+			el.attr( "data-vizboard-old-fill", null );
+			el.attr( "data-vizboard-old-bgcolor", null );
+			el.attr( "data-vizboard-old-cursor", null );
 		},
 
 		// handles the highlighting of elements on hover
 		_highlightOnHover: function( evt ) {
 			// break if selection tool is not active
 			if ( this.capability !== "selection" ) 
-				return; // if we would return false here, the drag behavior would not work
+				return; // if we would return false here, the drag behavior would not work as event is not further inspected
 			// manual hit test as this svg is over the actual visualization
 			var el = this._getElementAt( evt.pageX, evt.pageY );
+			console.debug( el );
 			// if we're not over an element, dehighlight all unselected ones. this is necessary to properly handle mouseout case.
 			if ( !el ) {
 				this._allDatapoints()
@@ -284,12 +295,11 @@ var assistance = assistance || {};
 				// if it's not selected, select it
 				if ( !el.attr( "data-vizboard-selected" ) ) {
 					el.attr( "data-vizboard-selected", "true" );
-					el.attr( "class", "vizboard-highlight" );
+					el.each( this._highlightElement );
 				} else {
 					// deselect if already selected
 					el.attr( "data-vizboard-selected", null );
-					el.attr( "class", el.attr( "data-vizboard-old-class" ) );
-					el.attr( "data-vizboard-old-class", null );
+					el.each( this._dehighlightElement );
 				}
 				// trigger event with all current selections
 				this._triggerSelection();
@@ -342,12 +352,22 @@ var assistance = assistance || {};
 
 			// rect contains the visible coordinates
 			return this._allDatapoints().filter( function( ) {
-				var bbox = this.getBBox(),	//TODO this is only helpful if it's an svg visualization - in case of html we would probably use offsetLeft and offsetTop here
-					centerX = bbox.x + bbox.width / 2,
-					centerY = bbox.y + bbox.height / 2;
 
-				return  rect.x1 < centerX && centerX < rect.x2 &&
+				if ( assistance.Utility.isSvgElement( this ) ) {
+					var bbox = this.getBBox(),
+						centerX = bbox.x + bbox.width / 2,
+						centerY = bbox.y + bbox.height / 2;
+
+					return  rect.x1 < centerX && centerX < rect.x2 &&
 						rect.y1 < centerY && centerY < rect.y2;
+				} else {
+					var bbox = this.getBoundingClientRect(),
+						centerX = bbox.x + bbox.width / 2,
+						centerY = bbox.y + bbox.height/ 2;
+
+					return  rect.x1 < centerX && centerX < rect.x2 &&
+						rect.y1 < centerY && centerY < rect.y2;
+				}
 			});
 		},
 
@@ -382,8 +402,8 @@ var assistance = assistance || {};
 			var maskBg = mask.append( "rect" );
 			// see http://stackoverflow.com/questions/11404391/invert-svg-clip-show-only-outside-path?lq=1
 			maskBg.style( "fill", "white" );
-			maskBg.attr( "width", "100%" );
-			maskBg.attr( "height", "100%" );
+			maskBg.attr( "width", $( this.options.component ).width() );
+			maskBg.attr( "height", $( this.options.component ).height() );
 			var bg = mask.append( "rect" );
 			bg.attr( "class", "assistance-annotations__bg")
 			bg.style( "fill", "black" );

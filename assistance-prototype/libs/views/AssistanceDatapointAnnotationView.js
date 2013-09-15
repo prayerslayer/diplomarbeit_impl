@@ -16,16 +16,29 @@ var assistance = assistance || {};
 		template: "#pointannotationViewTemplate",
 
 		show: function() {
-			var dings = d3.select( this.model.get( "component" ) ).select( "[resource=" + this.model.get( "uri" ) + "]" );
-			dings.attr( "data-vizboard-old-class", dings.attr( "class" ) );
-			dings.attr( "class", "vizboard-highlight");
+			var el = d3.select( this.model.get( "component" ) ).select( "[resource='" + this.model.get( "uri" ) + "']" );
+			if ( !el.attr( "data-vizboard-old-fill" ) ) {
+
+				// cannot set this via css class due to rule specifity
+				el.attr( "data-vizboard-old-fill", el.style( "fill" ) );
+				el.attr( "data-vizboard-old-bgcolor", el.style( "background-color" ) );
+				el.attr( "data-vizboard-old-cursor", el.style( "cursor" ) );
+
+				el.style( "fill", "orange" );
+				el.style( "background-color", "orange" );
+				el.style( "cursor", "pointer" );
+			}
 		},
 
 		hide: function() {
-			var dings = d3.select( this.model.get( "component" ) ).select( "[resource=" + this.model.get( "uri" ) + "]" );
-			dings
-				.attr( "class", dings.attr( "data-vizboard-old-class" ) || dings.attr( "class" ) )
-				.attr( "data-vizboard-old-class", null );
+			var el = d3.select( this.model.get( "component" ) ).select( "[resource='" + this.model.get( "uri" ) + "']" );
+			el.style( "fill", el.attr( "data-vizboard-old-fill" ) || el.style( "fill" ) );
+			el.style( "background-color", el.attr( "data-vizboard-old-bgcolor" ) || el.style( "background-color" ) );
+			el.style( "cursor", el.attr( "data-vizboard-old-cursor" ) || el.style( "cursor" ) );
+			// delete copy
+			el.attr( "data-vizboard-old-fill", null );
+			el.attr( "data-vizboard-old-bgcolor", null );
+			el.attr( "data-vizboard-old-cursor", null );
 		},
 
 		onClose: function() {

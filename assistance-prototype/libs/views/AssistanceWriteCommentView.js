@@ -111,8 +111,14 @@ var assistance = assistance || {};
 			// init comment
 			var comment = _.clone( this.options.comment_data );	// i don't know, a clone just looked right. defensive programming!
 			comment.score = 0;
+
 			// memento
-			// comment.memento = comment.reference.getMemento();
+			var filled_in_memento = {};
+			_.each( comment.memento, function( prop ) {
+				filled_in_memento[ prop ] = comment.reference.getProperty( prop );
+			});
+			delete comment.memento;
+			comment.memento = filled_in_memento;
 
 			//versions 
 			var versions = [],
@@ -186,7 +192,8 @@ var assistance = assistance || {};
 
 			versions.push( version );
 			comment.versions = versions;
-
+			delete comment.reference; // causes circular struction and JSON.stringify fail
+			console.debug( comment );
 			// submit
 			// alternative: create a new CommentModel( comment ) and call .save() on it. does the same under the hood.
 			$.ajax({

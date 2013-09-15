@@ -74,6 +74,7 @@ var assistance = assistance || {};
 					"dataset_id": this.options.dataset_id,
 					"component_id": comp.component_id,
 					"user_id": this.options.user_id,
+					"memento": comp.memento,
 					"visualized_properties": comp.visualized_properties,
 					"reference": comp.reference,
 					"response_to": responseto ? responseto.get("comment_id" ) : null

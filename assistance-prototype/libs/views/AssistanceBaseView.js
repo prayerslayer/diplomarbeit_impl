@@ -43,7 +43,9 @@ var assistance = assistance || {};
 
 		// recall saved scroll position and set it
 		resetScroll: function() {
-			this.ui.content.scrollTop( this.scrollPosition );
+			this.ui.content.animate({
+				"scrollTop": this.scrollPosition
+			}, 200);
 			this.scrollPosition = 0;
 		},
 

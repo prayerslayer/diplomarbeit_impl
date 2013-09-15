@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- @author Martin Dobrev -->
-<component 
+<component
 		id="http://cruise/ui/xima/vvo/eventList/ExtEventList" 
-		name="EventList" version="1.0"
+		name="EventList"
+		version="1.0"
 		isUI="true"
 		doesDataProcessing="false"
 		loadsExternalData="false"
 		hasRelativeStyle="false"
-
 		xmlns:meta="http://mmt.inf.tu-dresden.de/smcdl/1.12/metadata"
 		xmlns:nfp="http://mmt.inf.tu-dresden.de/models/nfp.owl#"	
 		xmlns:op="http://mmt.inf.tu-dresden.de/models/activity-operations.owl#"
@@ -18,6 +18,32 @@
 		xmlns="http://mmt.inf.tu-dresden.de/smcdl/1.12" 
 		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
 		xsi:schemaLocation="http://mmt.inf.tu-dresden.de/smcdl/1.12 ../schema/MCDL.xsd">
+		
+	<testdata>
+		<url>localhost:8000/eventlisttestdata</url>
+	</testdata>
+	<capability
+		entity="travel:Event"
+		activity="upperactions:Sort"
+		dataVariable="dv:N1"
+		id="cap01"
+		relatedConcept="http://dbpedia.org/resource/Event"
+		wait="5s"
+		generateAssistance="true">
+
+		<atomicoperation id="clickSortButton" element="button.sort" type="op:Click" modifier="op:LeftButton"/>
+		<atomicoperation id="clickSpaceWhileFocusOnSortButton" element="button.sort" type="op:Type" modifier="op:SpaceKey"/>
+		<sequentialoperation id="clickSortOnMenu">
+			<atomicoperation id="clickMenuButton" element=".menu" type="op:Click" modifier="op:LeftButton" />
+			<atomicoperation id="clickMenuSortButton" element=".menu > li.sort" type="op:Click" modifier="LeftButton"/>
+		</sequentialoperation>
+		<atomicoperation id="dragMap" element=".map" type="op:Drag" modifier="LeftButton">
+			<exampledata>100,200</exampledata>
+		</atomicoperation>
+
+	</capability>
+	<capability entity="travel:Location" activity="upperactions:Input" id="cap02"/>
+
 
 	<meta:metadata>
 		<meta:keywords>events, last fm, list, grid</meta:keywords>
@@ -56,27 +82,6 @@
 		</runtimes>
 	</requirements>
 	
-	<!-- BEGIN NEW STUFF -->
-	<capability
-		entity="travel:Event"
-		activity="upperactions:Sort"
-		dataVariable="dv:N1"
-		id="cap01"
-		relatedConcept="http://dbpedia.org/resource/Event"
-		wait="5s"
-		generateAssistance="true">
-
-		<atomicoperation id="clickSortButton" element="button.sort" type="op:Click" modifier="op:LeftButton"/>
-		<atomicoperation id="clickSpaceWhileFocusOnSortButton" element="button.sort" type="op:Type" modifier="op:SpaceKey"/>
-		<sequentialoperation id="clickSortOnMenu">
-			<atomicoperation id="clickMenuButton" element=".menu" type="op:Click" modifier="op:LeftButton" />
-			<atomicoperation id="clickMenuSortButton" element=".menu > li.sort" type="op:Click" modifier="LeftButton"/>
-		</sequentialoperation>
-		<atomicoperation id="dragMap" element=".map" type="op:Drag" modifier="LeftButton" exampleParameter="100,200"/>
-
-	</capability>
-	<capability entity="travel:Location" activity="upperactions:Input" id="cap02"/>
-
 	<interface>
 		<property type="mcdl:hasTitle" required="true" name="title">
 			<default>Veranstaltungen</default>

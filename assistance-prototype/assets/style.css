@@ -407,6 +407,8 @@ div.assistance-comment__write-comment-area {
 
 .assistance-annotations {
 	position:absolute;	
+	z-index: 999; /* important to keep < 1000 because of smoke.js */
+	pointer-events: all;
 }
 
 .assistance-annotations__selection {
@@ -537,6 +539,14 @@ div.button {
 	width: 10%;
 	font-size: 24px;
 	margin: 2rem;
+}
+
+div#renderTarget {
+	width: 800px;
+	height: 120px;
+	position: absolute;
+	top: 320px;
+	left: 50px;
 }
 
 div#barchart {

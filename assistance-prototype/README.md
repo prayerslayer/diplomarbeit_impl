@@ -1,5 +1,9 @@
 # TODO
 
+1. Demoserver (und Komponente) ausprobieren
+2. SMCDL update -> Memento!
+3. API Update -> get, set memento, transform coordinates, values
+4. Integration von Komponente, CoRe, DaRe, Hilfesystem, TSR
 
 * Datenannotationen, geht halt erst mit API
 

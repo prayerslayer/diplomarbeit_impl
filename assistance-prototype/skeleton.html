@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+	<html>
+		<head>
+			<meta charset='utf-8'/>
+
+			<!-- HELP SYSTEM -->
+		<!-- templates -->		
+			<script type="text/template" id="badgeViewTemplate">
+			</script>
+
+			<script type="text/template" id="addannotationViewTemplate">
+			</script>
+
+			<script type="text/template" id="arrowannotationViewTemplate">
+			</script>
+			
+			<script type="text/template" id="rectangleannotationViewTemplate">
+			</script>
+
+			<script type="text/template" id="pointannotationViewTemplate">
+			</script>
+
+			<script type="text/template" id="textannotationViewTemplate">
+				<%= text %>
+			</script>
+
+			<script type="text/template" id="howtoItemTemplate">
+				<%= action %> <%= variable %>
+			</script>
+
+			<script type="text/template" id="spinnerTemplate">
+			</script>
+
+			<script type="text/template" id="writecommentViewTemplate">
+
+				<div class="assistance-comment__write-comment-annotate">
+					<div class="assistance-comment__write-comment-anno-select assistance-comment__write-comment-anno_selected" data-action="select-select">
+						<i class="icon-hand-up"></i> Selection
+					</div>
+
+					<div class="assistance-comment__write-comment-anno-text" data-action="select-text">
+						<i class="icon-font"></i> Text
+					</div>
+
+					<div class="assistance-comment__write-comment-anno-rect" data-action="select-rect">
+						<i class="icon-unchecked"></i> Rectangle
+					</div>
+
+					<div class="assistance-comment__write-comment-anno-arrow" data-action="select-arrow">
+						<i class="icon-long-arrow-up"></i> Arrow
+					</div>
+				</div>
+				<div class="assistance-comment__write-comment-area" contenteditable="true">
+					Put your comment here.
+				</div>
+				<div class="assistance-comment__submit" data-action="submit">
+					<i class="icon-3x icon-ok"></i>
+				</div>
+			</script>
+
+			<script type="text/template" id="nocommentViewTemplate">
+				There are no comments to display. Sorry!
+			</script>
+
+			<script type="text/template" id="readcommentsViewTemplate">
+				<div class="assistance-comment__back"><i class="icon-caret-left"></i> View all comments again</div>
+				<div class="assistance-comment__comments"></div>
+			</script>
+
+			<script type="text/template" id="commentViewTemplate">
+				<div class="assistance-comment__comment-metadata">
+					<div class="assistance-comment__comment-metadata-name"><%= user_name %></div>
+					<img class="assistance-comment__comment-metadata-avatar" src="<%= avatar_url %>"/>
+					<div class="assistance-comment__comment-metadata-date"><%= hr_timestamp %></div>
+					<div class="assistance-comment__comment-metadata-edit-delete"></div>
+					<div class="assistance-comment__comment-metadata-show-annos">
+					<i class="icon-eye-open assistance-comment__comment-metadata-show-annos_icon"></i> <span class="assistance-comment__comment-metadata-show-annos_text" data-action="show-annotations">Show annotations
+					</span>
+					</div>
+					<div class="assistance-comment__comment-metadata-reply" data-action="reply">
+					<i class="icon-reply assistance-comment__comment-metadata-reply_icon"></i> Reply to comment</div>
+					<div class="assistance-comment__comment-metadata-voting">
+					Vote for comment:
+						<div class="assistance-comment__comment-metadata-voting_up" data-action="vote-up"><i class="icon-thumbs-up"></i> Agree</div>
+						<div class="assistance-comment__comment-metadata-score"><%= hr_score  %></div>
+						<div class="assistance-comment__comment-metadata-voting_down" data-action="vote-down"><i class="icon-thumbs-down"></i> Disagree</div>
+					</div>
+				</div>
+				<div class="assistance-comment__comment-content">
+					<% if ( response_to ) { %>
+					<div class="assistance-comment__comment-response">(in response to comment <span class="assistance-comment__comment-response-id" data-action="view-response">#<%= response_to.substring(0,8) %></span>)</div>
+					<% } %>
+					<%= versions[0].text %>
+				</div>
+			</script>
+
+			<script type="text/template" id="baseViewTemplate">
+				<h2 class="assistance-base__headline">Headline</h2>
+				<span class="assistance-base__close" data-action="close"><i class="icon-remove icon-large"></i> Close</span>
+				<p class="assistance-base__explanation">Some explanations maybe</p>
+				<div class='assistance-base__content'>
+				</div>
+			</script>
+
+			<script type="text/template" id="panelViewTemplate">
+				<div class="assistance-comic__panel-wrapper">
+					<img class="assistance-comic__panel-image" src="<%= image_url %>" alt="picture of <%= user_name %>"/>
+				</div>
+				<div class="assistance-comic__panel-caption">
+					<div class="assistance-comic__panel-caption-content"><%= caption %>
+					</div>
+				</div>
+			</script>
+
+			<script type="text/template" id="comicViewTemplate">
+			
+			</script>
+
+			<script type="text/template" id="listViewTemplate">
+				<div class="assistance-howto__list-content">
+				</div>
+			</script>
+
+			<!-- stylesheets -->
+			<link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,700' rel='stylesheet' type='text/css'>
+			<link href='http://fonts.googleapis.com/css?family=Source+Code+Pro' rel='stylesheet' type='text/css'>
+			<link href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+			<link rel="stylesheet" href="assets/style.css" />
+			<link rel="stylesheet" href="assets/smoke.css" />
+			<!-- libraries -->
+			<script src="libs/jquery.js"></script>
+			<script src="libs/jquery.insertat.js"></script>
+			<script src="libs/jquery-ui-core.js"></script>
+			<script src="libs/imagesloaded.js"></script>
+			<script src="libs/underscore.js"></script>
+			<script src="libs/backbone.js"></script>
+			<script src="libs/backbone.marionette.js"></script>
+			<script src="libs/d3.js"></script>
+			<script src="libs/d3-plugin.js"></script>
+			<script src="libs/moment.js"></script>
+			<script src="libs/numeral.min.js"></script>
+			<script src="libs/sinon.js"></script>
+			<script src="libs/smoke.js"></script>
+
+			<script src="libs/AssistanceUtility.js"></script>
+			<!-- models -->
+			<script src="libs/models/AssistanceHowtoItemModel.js"></script>
+			<script src="libs/models/AssistancePanelModel.js"></script>
+			<script src="libs/models/AssistanceOperationPanelModel.js"></script>
+			<script src="libs/models/AssistancePanelCollection.js"></script>
+			<script src="libs/models/AssistanceHowtoCollection.js"></script>
+			<script src="libs/models/AssistanceAnnotationElementModel.js"></script>
+			<script src="libs/models/AssistanceAnnotationModel.js"></script>
+			<script src="libs/models/AssistanceAreaAnnotationModel.js"></script>
+			<script src="libs/models/AssistanceDatapointAnnotationModel.js"></script>
+			<script src="libs/models/AssistanceTextAnnotationModel.js"></script>
+			<script src="libs/models/AssistanceArrowAnnotationModel.js"></script>
+			<script src="libs/models/AssistanceRectangleAnnotationModel.js"></script>
+			<script src="libs/models/AssistanceAnnotationCollection.js"></script>
+			<script src="libs/models/AssistanceCommentModel.js"></script>
+			<script src="libs/models/AssistanceCommentCollection.js"></script>
+			<script src="libs/models/AssistanceCommentBadgeModel.js"></script>
+			<script src="libs/models/AssistanceCommentBadgeCollection.js"></script>
+			<script src="libs/views/AssistanceSpinner.js"></script>
+			<!-- howto views -->
+			<script src="libs/views/AssistanceBaseView.js"></script>
+			<script src="libs/views/AssistancePanelView.js"></script>
+			<script src="libs/views/AssistanceCaptionPanelView.js"></script>
+			<script src="libs/views/AssistanceOperationPanelView.js"></script>
+			<script src="libs/views/AssistanceComicBaseView.js"></script>
+			<script src="libs/views/AssistanceHowtoItemView.js"></script>
+			<script src="libs/views/AssistanceHowtoListView.js"></script>
+			<script src="libs/views/AssistanceComicView.js"></script>
+			<!-- comment views -->
+			<script src="libs/views/AssistanceAnnotationRegion.js"></script>
+			<script src="libs/views/AssistanceAddAnnotationView.js"></script>
+			<script src="libs/views/AssistanceDatapointAnnotationView.js"></script>
+			<script src="libs/views/AssistanceTextAnnotationView.js"></script>
+			<script src="libs/views/AssistanceRectangleAnnotationView.js"></script>
+			<script src="libs/views/AssistanceArrowAnnotationView.js"></script>
+			<script src="libs/views/AssistanceAreaAnnotationView.js"></script>
+			<script src="libs/views/AssistanceCommentView.js"></script>
+			<script src="libs/views/AssistanceCommentBadgeView.js"></script>
+			<script src="libs/views/AssistanceReadCommentsView.js"></script>
+			<script src="libs/views/AssistanceWriteCommentView.js"></script>
+			<!-- app -->
+			<script src="libs/AssistanceApplication.js"></script>
+
+			<!-- START OF COMPONENT -->
+			<script type="text/javascript">
+				var testdata = {
+				    "http://mmt.inf.tu-dresden/vizBoard/SimileTimelineTestData#event3": {
+				        "http://mmt.inf.tu-dresden.de/models/domainmodels/vizBoardDataTypeExpressions#dvQuManTimelineStart": [
+				            {
+				                "value": "2013-09-06",
+				                "type": "literal",
+				                "datatype": "http://www.w3.org/2001/XMLSchema#date"
+				            }
+				        ],
+				        "http://mmt.inf.tu-dresden.de/models/domainmodels/vizBoardDataTypeExpressions#dvQuOptTimelineEnd": [
+				            {
+				                "value": "2013-09-02",
+				                "type": "literal",
+				                "datatype": "http://www.w3.org/2001/XMLSchema#date"
+				            }
+				        ],
+				        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": [
+				            {
+				                "value": "http://mmt.inf.tu-dresden.de/models/domainmodels/vizBoardDataTypeExpressions#eSimileTimeline",
+				                "type": "uri"
+				            }
+				        ],
+				        "http://mmt.inf.tu-dresden.de/models/domainmodels/vizBoardDataTypeExpressions#dvNomManTimelineTitle": [
+				            {
+				                "value": "another week",
+				                "type": "literal",
+				                "datatype": "http://www.w3.org/2001/XMLSchema#string"
+				            }
+				        ]
+				    },
+				    "http://mmt.inf.tu-dresden/vizBoard/SimileTimelineTestData#event2": {
+				        "http://mmt.inf.tu-dresden.de/models/domainmodels/vizBoardDataTypeExpressions#dvQuManTimelineStart": [
+				            {
+				                "value": "2013-09-02",
+				                "type": "literal",
+				                "datatype": "http://www.w3.org/2001/XMLSchema#date"
+				            }
+				        ],
+				        "http://mmt.inf.tu-dresden.de/models/domainmodels/vizBoardDataTypeExpressions#dvQuOptTimelineEnd": [
+				            {
+				                "value": "2013-08-26",
+				                "type": "literal",
+				                "datatype": "http://www.w3.org/2001/XMLSchema#date"
+				            }
+				        ],
+				        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": [
+				            {
+				                "value": "http://mmt.inf.tu-dresden.de/models/domainmodels/vizBoardDataTypeExpressions#eSimileTimeline",
+				                "type": "uri"
+				            }
+				        ],
+				        "http://mmt.inf.tu-dresden.de/models/domainmodels/vizBoardDataTypeExpressions#dvNomManTimelineTitle": [
+				            {
+				                "value": "a week",
+				                "type": "literal",
+				                "datatype": "http://www.w3.org/2001/XMLSchema#string"
+				            }
+				        ]
+				    },
+				    "http://mmt.inf.tu-dresden/vizBoard/SimileTimelineTestData#event1": {
+				        "http://mmt.inf.tu-dresden.de/models/domainmodels/vizBoardDataTypeExpressions#dvQuManTimelineStart": [
+				            {
+				                "value": "2013-12-24",
+				                "type": "literal",
+				                "datatype": "http://www.w3.org/2001/XMLSchema#date"
+				            }
+				        ],
+				        "http://mmt.inf.tu-dresden.de/models/domainmodels/vizBoardDataTypeExpressions#dvQuOptTimelineEnd": [
+				            {
+				                "value": "2009-05-01",
+				                "type": "literal",
+				                "datatype": "http://www.w3.org/2001/XMLSchema#date"
+				            }
+				        ],
+				        "http://www.w3.org/1999/02/22-rdf-syntax-ns#type": [
+				            {
+				                "value": "http://mmt.inf.tu-dresden.de/models/domainmodels/vizBoardDataTypeExpressions#eSimileTimeline",
+				                "type": "uri"
+				            }
+				        ],
+				        "http://mmt.inf.tu-dresden.de/models/domainmodels/vizBoardDataTypeExpressions#dvNomManTimelineTitle": [
+				            {
+				                "value": "Vizboard",
+				                "type": "literal",
+				                "datatype": "http://www.w3.org/2001/XMLSchema#string"
+				            }
+				        ]
+				    }
+				};
+			</script>
+
+			<!-- COMPONENT --> 
+			<link rel='stylesheet' href='http://extjs-public.googlecode.com/svn/tags/extjs-3.4.0/release/resources/css/ext-all.css'/>
+			<script type='text/javascript' src='http://extjs-public.googlecode.com/svn/tags/extjs-3.4.0/release/adapter/ext/ext-base.js'></script>
+			<script type='text/javascript' src='http://extjs-public.googlecode.com/svn/tags/extjs-3.4.0/release/ext-all.js'></script>
+			<!-- <script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js'></script> -->
+			<script type='text/javascript' src='https://rdfquery.googlecode.com/svn/trunk/jquery.uri.js'></script>
+			<script type='text/javascript' src='https://rdfquery.googlecode.com/svn/trunk/jquery.xmlns.js'></script>
+			<script type='text/javascript' src='https://rdfquery.googlecode.com/svn/trunk/jquery.datatype.js'></script>
+			<script type='text/javascript' src='https://rdfquery.googlecode.com/svn/trunk/jquery.curie.js'></script>
+			<script type='text/javascript' src='http://141.76.68.74:8089/VizBoard/res/components/UI_SimileTimeline/lib/jquery.json-2.4.js'></script>
+			<script type='text/javascript' src='https://rdfquery.googlecode.com/svn/trunk/jquery.rdf.js'></script>
+			<script type='text/javascript' src='https://rdfquery.googlecode.com/svn/trunk/jquery.rdf.json.js'></script>
+			<script type='text/javascript' src='http://api.simile-widgets.org/timeline/2.3.1/timeline-api.js'></script>
+			<script type='text/javascript' src='http://141.76.68.74:8089/VizBoard/res/components/UI_SimileTimeline/SimileTimeline.js'></script>
+			<script type='text/javascript'>jQuery = $;</script>
+	
+			<!-- need to overwrite how events are painted -->
+			<script type="text/javascript">
+
+				Timeline.OriginalEventPainter.prototype._paintEventLabel = function(evt, text, left, top, width, height, theme, labelDivClassName, highlightIndex) {
+					    var doc = this._timeline.getDocument();
+					    
+					    var labelDiv = doc.createElement("div");
+					    labelDiv.className = labelDivClassName;
+					    labelDiv.id = this._encodeEventElID('label', evt);
+					    labelDiv.style.left = left + "px";
+					    labelDiv.style.width = width + "px";
+					    labelDiv.style.top = top + "px";
+					    labelDiv.innerHTML = text;
+					    //labelDiv.setAttribute( "resource", evt._obj.uri );
+					    if(evt._title != null)
+					        labelDiv.title = evt._title;    
+
+					    var color = evt.getTextColor();
+					    if (color == null) {
+					        color = evt.getColor();
+					    }
+					    if (color != null) {
+					        labelDiv.style.color = color;
+					    }
+					    if (theme.event.highlightLabelBackground && highlightIndex >= 0) {
+					        labelDiv.style.background = this._getHighlightColor(highlightIndex, theme);
+					    }
+					    
+					    this._eventLayer.appendChild(labelDiv);
+					    
+					    return {
+					        left:   left,
+					        top:    top,
+					        width:  width,
+					        height: height,
+					        elmt:   labelDiv
+					    };
+					};
+				Timeline.OriginalEventPainter.prototype._paintEventTape = function( evt, iconTrack, startPixel, endPixel, color, opacity, metrics, theme, tape_index) {
+				    
+					    var tapeWidth = endPixel - startPixel;
+					    var tapeHeight = theme.event.tape.height;
+					    var top = metrics.trackOffset + iconTrack * metrics.trackIncrement;
+					    
+					    var tapeDiv = this._timeline.getDocument().createElement("div");
+					    tapeDiv.className = this._getElClassName('timeline-event-tape', evt, 'tape');
+					    tapeDiv.id = this._encodeEventElID('tape' + tape_index, evt);
+					    tapeDiv.setAttribute( "resource", evt._obj.uri );
+					    tapeDiv.style.left = startPixel + "px";
+					    tapeDiv.style.width = tapeWidth + "px";
+					    tapeDiv.style.height = tapeHeight + "px";
+					    tapeDiv.style.top = top + "px";
+
+					    if(evt._title != null)
+					        tapeDiv.title = evt._title;   
+					   
+					    if(color != null) {
+					        tapeDiv.style.backgroundColor = color;
+					    }
+					    
+					    var backgroundImage = evt.getTapeImage();
+					    var backgroundRepeat = evt.getTapeRepeat();
+					    backgroundRepeat = backgroundRepeat != null ? backgroundRepeat : 'repeat';
+					    if(backgroundImage != null) {
+					      tapeDiv.style.backgroundImage = "url(" + backgroundImage + ")";
+					      tapeDiv.style.backgroundRepeat = backgroundRepeat;
+					    } 	
+					    
+					    SimileAjax.Graphics.setOpacity(tapeDiv, opacity);
+					        
+					    this._eventLayer.appendChild(tapeDiv);
+					    
+					    return {
+					        left:   startPixel,
+					        top:    top,
+					        width:  tapeWidth,
+					        height: tapeHeight,
+					        elmt:   tapeDiv
+					    };
+					}
+			</script>
+			<script type="text/javascript">
+				$( document ).ready( function() {
+					$.support.cors = true;
+					var app = new assistance.Application();
+
+					var comp = new Ext.VizBoard.SimileTimeline();
+					comp.init({
+						"renderTargetId": "renderTarget",
+						"Logger": console,
+						"ServiceAccess": null,
+						"EventHandler": null,
+						"getAttribute": function( attr ) {
+							return this[attr];
+						}
+					});
+					comp.invokeOperation( "enable" );
+					comp.invokeOperation( "show" );
+					comp.loadTestdata( JSON.stringify( testdata ) );
+
+					app.start({
+						"comment_url": "http://141.76.68.74:8089/dare/comment",
+						"core_url": "http://141.76.68.74:8089/CoRe/",
+						"dataset_id": "testdataset",
+						"user_id": "schneewittchen",
+						"components": [{
+							"component": ".x-panel.timeline-container",
+							"visualization": ".timeline-band-0",
+							"component_id": "http://cruise/ui/SimileTimeline",
+							"memento": [ "width", "height", "mousewheelscroll", "centerDate", "selection"],
+							"data_annotations_enabled": false,
+							"visualized_properties": [ "http://mmt.inf.tu-dresden.de/TimelineData" ],
+							"reference": comp, // to access the component's api
+						}]
+					});
+
+					$( ".button#showcomments" ).click( function() {
+						app.showComments( ".x-panel.timeline-container" );
+					});
+
+					$( ".button#writecomment" ).click( function() {
+						app.writeComment( ".x-panel.timeline-container" );
+					});
+
+					$( ".button#instructions" ).click( function() {
+						app.showHowto( ".x-panel.timeline-container" );
+					});
+				});
+			</script>
+		</head>
+		<body>
+
+			<h1>hooray for timelines</h1>
+			<div class="button" id="instructions">show howto</div>
+			<div class="button" id="showcomments">show comments</div>
+			<div class="button" id="writecomment">write comment</div>
+
+			<div id='renderTarget' style='width:100%;height:100%;'></div>
+		</body>
+	</html>
