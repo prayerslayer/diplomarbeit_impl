@@ -47,12 +47,14 @@ var assistance = assistance || {};
 			var $comp = $( this.model.get( "component" ) ).first(),
 				$vis = $comp.find( this.model.get( "visualization" ) ).first();
 			
-			this.ui.bg.attr( "width", $vis.width() );
-			this.ui.bg.attr( "height", $vis.height() );
-			this.$el.css( "width", $vis.width() );
-			this.$el.css( "height", $vis.height() );
-			this.$el.css( "top", $vis[0].offsetTop );
-			this.$el.css( "left", $vis[0].offsetLeft );
+			var bbox = assistance.Utility.insideBoundingBox( $comp, $vis );
+
+			this.ui.bg.attr( "width", bbox.width );
+			this.ui.bg.attr( "height", bbox.height );
+			this.$el.css( "width", bbox.width );
+			this.$el.css( "height", bbox.height );
+			this.$el.css( "top", bbox.top );
+			this.$el.css( "left", bbox.left );
 
 			this.$el.hide();
 		},

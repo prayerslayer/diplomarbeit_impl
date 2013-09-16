@@ -608,10 +608,15 @@ var assistance = assistance || {};
 				that = this;
 			
 			// set size of annotation view
-			this.offsetLeft = $vis[0].offsetLeft;
-			this.offsetTop = $vis[0].offsetTop;
-			this.width = $vis.width();
-			this.height = $vis.height();
+
+			// the visualization might be inside a container with overflow:hidden and actually much longer than the component. to prevent this first get offset from parent
+
+			var bbox = assistance.Utility.insideBoundingBox( $comp, $vis );
+
+			this.offsetLeft = bbox.left;
+			this.offsetTop = bbox.top;
+			this.width = bbox.width;
+			this.height = bbox.height;
 
 			this.ui.bg.attr( "width", this.width );
 			this.ui.bg.attr( "height", this.height );

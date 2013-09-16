@@ -17,6 +17,7 @@ var assistance = assistance || {};
 		template: "#rectangleannotationViewTemplate",
 
 		initialize: function( opts ) {
+			console.log( "rectangle opts", opts );
 			// see http://stackoverflow.com/questions/9651167/svg-not-rendering-properly-as-a-backbone-view
 			this.setElement( document.createElementNS( "http://www.w3.org/2000/svg", this.tagName ) );
 			// the line above also destroys the template ;_;

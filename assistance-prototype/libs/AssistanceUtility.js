@@ -44,6 +44,55 @@ var assistance = assistance || {};
 			return bb;
 		},
 
+		// calculates the VISIBLE bounding box of child inside parent
+		// if the child itself is 5000 px long but inside a container of 100px width, the bounding box will return 100px width.
+		insideBoundingBox: function( parent, child ) {
+			var p = $( parent )[ 0 ],
+				c = $( child )[ 0 ],
+				offsetLeft = 0,
+				offsetTop = 0,
+				width = Infinity,
+				height= Infinity;
+
+			do {
+				offsetLeft += c.offsetLeft;
+				offsetTop += c.offsetTop;
+				width = $(c).width() < width ? $(c).width() : width;
+		        height= $(c).height() < height ? $(c).height() : height;
+		    	c = c.parentNode;
+			} while( c != p );
+
+
+			// check boundaries
+			if ( width > $(p).width() ) {
+				// overflow x
+				width = $(p).width();
+			}
+
+			if ( height > $(p).height() ) {
+				// overflow y
+				height = $(p).height();
+			}
+
+			if ( offsetLeft < 0 ) {
+				// underflow x
+				offsetLeft = 0;
+			}
+
+			if ( offsetTop < 0 ) {
+				// underflow y
+				offsetTop = 0;
+			}
+
+			console.debug( offsetLeft, offsetTop, width, height );
+			return {
+				"left": offsetLeft,
+				"top": offsetTop,
+				"width": width,
+				"height": height
+			};
+		},
+
 		isSvgElement: function( node ) {
 			return node.namespaceURI === "http://www.w3.org/2000/svg";
 		}

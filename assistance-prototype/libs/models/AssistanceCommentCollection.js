@@ -49,7 +49,8 @@ var assistance = assistance || {};
 				c.urlRoot = that.options.comment_url;
 				c.component = that.options.component;
 				c.visualization = that.options.visualization;
-
+				c.reference = that.options.reference;
+				
 				var version = c.versions[ 0 ];	// this is the version we're going to display
 				// make links clickable
 				version.text = that._linkify( version.text );

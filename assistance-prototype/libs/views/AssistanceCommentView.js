@@ -17,6 +17,8 @@ var assistance = assistance || {};
 		model: assistance.Comment,
 
 		annotationsShown: false,
+		previousState: null,
+
 
 		getItemView: function( item ) {
 			if ( item.get( "type" ) === "area" ) {
@@ -27,7 +29,8 @@ var assistance = assistance || {};
 
 		// do not render annotations inside of this view plz kthxbai
 		appendHtml: function( collectionview, itemview, index ) {
-			$( collectionview.model.get( "component" ) ).append( itemview.el );
+			var $comp = $( collectionview.model.get( "component" ) );
+			$comp.append( itemview.el );
 		},
 
 		votes_enabled: true,	// false if this is own comment
@@ -106,7 +109,34 @@ var assistance = assistance || {};
 			this.trigger( "viewresponse", this.model.get( "response_to" ) );
 		},
 
+		_unloadMemento: function() {
+			// reset previous state of component
+			var that = this,
+				memo = this.model.get( "memento" ),
+				comp = this.model.get( "reference" );
+
+			_.each( this.previousState, function( value, prop ) {
+				comp.setProperty( prop, value );
+			});
+		},
+
+		_loadMemento: function() {
+			// save current state
+			var that = this,
+				memo = this.model.get( "memento" ),
+				comp = this.model.get( "reference" );
+			this.previousState = {};
+			_.each( memo, function( value, prop ) {
+				that.previousState[ prop ] = comp.getProperty( prop );
+			});
+			// load memento
+			_.each( memo, function( value, prop ) {
+				comp.setProperty( prop, value );
+			});
+		},
+
 		hideAnnotations: function() {
+			this._unloadMemento();
 			this.ui.annostext.text( "Show annotations" );
 			this.children.call( "hide" );
 			this.ui.annosicon.removeClass( "icon-eye-close" ).addClass( "icon-eye-open" );
@@ -116,6 +146,7 @@ var assistance = assistance || {};
 			if ( !this.annos_enabled )
 				return;
 
+			this._loadMemento();
 			this.ui.annostext.text( "Hide annotations" );
 			this.children.call( "show" );
 			this.ui.annosicon.removeClass( "icon-eye-open" ).addClass( "icon-eye-close" );

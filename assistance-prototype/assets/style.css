@@ -109,6 +109,7 @@ body {
 	padding-top: 12px;
 	text-align: center;
 	cursor:pointer;
+	z-index: 999;
 }
 
 .vizboard-badge-selected {
@@ -459,6 +460,7 @@ div.assistance-comment__datapointannotation {
 	height: 100%;
 	left: 0px;
 	top: 0px;
+	z-index: 999;
 }
 
 rect.assistance-comment__areaannotation-bg {

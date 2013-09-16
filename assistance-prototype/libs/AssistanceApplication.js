@@ -161,6 +161,7 @@ var assistance = assistance || {};
     		var comments = new assistance.CommentCollection([], {
 				"url": new_url,
 				"component": component,
+				"reference": compData.reference,
 				"comment_url": this.options.comment_url,
 				"current_user": this.options.user_id,
 				"visualization": compData.visualization
