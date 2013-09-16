@@ -405,8 +405,11 @@
 							"visualization": ".timeline-band-0",
 							"component_id": "http://cruise/ui/SimileTimeline",
 							"memento": [ "width", "height", "mousewheelscroll", "centerDate", "selection"],
-							"data_annotations_enabled": false,
-							"visualized_properties": [ "http://mmt.inf.tu-dresden.de/TimelineData" ],
+							"data_annotations_enabled": true,
+							"visualized_properties": [
+								{
+									"uri": "http://mmt.inf.tu-dresden.de/TimelineData",
+									"type": "quantitative" } ],
 							"reference": comp, // to access the component's api
 						}]
 					});

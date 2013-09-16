@@ -86,8 +86,8 @@ var assistance = assistance || {};
 
 			console.debug( offsetLeft, offsetTop, width, height );
 			return {
-				"left": offsetLeft,
-				"top": offsetTop,
+				"x": offsetLeft,
+				"y": offsetTop,
 				"width": width,
 				"height": height
 			};

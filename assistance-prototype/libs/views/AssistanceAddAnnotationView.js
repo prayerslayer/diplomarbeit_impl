@@ -352,22 +352,16 @@ var assistance = assistance || {};
 
 			// rect contains the visible coordinates
 			return this._allDatapoints().filter( function( ) {
-
+				var bbox = null;
 				if ( assistance.Utility.isSvgElement( this ) ) {
-					var bbox = this.getBBox(),
-						centerX = bbox.x + bbox.width / 2,
-						centerY = bbox.y + bbox.height / 2;
-
-					return  rect.x1 < centerX && centerX < rect.x2 &&
-						rect.y1 < centerY && centerY < rect.y2;
+					bbox = this.getBBox();
 				} else {
-					var bbox = this.getBoundingClientRect(),
-						centerX = bbox.x + bbox.width / 2,
-						centerY = bbox.y + bbox.height/ 2;
-
-					return  rect.x1 < centerX && centerX < rect.x2 &&
-						rect.y1 < centerY && centerY < rect.y2;
+					bbox = assistance.Utility.insideBoundingBox( $( that.options.component ), this );
 				}
+				var centerX = bbox.x + bbox.width / 2,
+					centerY = bbox.y + bbox.height/ 2;
+				return  rect.x1 < centerX && centerX < rect.x2 &&
+						rect.y1 < centerY && centerY < rect.y2;
 			});
 		},
 
@@ -613,8 +607,8 @@ var assistance = assistance || {};
 
 			var bbox = assistance.Utility.insideBoundingBox( $comp, $vis );
 
-			this.offsetLeft = bbox.left;
-			this.offsetTop = bbox.top;
+			this.offsetLeft = bbox.x;
+			this.offsetTop = bbox.y;
 			this.width = bbox.width;
 			this.height = bbox.height;
 

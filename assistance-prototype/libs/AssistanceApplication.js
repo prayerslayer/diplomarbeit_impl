@@ -155,7 +155,7 @@ var assistance = assistance || {};
 			// construct appropriate url to fetch appropriate comments
 			var new_url = this.options.comment_url + "?";
     		for (var len = compData.visualized_properties.length - 1, i=len; i >= 0; i--) {
-    			var prop = compData.visualized_properties[i];
+    			var prop = compData.visualized_properties[i].uri;
     			new_url +=  ( i < len ? "&" : "" ) + "property=" + encodeURIComponent( prop );
     		};
     		var comments = new assistance.CommentCollection([], {

@@ -53,8 +53,8 @@ var assistance = assistance || {};
 			this.ui.bg.attr( "height", bbox.height );
 			this.$el.css( "width", bbox.width );
 			this.$el.css( "height", bbox.height );
-			this.$el.css( "top", bbox.top );
-			this.$el.css( "left", bbox.left );
+			this.$el.css( "top", bbox.y );
+			this.$el.css( "left", bbox.x );
 
 			this.$el.hide();
 		},
