@@ -138,13 +138,36 @@ var assistance = assistance || {};
 			};
 
 			var datapoint_annotations = [];
+			var data_annotations = [];
+			// check whether a visualized property is nominal 
+			var has_nominal = _.contains( _.pluck( comment.visualized_properties, "type" ), "nominal" );
 			
 			// check rectangles
-			if ( this.annotations.rectangles && this.options.dataAnnotationsEnabled ) {
-				// data annotations
-				//TODO call component api
-				//TODO also check whether visualized properties are nominal, quantitative or ordinal
-				// in case they are nominal, create a datagroup annotation (because there is no inherent order on a nominal axis).
+			// must not contain nominal values as it doesn't make sense to define start and end points. from sweden to finland? from ferrari to audi?
+			if ( this.annotations.rectangles && comment.data_annotations_enabled && !has_nominal) {
+
+				_.each( this.annotations.rectangles, function( rect ) {
+
+					// rect has absolute values
+					var values = comment.reference.coordinatesToData( rect.top, rect.left, rect.top + rect.height, rect.left + rect.width );
+
+					/* now values must look something like [{
+						"from": 2012,
+						"to": 2015,
+						"uri": xsd:date					
+					}, {
+						"from": 40,
+						"to": 505,
+						"uri": appleSharePrice
+					}]
+					*/
+
+					//TODO hier sind invalid dates drin - mal überprüfen ob die richtigen koordinaten eingegeben werden. (wahrscheinlich nicht, weil die von der bounding box relativ zur komponente sind, ich aber die tatsächlichen x/y werte auf der timeline haben will, also auch ein offsetLeft von 4000 px ).
+					data_annotations.push( {
+						"type": "data",
+						"items": values
+					});
+				});
 			} else if ( this.annotations.rectangles ) {
 				// rect annotations
 				_.each( this.annotations.rectangles, function( rect ) {
@@ -179,7 +202,7 @@ var assistance = assistance || {};
 					var point = {};
 					point.uri = s;
 					point.type = "point";
-					// point.values = this.options.reference.getValues( s );
+					point.values = comment.reference.getDataFromResource( s );
 					datapoint_annotations.push( point );
 				});
 			}
@@ -189,10 +212,13 @@ var assistance = assistance || {};
 				version.annotations.push( area_annotations );
 			if ( datapoint_annotations.length )
 				version.annotations.push.apply( version.annotations, datapoint_annotations );
+			if ( data_annotations.length ) {
+				version.annotations.push.apply( version.annotations, data_annotations );
+			}
 
 			versions.push( version );
 			comment.versions = versions;
-			delete comment.reference; // causes circular struction and JSON.stringify fail
+			delete comment.reference; // causes circular structure and JSON.stringify fail
 			console.debug( comment );
 			// submit
 			// alternative: create a new CommentModel( comment ) and call .save() on it. does the same under the hood.

@@ -83,8 +83,6 @@ var assistance = assistance || {};
 				// underflow y
 				offsetTop = 0;
 			}
-
-			console.debug( offsetLeft, offsetTop, width, height );
 			return {
 				"x": offsetLeft,
 				"y": offsetTop,
