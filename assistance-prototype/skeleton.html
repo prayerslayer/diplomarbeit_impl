@@ -17,6 +17,9 @@
 			<script type="text/template" id="rectangleannotationViewTemplate">
 			</script>
 
+			<script type="text/template" id="dataannotationViewTemplate">
+			</script>
+
 			<script type="text/template" id="pointannotationViewTemplate">
 			</script>
 
@@ -152,6 +155,7 @@
 			<script src="libs/models/AssistanceAnnotationElementModel.js"></script>
 			<script src="libs/models/AssistanceAnnotationModel.js"></script>
 			<script src="libs/models/AssistanceAreaAnnotationModel.js"></script>
+			<script src="libs/models/AssistanceDataAnnotationModel.js"></script>
 			<script src="libs/models/AssistanceDatapointAnnotationModel.js"></script>
 			<script src="libs/models/AssistanceTextAnnotationModel.js"></script>
 			<script src="libs/models/AssistanceArrowAnnotationModel.js"></script>
@@ -174,6 +178,7 @@
 			<!-- comment views -->
 			<script src="libs/views/AssistanceAnnotationRegion.js"></script>
 			<script src="libs/views/AssistanceAddAnnotationView.js"></script>
+			<script src="libs/views/AssistanceDataAnnotationView.js"></script>
 			<script src="libs/views/AssistanceDatapointAnnotationView.js"></script>
 			<script src="libs/views/AssistanceTextAnnotationView.js"></script>
 			<script src="libs/views/AssistanceRectangleAnnotationView.js"></script>
@@ -381,7 +386,7 @@
 					$.support.cors = true;
 					var app = new assistance.Application();
 
-					var comp = new Ext.VizBoard.SimileTimeline();
+					comp = new Ext.VizBoard.SimileTimeline();
 					comp.init({
 						"renderTargetId": "renderTarget",
 						"Logger": console,
@@ -406,10 +411,7 @@
 							"component_id": "http://cruise/ui/SimileTimeline",
 							"memento": [ "width", "height", "mousewheelscroll", "centerDate", "selection"],
 							"data_annotations_enabled": true,
-							"visualized_properties": [
-								{
-									"uri": "http://mmt.inf.tu-dresden.de/TimelineData",
-									"type": "quantitative" } ],
+							"visualized_properties": [ "http://mmt.inf.tu-dresden.de/TimelineData" ],
 							"reference": comp, // to access the component's api
 						}]
 					});

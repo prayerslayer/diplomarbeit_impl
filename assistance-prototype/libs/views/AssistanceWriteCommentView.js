@@ -148,8 +148,11 @@ var assistance = assistance || {};
 
 				_.each( this.annotations.rectangles, function( rect ) {
 
+					// rect selection coordinates relative to the visible visualization bounding box
+					// we want actual coordinates on visualization
+
 					// rect has absolute values
-					var values = comment.reference.coordinatesToData( rect.top, rect.left, rect.top + rect.height, rect.left + rect.width );
+					var values = comment.reference.coordinatesToData( rect.x1, rect.y1, rect.x2, rect.y2 );
 
 					/* now values must look something like [{
 						"from": 2012,
@@ -161,8 +164,6 @@ var assistance = assistance || {};
 						"uri": appleSharePrice
 					}]
 					*/
-
-					//TODO hier sind invalid dates drin - mal überprüfen ob die richtigen koordinaten eingegeben werden. (wahrscheinlich nicht, weil die von der bounding box relativ zur komponente sind, ich aber die tatsächlichen x/y werte auf der timeline haben will, also auch ein offsetLeft von 4000 px ).
 					data_annotations.push( {
 						"type": "data",
 						"items": values

@@ -44,6 +44,25 @@ var assistance = assistance || {};
 			return bb;
 		},
 
+		// sum offsets from child to parent
+		offsetSum: function( parent, child ) {
+			var p = $( parent )[ 0 ],
+				c = $( child )[ 0 ],
+				offsetLeft = 0,
+				offsetTop = 0;
+
+			do {
+				offsetLeft += c.offsetLeft;
+				offsetTop += c.offsetTop;
+				c = c.parentNode;
+			} while( c != p );
+
+			return {
+				"left": offsetLeft,
+				"top": offsetTop
+			};
+		},
+
 		// calculates the VISIBLE bounding box of child inside parent
 		// if the child itself is 5000 px long but inside a container of 100px width, the bounding box will return 100px width.
 		insideBoundingBox: function( parent, child ) {

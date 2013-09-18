@@ -66,6 +66,10 @@ var assistance = assistance || {};
 			d3.select( this.el ).attr( "class", "assistance-annotations assistance-annotations__selection" );
 		},
 
+		getOffsets: function() {
+			return assistance.Utility.offsetSum( $( this.options.component ), $( this.options.visualization ) );
+		},
+
 		// takes absolute values, scales them appropriately to relative ones and
 		// returns a scaled copy of the original opbject
 		scale: function( obj ) {
@@ -173,7 +177,6 @@ var assistance = assistance || {};
 				return; // if we would return false here, the drag behavior would not work as event is not further inspected
 			// manual hit test as this svg is over the actual visualization
 			var el = this._getElementAt( evt.pageX, evt.pageY );
-			console.debug( el );
 			// if we're not over an element, dehighlight all unselected ones. this is necessary to properly handle mouseout case.
 			if ( !el ) {
 				this._allDatapoints()

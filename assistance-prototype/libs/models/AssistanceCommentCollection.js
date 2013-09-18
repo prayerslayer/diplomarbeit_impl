@@ -20,6 +20,7 @@ var assistance = assistance || {};
             return text.replace( /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig, '<a href="$1" target="_blank">$1</a>' );
         },
 
+        // keep comments sorted by date
         comparator: function( v1, v2 ) {
         	if ( v1.get("latest").timestamp > v2.get("latest").timestamp )
         		return -1;
@@ -41,7 +42,7 @@ var assistance = assistance || {};
 			_.each( data, function( c ) {
 				var models = [];
 				// user stuff
-				c.id = c.comment_id;	// this is for model.save()
+				c.id = c.comment_id;
 				c.avatar_url = "http://robohash.org/" + c.user_id;	// yep, we could get it from the user service as well
 				c.user_name = /* TODO call user service */ c.user_id;
 
@@ -75,9 +76,13 @@ var assistance = assistance || {};
 					} else if ( anno.type === "point" ) {
 						model = new assistance.DatapointAnnotation( anno );
 					} else if ( anno.type === "group" ) {
-
+						//TODO WONTFIX groups are just a collection of points.
 					} else if ( anno.type === "data" ) {
-						
+						model = new assistance.DataAnnotation( anno );
+						model.set( "reference", c.reference ); // data anno needs to access component api
+						model.set( "component", c.component );
+						model.set( "visualization", c.visualization );
+						models.push( model );
 					}
 					models.push( model );
 				});

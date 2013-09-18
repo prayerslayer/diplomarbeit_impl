@@ -21,10 +21,12 @@ var assistance = assistance || {};
 
 
 		getItemView: function( item ) {
-			if ( item.get( "type" ) === "area" ) {
+			if ( item.get( "type" ) === "area" )
 				return assistance.AreaAnnotationView;
-			} else if ( item.get( "type" ) === "point" )
+			if ( item.get( "type" ) === "point" )
 				return assistance.DatapointAnnotationView;
+			if ( item.get( "type" ) === "data" )
+				return assistance.DataAnnotationView;
 		},
 
 		// do not render annotations inside of this view plz kthxbai

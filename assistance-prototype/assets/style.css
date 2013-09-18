@@ -344,8 +344,6 @@ div.assistance-comment__comment-content a:hover {
 	color: orange;
 }
 
-
-
 /* WRITE COMMENT STUFF */
 
 div.assistance-comment__submit {
@@ -454,6 +452,7 @@ rect.assistance-annotations__rectangle_finished {
 }
 
 svg.assistance-comment__areaannotation,
+svg.assistance-comment__dataannotation,
 div.assistance-comment__datapointannotation {
 	position: absolute;
 	width: 100%;
@@ -463,7 +462,8 @@ div.assistance-comment__datapointannotation {
 	z-index: 999;
 }
 
-rect.assistance-comment__areaannotation-bg {
+rect.assistance-comment__areaannotation-bg,
+rect.assistance-comment__dataannotation-bg {
 	fill: black;
 	opacity: .25;
 }
