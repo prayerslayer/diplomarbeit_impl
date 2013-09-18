@@ -30,6 +30,8 @@ body {
 }
 
 .assistance-base__headline {
+	font-size: 150%;
+	line-height: 150%;
 	padding-left: 1rem;
 	padding-bottom: .5rem;
 	border-bottom: 2px solid white;
@@ -42,7 +44,7 @@ body {
 .assistance-base__close {
 	position: absolute;
 	right: 1rem;
-	top: 1rem;
+	top: .5rem;
 	-webkit-transition: color .2s;
 }
 
